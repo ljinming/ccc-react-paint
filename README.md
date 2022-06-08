@@ -50,3 +50,5 @@ More fun and interesting things, visit [minicode](https://pengfeiw.github.io/min
 // install brew
 
 /bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)"
+
+yarn add -D rollup rollup-plugin-babel rollup-plugin-commonjs rollup-plugin-node-resolve rollup-plugin-replace @rollup/plugin-image rollup-plugin-terser rollup-plugin-uglify rollup-plugin-postcss cssnano postcss-cssnext postcss-nested postcss-simple-vars
