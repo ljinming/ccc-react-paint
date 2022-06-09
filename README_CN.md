@@ -29,7 +29,7 @@
 - 启动服务: `npm run start`
 - 在浏览器中打开：[http://localhost:3000](http://localhost:3000)
 
-## 技术 
+## 技术
 
 - TypeScript
 - React
@@ -38,7 +38,6 @@
 
 ## 有问题?
 
-遇到任何问题，可以在文章[<<react实现简易画板程序>>](http://pengfeixc.com/blog/60d073bce97367196dce3efc)留言或者提交 [issue](https://github.com/pengfeiw/react-paint/issues).
-
+遇到任何问题，可以在文章[<<react 实现简易画板程序>>](http://pengfeixc.com/blog/60d073bce97367196dce3efc)留言或者提交 [issue](https://github.com/pengfeiw/react-paint/issues).
 
 ps: 更多好玩有趣的东西，请访问[minicode](https://pengfeiw.github.io/minicode)
