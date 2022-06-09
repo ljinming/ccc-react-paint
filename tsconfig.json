@@ -18,7 +18,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "baseUrl": ".",
     "allowJs": false,
     "noUnusedLocals": false,
@@ -29,10 +29,17 @@
     "src"
   ],
   "paths": {
-      "@/src": ["src/*"],
-      "@/components": ["src/components"],
-      "@/util": ["src/util"],
-       "@/context": ["src/context"]
-
-    }
+    "@/src": [
+      "src/*"
+    ],
+    "@/components": [
+      "src/components"
+    ],
+    "@/util": [
+      "src/util"
+    ],
+    "@/context": [
+      "src/context"
+    ]
+  }
 }

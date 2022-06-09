@@ -15,10 +15,6 @@ interface ToolbarProps {
 const ToolRightBar: FC<ToolbarProps> = (props) => {
   const { toolType } = props;
 
-  useEffect(() => {
-    renderChild();
-  }, [toolType]);
-
   const renderChild = (): any => {
     let content = null;
     switch (toolType) {
@@ -46,13 +42,6 @@ const ToolRightBar: FC<ToolbarProps> = (props) => {
   return <div className="ccc-showTool">{renderChild()}</div>;
 };
 
-export default React.memo(ToolRightBar, (preProps: any, nextProps: any) => {
-  console.log(
-    "====56",
-    nextProps.toolType,
-    ToolType.ERASER,
-    nextProps.toolType !== ToolType.ERASER
-  );
-  return nextProps.toolType !== ToolType.ERASER;
-  // return true;
+export default React.memo(ToolRightBar, (preProps: ToolbarProps, nextProps: ToolbarProps) => {
+  return nextProps.toolType === ToolType.ERASER;
 });

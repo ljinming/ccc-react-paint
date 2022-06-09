@@ -2,31 +2,15 @@ import React from "react";
 import "./index.less";
 import { useEffect } from "react";
 import { useRef } from "react";
-import {
-  LineWidthType,
-  ShapeOutlineType,
-  ShapeToolType,
-  ToolType,
-} from "../../util/toolType";
+import { LineWidthType, ShapeOutlineType, ShapeToolType, ToolType } from "../../util/toolType";
 import { FC } from "react";
 import { useState } from "react";
 import TextBox from "./TextBox";
-import {
-  Pen,
-  Tool,
-  Eraser,
-  ColorExtract,
-  ColorFill,
-  Text,
-} from "../../util/tool";
+import { Pen, Tool, Eraser, ColorExtract, ColorFill, Text } from "../../util/tool";
 import Shape from "../../util/tool/shape";
 import { useContext } from "react";
 import { DispatcherContext } from "../../context";
-import {
-  CLEAR_EVENT,
-  REDO_EVENT,
-  UNDO_EVENT,
-} from "../../util/dispatcher/event";
+import { CLEAR_EVENT, REDO_EVENT, UNDO_EVENT } from "../../util/dispatcher/event";
 import SnapShot from "../../util/snapshot";
 import Snapshot from "../../util/snapshot";
 
@@ -54,7 +38,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     shapeType,
     shapeOutlineType,
     fontStyle,
-    lineSize = 1,
+    lineSize = 1
   } = props;
   const [tool, setTool] = useState<Tool>();
   const [showArea, setShow] = useState(false);
@@ -63,7 +47,6 @@ const Canvas: FC<CanvasProps> = (props) => {
   const [snapshot] = useState<SnapShot>(new Snapshot());
 
   useEffect(() => {
-    console.log("===34", toolType, ToolType.COLOR_FILL, fillColor);
     switch (toolType) {
       case ToolType.PEN:
         setTool(new Pen());
@@ -81,9 +64,7 @@ const Canvas: FC<CanvasProps> = (props) => {
         setTool(new Text(fontStyle));
         break;
       case ToolType.SHAPE:
-        setTool(
-          new Shape(shapeType, shapeOutlineType === ShapeOutlineType.DOTTED)
-        );
+        setTool(new Shape(shapeType, shapeOutlineType === ShapeOutlineType.DOTTED));
         break;
       default:
         break;
@@ -139,6 +120,7 @@ const Canvas: FC<CanvasProps> = (props) => {
 
       Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       // 初始化，将画布绘制成白色底，否则提取颜色会变成黑色
+
       const ctx: any = canvas.getContext("2d");
       ctx.font = "26px Arial bolder";
       ctx.fillStyle = "red";
@@ -189,12 +171,7 @@ const Canvas: FC<CanvasProps> = (props) => {
       dispatcher.on(UNDO_EVENT, back);
 
       window.addEventListener("resize", () => {
-        const canvasData = Tool.ctx.getImageData(
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
+        const canvasData = Tool.ctx.getImageData(0, 0, canvas.width, canvas.height);
         canvas.height = canvas.clientHeight;
         canvas.width = canvas.clientWidth;
         Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
@@ -226,14 +203,7 @@ const Canvas: FC<CanvasProps> = (props) => {
       tool.onMouseUp(event);
 
       // 存储canvas剪影
-      snapshot.add(
-        Tool.ctx.getImageData(
-          0,
-          0,
-          Tool.ctx.canvas.width,
-          Tool.ctx.canvas.height
-        )
-      );
+      snapshot.add(Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height));
     }
   };
 
@@ -255,9 +225,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
 
     // 存储canvas剪影
-    snapshot.add(
-      Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height)
-    );
+    snapshot.add(Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height));
   };
 
   useEffect(() => {
@@ -285,12 +253,7 @@ const Canvas: FC<CanvasProps> = (props) => {
 
   return (
     <>
-      <canvas
-        className="canvas"
-        ref={canvasRef}
-        width="100%"
-        height="100%"
-      ></canvas>
+      <canvas id="ccc-paint-canvas" className="canvas" ref={canvasRef} width="100%" height="100%"></canvas>
       <TextBox />
     </>
   );
