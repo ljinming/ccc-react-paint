@@ -35,6 +35,16 @@ export const ColorContext = createContext({
     setActiveColor: (type: ColorType) => {}
 });
 
+export const FillContext = createContext({
+    fillColor: "black",
+    setFillColor: (type:string) => {}
+});
+
 export const DispatcherContext = createContext({
     dispatcher: new Dispatcher()
+});
+
+export const TextContext = createContext({
+    fontStyle: {},
+    setFont: (type: any) => { }
 });

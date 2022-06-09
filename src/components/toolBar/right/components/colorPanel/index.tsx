@@ -9,12 +9,13 @@ import { useEffect } from "react";
 
 interface ColorPanelProps {
   className?: string;
+  title?: string;
 }
 
 const activeColorTypeCls = "active-color-type";
 
 const ColorPanel: React.FC<ColorPanelProps> = (props) => {
-  const { className } = props;
+  const { className, title } = props;
   const [pickerColor, setPickerColor] = useState(createColor("#000000FF"));
   const colorContext = useContext(ColorContext);
   const activeColorType = colorContext.activeColor;
@@ -26,36 +27,31 @@ const ColorPanel: React.FC<ColorPanelProps> = (props) => {
   return (
     <div className={className ? `colorpanel ${className}` : "colorpanel"}>
       <div className="content">
-        {/* <div className="color-template">
-          {colors.map((color) => (
+        {title ? (
+          <div className="color-result">
             <div
-              onClick={() => colorContext.setColor(color.value)}
-              key={color.value}
-              className="color-template-item"
-              style={{ backgroundColor: color.value }}
-            />
-          ))}
-        </div> */}
-        <div className="color-result">
-          <div
-            onClick={() => colorContext.setActiveColor(ColorType.MAIN)}
-            className={activeColorType === ColorType.MAIN ? `main-color ${activeColorTypeCls}` : "main-color"}
-          >
-            <div className="color-box1" style={{ backgroundColor: colorContext.mainColor }} />
-            <div>panel color</div>
+              onClick={() => colorContext.setActiveColor(ColorType.MAIN)}
+              className={
+                activeColorType === ColorType.MAIN
+                  ? `main-color ${activeColorTypeCls}`
+                  : "main-color"
+              }
+            >
+              <div
+                className="color-box1"
+                style={{ backgroundColor: colorContext.mainColor }}
+              />
+              <div>{title}</div>
+            </div>
           </div>
-          <div
-            onClick={() => colorContext.setActiveColor(ColorType.SUB)}
-            className={activeColorType === ColorType.SUB ? `sub-color ${activeColorTypeCls}` : "sub-color"}
-          ></div>
-        </div>
+        ) : (
+          <h3>color</h3>
+        )}
         <div className="material-color-box">
           <ColorBox
             value={pickerColor}
-            deferred={true}
             disableAlpha={false}
             onChange={(color) => {
-              console.log("===3", color);
               setPickerColor(color);
             }}
           />

@@ -6,6 +6,8 @@ import {
   ShapeOutlineContext,
   LineWidthContext,
   ColorContext,
+  FillContext,
+  TextContext,
   DispatcherContext
 } from "./context";
 import "./style.less";
@@ -16,12 +18,14 @@ import Dispatcher from "./util/dispatcher";
 import Right from "./components/toolBar/right";
 
 function Paint(): JSX.Element {
-  const [toolType, setToolType] = useState<ToolType>(ToolType.SHAPE);
+  const [toolType, setToolType] = useState<ToolType>(ToolType.PEN);
   const [shapeType, setShapeType] = useState<ShapeToolType>(ShapeToolType.LINE);
   const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(ShapeOutlineType.SOLID);
   const [lineWidthType, setLineWidthType] = useState<LineWidthType>(LineWidthType.LINESIZE);
   const [lineSize, setLineFontSize] = useState<number>(1);
+  const [fillColor, setFillColor] = useState<string>("");
   const [activeColorType, setActiveColorType] = useState<ColorType>(ColorType.MAIN);
+  const [fontStyle, setFontStyle] = useState({});
   const [mainColor, setMainColor] = useState<string>("black");
   const [subColor, setSubColor] = useState<string>("white");
   const [dispatcher] = useState(new Dispatcher());
@@ -64,26 +68,42 @@ function Paint(): JSX.Element {
                   setActiveColor: setActiveColorType
                 }}
               >
-                <div className="ccc">
-                  <div className="ToolPanel">
-                    <ToolPanel className="toolbar-item" />
-                  </div>
-                  <div className="show-Canvas">
-                    <Canvas
-                      toolType={toolType}
-                      shapeType={shapeType}
-                      shapeOutlineType={shapeOutlineType}
-                      mainColor={mainColor}
-                      subColor={subColor}
-                      lineSize={lineSize}
-                      lineWidthType={lineWidthType}
-                      setColor={setColor}
-                    />
-                  </div>
-                  <div className="show-type">
-                    <Right toolType={toolType} />
-                  </div>
-                </div>
+                <FillContext.Provider
+                  value={{
+                    fillColor,
+                    setFillColor
+                  }}
+                >
+                  <TextContext.Provider
+                    value={{
+                      fontStyle,
+                      setFont: setFontStyle
+                    }}
+                  >
+                    <div className="ccc">
+                      <div className="ToolPanel">
+                        <ToolPanel className="toolbar-item" />
+                      </div>
+                      <div className="show-Canvas">
+                        <Canvas
+                          fillColor={fillColor}
+                          toolType={toolType}
+                          fontStyle={fontStyle}
+                          shapeType={shapeType}
+                          shapeOutlineType={shapeOutlineType}
+                          mainColor={mainColor}
+                          subColor={subColor}
+                          lineSize={lineSize}
+                          lineWidthType={lineWidthType}
+                          setColor={setColor}
+                        />
+                      </div>
+                      <div className="show-type">
+                        <Right toolType={toolType} />
+                      </div>
+                    </div>
+                  </TextContext.Provider>
+                </FillContext.Provider>
               </ColorContext.Provider>
             </DispatcherContext.Provider>
           </LineWidthContext.Provider>

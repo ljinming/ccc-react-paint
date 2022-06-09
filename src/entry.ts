@@ -1,2 +1,2 @@
 import CCCPaint from "./CCCPaint";
-export { CCCPaint };
+export default { CCCPaint };

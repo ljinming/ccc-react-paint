@@ -4,7 +4,7 @@ import FormatColorFillTwoTone from "@material-ui/icons/FormatColorFillTwoTone";
 import ColorizeTwoToneIcon from "@material-ui/icons/ColorizeTwoTone";
 import AccessAlarm from "@material-ui/icons/AccessAlarm";
 // import SearchTwoToneIcon from "@material-ui/icons/SearchTwoTone";
-// import TextFieldsIcon from "@material-ui/icons/TextFields";
+import TextFieldsIcon from "@material-ui/icons/TextFields";
 import { ToolType } from "../../../util/toolType";
 import { ToolTypeContext } from "../../../context";
 import "./index.less";
@@ -21,7 +21,7 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
       <ToolTypeContext.Consumer>
         {({ type, setType }) => (
           <>
-            <span title="铅笔">
+            <span title="铅笔" className="tool-Icon">
               <CreateTwoTone
                 className={
                   type === ToolType.PEN
@@ -33,7 +33,7 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
                 }}
               />
             </span>
-            <span title="橡皮擦">
+            <span title="橡皮擦" className="tool-Icon">
               <img
                 src="./icon/eraser.svg"
                 className={
@@ -46,7 +46,7 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
                 }}
               />
             </span>
-            <span title="填充">
+            <span title="填充" className="tool-Icon">
               <FormatColorFillTwoTone
                 className={
                   type === ToolType.COLOR_FILL
@@ -58,7 +58,7 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
                 }}
               />
             </span>
-            <span title="形状">
+            <span title="形状" className="tool-Icon">
               <AccessAlarm
                 className={
                   type === ToolType.SHAPE
@@ -70,7 +70,7 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
                 }}
               />
             </span>
-            <span title="颜色选取器">
+            {/* <span title="颜色选取器" className="tool-Icon">
               <ColorizeTwoToneIcon
                 className={
                   type === ToolType.COLOR_EXTRACT
@@ -81,13 +81,22 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
                   setType(ToolType.COLOR_EXTRACT);
                 }}
               />
+            </span> */}
+            <span title="文字" className="tool-Icon">
+              <TextFieldsIcon
+                className={
+                  type === ToolType.TEXT
+                    ? `tool-item ${selectedToolClass}`
+                    : "tool-item"
+                }
+                onClick={() => {
+                  setType(ToolType.TEXT);
+                }}
+              />
             </span>
-            {/* <span title="文字">
-                                    <TextFieldsIcon className={type === ToolType.TEXT ? `tool-item ${selectedToolClass}` : "tool-item"} onClick={() => {setType(ToolType.TEXT)}} />
-                                </span>
-                                <span title="放大镜">
+            {/* <span title="放大镜">
                                     <SearchTwoToneIcon className={type === ToolType.MAGNIFYING ? `tool-item ${selectedToolClass}` : "tool-item"} onClick={() => {setType(ToolType.MAGNIFYING)}} />
-                                </span> */}
+                                </span>  */}
           </>
         )}
       </ToolTypeContext.Consumer>

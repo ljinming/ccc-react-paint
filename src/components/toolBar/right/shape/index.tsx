@@ -2,6 +2,8 @@ import React from "react";
 import { FC } from "react";
 import Shape from "../components/shape";
 import ExpandMore from "@material-ui/icons/ExpandMore";
+import { ColorBox, createColor } from "material-ui-color";
+import ColorPanel from "../components/colorPanel";
 
 import "./index.less";
 
@@ -12,8 +14,8 @@ const showShape: FC = () => {
         <span>Shope</span>
         <ExpandMore />
       </h3>
-
       <Shape className="toolbar-item" />
+      <ColorPanel className="toolbar-item" />
     </div>
   );
 };

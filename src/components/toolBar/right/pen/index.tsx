@@ -18,12 +18,11 @@ const ShowPen: FC = () => {
           min={1}
           max={20}
           onPropsChange={(value) => {
-            console.log("0000", value);
             lineWidthContext.setLineSize(value);
           }}
         />
       </div>
-      <ColorPanel className="toolbar-item" />
+      <ColorPanel className="toolbar-item" title="Panel Color" />
     </div>
   );
 };
