@@ -79,6 +79,8 @@ function App(): JSX.Element {
                 <div className="app">
                   <Toolbar />
                   <Canvas
+                    fontStyle={{}}
+                    fillColor={""}
                     toolType={toolType}
                     shapeType={shapeType}
                     shapeOutlineType={shapeOutlineType}

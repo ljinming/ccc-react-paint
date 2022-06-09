@@ -23,7 +23,7 @@ const ShowPen: FC = () => {
           }}
         />
       </div>
-      <ColorPanel className="toolbar-item" />
+      <ColorPanel className="toolbar-item" title="Panel Color" />
     </div>
   );
 };

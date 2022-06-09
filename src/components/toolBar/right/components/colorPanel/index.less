@@ -1,6 +1,5 @@
 .colorpanel {
     position: relative;
-    margin-top: 20px;
     .content {
         display: flex;
         flex-direction: column;
@@ -79,20 +78,21 @@
             width: 100%;
             .MuiBox-root{
                 width: 100% !important;
+                overflow:unset !important
             }
             .muicc-colorbox-hsvgradient{
                  width: 100% !important;
+                     margin: '20px 0px 0px 0px ' !important;
                 min-height: 240px;
-
-                 .makeStyles-root-34 {
-                     min-height: 240px;
+                 >div {
+                     min-height: 240px !important;
                  }
 
             }
             .muicc-colorbox-sliders{
-               width: 100% !important;
-
+                width: 100% !important;
             }
+        
             .muicc-colorbox-colorBg{
                 width: 20px !important;
                 height: 20px !important;

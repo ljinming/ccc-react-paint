@@ -80,7 +80,7 @@ export default class Tool {
      */
     public static lineWidthFactor = 1;
     /**
-     * 主色 背景色
+     * 主色 
      */
     public static mainColor = "black";
     /**
@@ -88,6 +88,9 @@ export default class Tool {
      */
     public static subColor = "white";
 
+    // 背景色
+    public static fillColor = "black";
+    
     public static ctx: CanvasRenderingContext2D;
 
     public onMouseDown(event: MouseEvent): void {

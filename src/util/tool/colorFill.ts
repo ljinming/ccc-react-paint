@@ -87,7 +87,8 @@ const fillPixel = (colorLayer: ImageData, pixelPos: number, color: [number, numb
 
 class ColorFill extends Tool {
     private operateStart(pos: Point) {
-        const color = new Color(Tool.mainColor);
+            console.log('===color5')
+        const color = new Color(Tool.fillColor);
         efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.red(), color.green(), color.blue()]);
     }
     public onMouseDown(event: MouseEvent): void {

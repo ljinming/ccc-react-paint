@@ -69,3 +69,10 @@ export enum ColorType {
     MAIN,
     SUB
 }
+
+
+/*
+
+font_Family
+*/
+
