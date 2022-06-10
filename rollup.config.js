@@ -61,7 +61,7 @@ export default {
     }
   },
   // 将模块视为外部模块，不会打包在库中
-  external: ["react", "prop-types", "react-is", "react-router", "react/jsx-runtime"],
+  external: ["react", "react-is", "prop-types", "react/jsx-runtime"],
   // 插件
   plugins: [
     image(),
@@ -106,7 +106,7 @@ export default {
     //   }
     // }),
     nodeResolve({
-      extensions: [".js", ".jsx", ".ts"]
+      extensions: [".js", ".jsx", ".ts", ".tsx"]
     }),
     ts({
       tsconfig: path.resolve(__dirname, "tsconfig.json")
