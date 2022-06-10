@@ -1,10 +1,8 @@
 import React from "react";
-import ClearAllIcon from "@material-ui/icons/ClearAll";
-import UndoIcon from "@material-ui/icons/Undo";
-import { Dialog, TextField, Button, DialogContent, DialogActions } from "@material-ui/core";
+import { Dialog, TextField, Button } from "@material-ui/core";
 import "./index.less";
 import { useContext } from "react";
-import { DispatcherContext } from "../../../context";
+import { SizeContext } from "../../../context";
 import { RESIZE } from "../../../util/dispatcher/event";
 
 export const style_other: any = {
@@ -24,11 +22,13 @@ const OtherOperator = () => {
   const [open, setOpen] = React.useState(false);
   const [width, setWidth] = React.useState(null);
   const [height, setHeight] = React.useState(null);
-
-  const dispatcherContext = useContext(DispatcherContext);
+  const sizeContext = useContext(SizeContext);
 
   const setResize = () => {
-    dispatcherContext.dispatcher.dispatch(RESIZE, { width, height });
+    sizeContext.onSize({
+      width: Number(width),
+      height: Number(height)
+    });
   };
 
   const handleResize = () => {

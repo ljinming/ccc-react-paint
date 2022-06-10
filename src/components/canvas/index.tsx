@@ -10,7 +10,7 @@ import { Pen, Tool, Eraser, ColorExtract, ColorFill, Text } from "../../util/too
 import Shape from "../../util/tool/shape";
 import { useContext } from "react";
 import { DispatcherContext } from "../../context";
-import { CLEAR_EVENT, REDO_EVENT, UNDO_EVENT } from "../../util/dispatcher/event";
+import { CLEAR_EVENT, REDO_EVENT, RESIZE, UNDO_EVENT } from "../../util/dispatcher/event";
 import SnapShot from "../../util/snapshot";
 import Snapshot from "../../util/snapshot";
 
@@ -26,6 +26,7 @@ interface CanvasProps {
   fontStyle: any;
   imgSrc?: string;
   CanvasWidth?: number;
+  CanvasSize?: any;
   CanvasHeight?: number;
   onClick?: (type: any) => void;
   setColor: (value: string) => void;
@@ -37,6 +38,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     lineWidthType,
     mainColor,
     subColor,
+    CanvasSize,
     setColor,
     fillColor,
     shapeType,
@@ -128,25 +130,7 @@ const Canvas: FC<CanvasProps> = (props) => {
 
       Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       const ctx = canvas.getContext("2d");
-
-      if (ctx) {
-        if (imgSrc) {
-          const img = new Image();
-          img.width = width;
-          img.src = imgSrc;
-          img.onload = function () {
-            // ctx.imageSmoothingEnabled = false;
-            ctx.drawImage(img, 0, 0);
-            //ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          };
-        } else {
-          ctx.fillStyle = "white";
-          ctx.fillRect(0, 0, width, height);
-        }
-
-        snapshot.add(ctx.getImageData(0, 0, width, height));
-      }
-
+      canvasPain(ctx, width, height, null);
       // 注册清空画布事件
       const dispatcher = dispatcherContext.dispatcher;
       const callback = () => {
@@ -183,22 +167,52 @@ const Canvas: FC<CanvasProps> = (props) => {
         }
       };
       dispatcher.on(UNDO_EVENT, back);
-
-      window.addEventListener("resize", () => {
+      const changeSize = () => {
         const canvasData = Tool.ctx.getImageData(0, 0, canvas.width, canvas.height);
-        canvas.height = canvas.clientHeight;
-        canvas.width = canvas.clientWidth;
-        Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-        Tool.ctx.fillStyle = "white";
-        Tool.ctx.fillRect(0, 0, canvas.width, canvas.height);
-        Tool.ctx.putImageData(canvasData, 0, 0);
-      });
+        console.log("---4", CanvasSize);
+        canvasPain(Tool.ctx, width, height, canvasData);
+        // canvas.height = canvas.clientHeight;
+        // canvas.width = canvas.clientWidth;
+        // // Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+        // Tool.ctx.fillStyle = "white";
+        // Tool.ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Tool.ctx.putImageData(canvasData, 0, 0);
+      };
+
+      window.addEventListener("resize", changeSize);
 
       return () => {
         dispatcher.off(CLEAR_EVENT, callback);
       };
     }
   }, [canvasRef]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    console.log("=====3", CanvasSize, canvas);
+    if (canvas) {
+      const canvasData = Tool.ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const height = CanvasSize.height || canvas.clientHeight;
+      const width = CanvasSize.width || canvas.clientWidth;
+      canvas.height = height;
+      canvas.width = width;
+      canvasPain(Tool.ctx, width, height, canvasData);
+    }
+  }, [CanvasSize]);
+
+  // 注册画布size事件
+
+  const canvasPain = (ctx: any, width: number, height: number, canvasData: any) => {
+    if (ctx) {
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, width, height);
+      if (canvasData) {
+        Tool.ctx.putImageData(canvasData, 0, 0);
+      } else {
+        snapshot.add(ctx.getImageData(0, 0, width, height));
+      }
+    }
+  };
 
   const onMouseDown = (event: MouseEvent) => {
     if (tool) {
