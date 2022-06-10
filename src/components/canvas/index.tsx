@@ -121,8 +121,10 @@ const Canvas: FC<CanvasProps> = (props) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
-      canvas.height = CanvasHeight || canvas.clientHeight;
-      canvas.width = CanvasWidth || canvas.clientWidth;
+      const height = CanvasHeight || canvas.clientHeight;
+      const width = CanvasWidth || canvas.clientWidth;
+      canvas.height = height;
+      canvas.width = width;
 
       Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       const ctx = canvas.getContext("2d");
@@ -130,19 +132,19 @@ const Canvas: FC<CanvasProps> = (props) => {
       if (ctx) {
         if (imgSrc) {
           const img = new Image();
-          img.width = CanvasWidth || canvas.clientWidth;
+          img.width = width;
+          img.src = imgSrc;
           img.onload = function () {
             // ctx.imageSmoothingEnabled = false;
             ctx.drawImage(img, 0, 0);
             //ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           };
-          img.src = imgSrc;
         } else {
           ctx.fillStyle = "white";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillRect(0, 0, width, height);
         }
 
-        snapshot.add(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        snapshot.add(ctx.getImageData(0, 0, width, height));
       }
 
       // 注册清空画布事件

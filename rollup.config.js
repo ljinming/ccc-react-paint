@@ -61,7 +61,7 @@ export default {
     }
   },
   // 将模块视为外部模块，不会打包在库中
-  external: ["react", "react-is", "prop-types", "react/jsx-runtime"],
+  external: ["react", "react-is", "prop-types", "react/jsx-runtime", "material-ui-color", "mater-ui/core"],
   // 插件
   plugins: [
     image(),
