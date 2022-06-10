@@ -189,7 +189,7 @@ const Canvas: FC<CanvasProps> = (props) => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    console.log("=====3", CanvasSize, canvas);
+    console.log("=====3", CanvasSize);
     if (canvas) {
       const canvasData = Tool.ctx.getImageData(0, 0, canvas.width, canvas.height);
       const height = CanvasSize.height || canvas.clientHeight;
