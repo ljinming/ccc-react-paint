@@ -16,8 +16,17 @@ import { ColorType, LineWidthType, ShapeOutlineType, ShapeToolType, ToolType } f
 import ToolPanel from "./components/toolBar/tool";
 import Dispatcher from "./util/dispatcher";
 import Right from "./components/toolBar/right";
+import Edit from "./components/edit";
 
-function Paint(): JSX.Element {
+interface PaintProps {
+  imgSrc?: string;
+  width?: number;
+  height?: number;
+  onClick?: (type: any) => void;
+}
+
+function Paint(props: PaintProps): JSX.Element {
+  const { imgSrc, width, height, onClick } = props;
   const [toolType, setToolType] = useState<ToolType>(ToolType.PEN);
   const [shapeType, setShapeType] = useState<ShapeToolType>(ShapeToolType.LINE);
   const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(ShapeOutlineType.SOLID);
@@ -81,25 +90,34 @@ function Paint(): JSX.Element {
                     }}
                   >
                     <div className="ccc">
-                      <div className="ToolPanel">
-                        <ToolPanel className="toolbar-item" />
+                      <div className="ccc-edit">
+                        <Edit />
                       </div>
-                      <div className="show-Canvas">
-                        <Canvas
-                          fillColor={fillColor}
-                          toolType={toolType}
-                          fontStyle={fontStyle}
-                          shapeType={shapeType}
-                          shapeOutlineType={shapeOutlineType}
-                          mainColor={mainColor}
-                          subColor={subColor}
-                          lineSize={lineSize}
-                          lineWidthType={lineWidthType}
-                          setColor={setColor}
-                        />
-                      </div>
-                      <div className="show-type">
-                        <Right toolType={toolType} />
+                      <div className="ccc-content">
+                        <div className="ToolPanel">
+                          <ToolPanel className="toolbar-item" />
+                        </div>
+                        <div className="show-Canvas">
+                          <Canvas
+                            imgSrc={imgSrc}
+                            onClick={onClick}
+                            CanvasWidth={width}
+                            CanvasHeight={height}
+                            fillColor={fillColor}
+                            toolType={toolType}
+                            fontStyle={fontStyle}
+                            shapeType={shapeType}
+                            shapeOutlineType={shapeOutlineType}
+                            mainColor={mainColor}
+                            subColor={subColor}
+                            lineSize={lineSize}
+                            lineWidthType={lineWidthType}
+                            setColor={setColor}
+                          />
+                        </div>
+                        <div className="show-type">
+                          <Right toolType={toolType} />
+                        </div>
                       </div>
                     </div>
                   </TextContext.Provider>

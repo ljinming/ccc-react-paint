@@ -38,8 +38,8 @@ class Text extends Tool {
       context.lineWidth = 5; // 指定描边线的宽度
       context.font = "10px";
 
-      if (this.canvas && this.textBox.style) {
-        const { fontSize, fontFamily, letterSpacing } = this.textBox.style;
+      if (this.canvas && this.fontStyle) {
+        const { fontSize = 12, fontFamily, letterSpacing } = this.fontStyle;
         context.fillStyle = this.textBox.color || "#000";
         context.font = `${fontSize} ${fontFamily}`; // 指定描边线的宽度
         this.canvas.style.letterSpacing = letterSpacing;

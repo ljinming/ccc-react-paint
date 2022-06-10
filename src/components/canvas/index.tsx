@@ -24,6 +24,10 @@ interface CanvasProps {
   lineSize?: number;
   fillColor: string;
   fontStyle: any;
+  imgSrc?: string;
+  CanvasWidth?: number;
+  CanvasHeight?: number;
+  onClick?: (type: any) => void;
   setColor: (value: string) => void;
 }
 
@@ -38,10 +42,13 @@ const Canvas: FC<CanvasProps> = (props) => {
     shapeType,
     shapeOutlineType,
     fontStyle,
+    imgSrc,
+    CanvasHeight,
+    onClick,
+    CanvasWidth,
     lineSize = 1
   } = props;
   const [tool, setTool] = useState<Tool>();
-  const [showArea, setShow] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dispatcherContext = useContext(DispatcherContext);
   const [snapshot] = useState<SnapShot>(new Snapshot());
@@ -114,19 +121,26 @@ const Canvas: FC<CanvasProps> = (props) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
-      canvas.height = canvas.clientHeight;
-      canvas.width = canvas.clientWidth;
+      canvas.height = CanvasHeight || canvas.clientHeight;
+      canvas.width = CanvasWidth || canvas.clientWidth;
 
       Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-      // 初始化，将画布绘制成白色底，否则提取颜色会变成黑色
+      const ctx = canvas.getContext("2d");
 
-      const ctx: any = canvas.getContext("2d");
-      ctx.font = "26px Arial bolder";
-      ctx.fillStyle = "red";
-      ctx.fillText("text", 123, 120);
       if (ctx) {
-        ctx.fillStyle = "white";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (imgSrc) {
+          const img = new Image();
+          img.width = CanvasWidth || canvas.clientWidth;
+          img.onload = function () {
+            // ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(img, 0, 0);
+            //ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          };
+          img.src = imgSrc;
+        } else {
+          ctx.fillStyle = "white";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
 
         snapshot.add(ctx.getImageData(0, 0, canvas.width, canvas.height));
       }
