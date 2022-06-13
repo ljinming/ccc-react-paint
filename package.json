@@ -1,6 +1,6 @@
 {
-  "name": "ccc-react-paint",
-  "version": "0.1.19",
+  "name": "ccc-react-paint001",
+  "version": "0.2.24",
   "keywords": [
     "ccc",
     "paint",
@@ -34,6 +34,9 @@
     "lint:fix": "eslint --fix './src/**/*.{ts,tsx}'",
     "dist": "webpack --config webpack/webpack.dist.prod.config.js",
     "rollup-build": "cross-env NODE_ENV=production rollup -c"
+  },
+  "peerDependencies": {
+    "react": ">=17"
   },
   "lint-staged": {
     "src/**/*.{jsx,tsx,ts,js,vue}": [
