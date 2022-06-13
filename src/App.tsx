@@ -1,5 +1,4 @@
 import React from "react";
-import Toolbar from "./components/toolBar";
 import Canvas from "./components/canvas";
 import {
   ToolTypeContext,
@@ -7,9 +6,11 @@ import {
   ShapeOutlineContext,
   LineWidthContext,
   ColorContext,
+  FillContext,
+  TextContext,
   DispatcherContext,
 } from "./context";
-import "./app.less";
+import "./style.less";
 import { useState } from "react";
 import {
   ColorType,
@@ -18,20 +19,34 @@ import {
   ShapeToolType,
   ToolType,
 } from "./util/toolType";
+import ToolPanel from "./components/toolBar/tool";
 import Dispatcher from "./util/dispatcher";
+import Right from "./components/toolBar/right";
+import Edit from "./components/edit";
 
-function App(): JSX.Element {
+interface PaintProps {
+  imgSrc?: string;
+  width?: number;
+  height?: number;
+  onClick?: (type: any) => void;
+}
+
+function Paint(props: PaintProps): JSX.Element {
+  const { imgSrc, width, height, onClick } = props;
   const [toolType, setToolType] = useState<ToolType>(ToolType.PEN);
   const [shapeType, setShapeType] = useState<ShapeToolType>(ShapeToolType.LINE);
   const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(
     ShapeOutlineType.SOLID
   );
   const [lineWidthType, setLineWidthType] = useState<LineWidthType>(
-    LineWidthType.THIN
+    LineWidthType.LINESIZE
   );
+  const [lineSize, setLineFontSize] = useState<number>(1);
+  const [fillColor, setFillColor] = useState<string>("");
   const [activeColorType, setActiveColorType] = useState<ColorType>(
     ColorType.MAIN
   );
+  const [fontStyle, setFontStyle] = useState({});
   const [mainColor, setMainColor] = useState<string>("black");
   const [subColor, setSubColor] = useState<string>("white");
   const [dispatcher] = useState(new Dispatcher());
@@ -61,9 +76,9 @@ function App(): JSX.Element {
           <LineWidthContext.Provider
             value={{
               type: lineWidthType,
-              lineSize: 1,
+              lineSize: lineSize,
               setType: setLineWidthType,
-              setLineSize: () => {},
+              setLineSize: setLineFontSize,
             }}
           >
             <DispatcherContext.Provider value={{ dispatcher }}>
@@ -76,20 +91,51 @@ function App(): JSX.Element {
                   setActiveColor: setActiveColorType,
                 }}
               >
-                <div className="app">
-                  <Toolbar />
-                  <Canvas
-                    fontStyle={{}}
-                    fillColor={""}
-                    toolType={toolType}
-                    shapeType={shapeType}
-                    shapeOutlineType={shapeOutlineType}
-                    mainColor={mainColor}
-                    subColor={subColor}
-                    lineWidthType={lineWidthType}
-                    setColor={setColor}
-                  />
-                </div>
+                <FillContext.Provider
+                  value={{
+                    fillColor,
+                    setFillColor,
+                  }}
+                >
+                  <TextContext.Provider
+                    value={{
+                      fontStyle,
+                      setFont: setFontStyle,
+                    }}
+                  >
+                    <div className="ccc">
+                      <div className="ccc-edit">
+                        <Edit />
+                      </div>
+                      <div className="ccc-content">
+                        <div className="ToolPanel">
+                          <ToolPanel className="toolbar-item" />
+                        </div>
+                        <div className="show-Canvas">
+                          <Canvas
+                            imgSrc={imgSrc}
+                            onClick={onClick}
+                            CanvasWidth={width}
+                            CanvasHeight={height}
+                            fillColor={fillColor}
+                            toolType={toolType}
+                            fontStyle={fontStyle}
+                            shapeType={shapeType}
+                            shapeOutlineType={shapeOutlineType}
+                            mainColor={mainColor}
+                            subColor={subColor}
+                            lineSize={lineSize}
+                            lineWidthType={lineWidthType}
+                            setColor={setColor}
+                          />
+                        </div>
+                        <div className="show-type">
+                          <Right toolType={toolType} />
+                        </div>
+                      </div>
+                    </div>
+                  </TextContext.Provider>
+                </FillContext.Provider>
               </ColorContext.Provider>
             </DispatcherContext.Provider>
           </LineWidthContext.Provider>
@@ -99,4 +145,4 @@ function App(): JSX.Element {
   );
 }
 
-export default App;
+export default Paint;
