@@ -39,11 +39,6 @@ export const FillContext = createContext({
   setFillColor: (type: string) => {}
 });
 
-export const FillContext = createContext({
-    fillColor: "black",
-    setFillColor: (type:string) => {}
-});
-
 export const DispatcherContext = createContext({
   dispatcher: new Dispatcher()
 });
@@ -53,10 +48,6 @@ export const SizeContext = createContext({
   onSize: (type: any) => {}
 });
 
-export const TextContext = createContext({
-  fontStyle: {},
-  setFont: (type: any) => {}
-});
 
 export const TextContext = createContext({
     fontStyle: {},
