@@ -14,6 +14,7 @@ const TextBox: FC = () => {
     <textarea
       id="textBox"
       name="story"
+      autoFocus={true}
       className="text-box"
       //rows={2}
     ></textarea>

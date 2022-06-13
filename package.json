@@ -1,6 +1,6 @@
 {
   "name": "ccc-react-paint",
-  "version": "0.2.3",
+  "version": "0.2.5",
   "keywords": [
     "ccc",
     "paint",
@@ -34,7 +34,7 @@
     "eject": "react-scripts eject",
     "lint:fix": "eslint --fix './src/**/*.{ts,tsx}'",
     "dist": "webpack --config webpack/webpack.dist.prod.config.js",
-    "rollup-build": "cross-env NODE_ENV=production rollup -c"
+    "rollup-build": "rm -rf dist & cross-env NODE_ENV=production rollup -c"
   },
   "peerDependencies": {
     "react": ">=17"
@@ -92,7 +92,7 @@
     "@types/react-dom": "^16.9.8",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
-    "antd": "4.16.9",
+    "antd": "^4.21.0",
     "babel-plugin-import": "^1.13.1",
     "cross-env": "^7.0.3",
     "cssnano": "^5.1.11",

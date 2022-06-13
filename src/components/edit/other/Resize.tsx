@@ -1,5 +1,6 @@
 import React from "react";
-import { Dialog, TextField, Button } from "@material-ui/core";
+import { Dialog, Button, TextField } from "@material-ui/core";
+//import { Button } from "antd";
 import "./index.less";
 import { useContext } from "react";
 import { SizeContext } from "@/context";
@@ -63,16 +64,20 @@ const OtherOperator = () => {
           </div>
 
           <div className="resize-content-footer">
-            <Button
-              color="primary"
-              variant="outlined"
+            <button
+              //color="primary"
+              // variant="outlined"
               className="resize-content-celBtn"
-              autoFocus
               onClick={() => setOpen(false)}
             >
               Cancel
-            </Button>
-            <Button color="primary" variant="outlined" className="resize-content-okBtn" onClick={handleResize}>
+            </button>
+            <Button
+              // color="primary"
+              // variant="outlined"
+              className="resize-content-okBtn"
+              onClick={handleResize}
+            >
               Resize
             </Button>
           </div>

@@ -61,7 +61,15 @@ export default {
     }
   },
   // 将模块视为外部模块，不会打包在库中
-  external: ["react", "react-is", "prop-types", "react/jsx-runtime", "material-ui-color", "@material-ui/core/Slider"], // 插件
+  external: [
+    "react",
+    "react-is",
+    "antd",
+    "prop-types",
+    "react/jsx-runtime",
+    "material-ui-color",
+    "@material-ui/core/Slider"
+  ], // 插件
   // 插件
   plugins: [
     image(),

@@ -1,3 +1,4 @@
+import zIndex from "@material-ui/core/styles/zIndex";
 import { ShapeToolType } from "../toolType";
 import Tool, { Point, getMousePos, getTouchPos, hexToRgb, updateImageData } from "./tool";
 
@@ -16,19 +17,22 @@ class Text extends Tool {
   private textBox: any;
   private fontStyle: any;
   private canvas: any;
+  private canvasText: any;
   public constructor(fontType: any) {
     super();
     this._x = NaN;
     this._y = NaN;
     this.textBox = document.getElementById("textBox");
     this.canvas = document.getElementById("ccc-paint-canvas");
+    this.canvasText = document.getElementById("canvas-text");
+
     this.textContent = "";
     this.fontStyle = fontType;
   }
 
   private drawing(x: number, y: number) {
     const context = Tool.ctx;
-    if (!context || !this.canvas) {
+    if (!context) {
       return;
     } else {
       // 设置画笔的颜色和大小
@@ -79,12 +83,12 @@ class Text extends Tool {
   public onMouseDown(event: MouseEvent): void {
     // 鼠标按下位置保存
 
-    // event.preventDefault();
-
+    event.preventDefault();
     if (this.isMouseDown) {
       this.textContent = this.textBox.value;
       this.isMouseDown = false;
       this.textBox.style["z-index"] = 1;
+      //  this.canvasText.style["z-index"] = 1;
       this.textBox.style.visibility = "hidden";
       this.drawing(this._x, this._y);
       this.textBox.value = "";
@@ -97,10 +101,11 @@ class Text extends Tool {
           this.textBox.style[va] = this.fontStyle[va];
         });
       }
+      //  this.canvasText.style["z-index"] = 5;
+      this.textBox.style["z-index"] = 6;
       this.textBox.style.visibility = "visible";
       this.textBox.style.left = this._x + "px";
       this.textBox.style.top = this._y + "px";
-      this.textBox.style["z-index"] = 6;
     }
   }
 }

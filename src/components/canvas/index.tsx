@@ -13,6 +13,7 @@ import { DispatcherContext } from "../../context";
 import { CLEAR_EVENT, REDO_EVENT, UNDO_EVENT } from "../../util/dispatcher/event";
 import SnapShot from "../../util/snapshot";
 import Snapshot from "../../util/snapshot";
+import { getImageColor } from "./utils";
 
 interface CanvasProps {
   toolType: ToolType;
@@ -58,6 +59,7 @@ const Canvas: FC<CanvasProps> = (props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dispatcherContext = useContext(DispatcherContext);
   const [snapshot] = useState<SnapShot>(new Snapshot());
+  let bgColor = "#fff";
 
   useEffect(() => {
     switch (toolType) {
@@ -145,6 +147,8 @@ const Canvas: FC<CanvasProps> = (props) => {
             /*2.从canvas 中获取图像的ImageData*/
             const imgData = ctx.getImageData(0, 0, width, height);
             /*3.在canvas 中显示ImageData*/
+            bgColor = getImageColor(imgData.data, img);
+            Tool.subColor = bgColor;
             ctx.putImageData(
               imgData,
               //位置
@@ -164,8 +168,28 @@ const Canvas: FC<CanvasProps> = (props) => {
       const callback = () => {
         const ctx = canvas.getContext("2d");
         if (ctx) {
-          ctx.fillStyle = "white";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          if (imgSrc) {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.src = imgSrc;
+            img.onload = function () {
+              const { width, height } = img;
+              /*1.在canvas 中绘制图像*/
+              ctx.drawImage(img, 0, 0);
+              /*2.从canvas 中获取图像的ImageData*/
+              const imgData = ctx.getImageData(0, 0, width, height);
+              /*3.在canvas 中显示ImageData*/
+              ctx.putImageData(
+                imgData,
+                //位置
+                0,
+                height
+              );
+            };
+          } else {
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          }
         }
       };
       dispatcher.on(CLEAR_EVENT, callback);
@@ -229,9 +253,10 @@ const Canvas: FC<CanvasProps> = (props) => {
   // 注册画布size事件
   const canvasPain = (ctx: any, width: number, height: number, canvasData: any) => {
     if (ctx) {
-      ctx.fillStyle = "white";
+      // ctx.fillStyle = "white";
       ctx.fillRect(0, 0, width, height);
       if (canvasData) {
+        // const bg = ctx.createPattern(canvasData, "no-repeat");
         Tool.ctx.putImageData(canvasData, 0, 0);
       } else {
         snapshot.add(ctx.getImageData(0, 0, width, height));
@@ -314,9 +339,10 @@ const Canvas: FC<CanvasProps> = (props) => {
         height={CanvasHeight || "100%"}
         style={{ background: background || "#fff" }}
       ></canvas>
-      <div className="canvas-text" style={{ width: CanvasWidth, height: CanvasHeight }}>
-        <TextBox />
-      </div>
+      <TextBox />
+
+      {/* <div className="canvas-text" id="canvas-text" style={{ width: CanvasWidth, height: CanvasHeight }}>
+      </div> */}
     </>
   );
 };
