@@ -31,6 +31,7 @@ interface PaintProps {
 }
 
 function Paint(props: PaintProps): JSX.Element {
+  console.log("==props==57", props);
   const { id = "test", imgSrc, width, height, background, onClick, cRef } = props;
   const [toolType, setToolType] = useState<ToolType>(ToolType.PEN);
   const [shapeType, setShapeType] = useState<ShapeToolType>(ShapeToolType.LINE);

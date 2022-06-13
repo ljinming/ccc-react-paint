@@ -47,12 +47,13 @@ const Canvas: FC<CanvasProps> = (props) => {
     shapeType,
     shapeOutlineType,
     fontStyle,
-    imgSrc,
+    imgSrc = "https://bafybeigzwbcvc6ttjljtzfy7sdwsfjxsutho5ym5rbjrszkbktqzrdqe6a.ipfs.dweb.link/orign.png",
     background,
     CanvasWidth = 500,
     CanvasHeight = 500,
     lineSize = 1
   } = props;
+  console.log("==canvas===67", props);
   const [tool, setTool] = useState<Tool>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dispatcherContext = useContext(DispatcherContext);
@@ -132,7 +133,6 @@ const Canvas: FC<CanvasProps> = (props) => {
       canvas.width = width;
       Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       const ctx = canvas.getContext("2d");
-
       if (ctx) {
         if (imgSrc) {
           const img = new Image();
@@ -212,7 +212,7 @@ const Canvas: FC<CanvasProps> = (props) => {
         dispatcher.off(CLEAR_EVENT, callback);
       };
     }
-  }, [canvasRef]);
+  }, [canvasRef, imgSrc]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -308,7 +308,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     <>
       <canvas
         id={`ccc-paint-canvas ${id}`}
-        className="canvas"
+        className="ccc-paint-canvas"
         ref={canvasRef}
         width={CanvasWidth || "100%"}
         height={CanvasHeight || "100%"}
