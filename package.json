@@ -35,6 +35,9 @@
     "dist": "webpack --config webpack/webpack.dist.prod.config.js",
     "rollup-build": "cross-env NODE_ENV=production rollup -c"
   },
+   "peerDependencies": {
+    "react": ">=17"
+  },
   "lint-staged": {
     "src/**/*.{jsx,tsx,ts,js,vue}": [
       "eslint --fix",
