@@ -1,6 +1,6 @@
 import React from "react";
 import { useContext } from "react";
-import { FillContext } from "../../../../context";
+import { FillContext } from "@/context";
 import { ColorBox, createColor } from "material-ui-color";
 import "./index.less";
 import { useState } from "react";

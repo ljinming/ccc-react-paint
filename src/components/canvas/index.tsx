@@ -2,32 +2,15 @@ import React from "react";
 import "./index.less";
 import { useEffect } from "react";
 import { useRef } from "react";
-import {
-  LineWidthType,
-  ShapeOutlineType,
-  ShapeToolType,
-  ToolType,
-} from "../../util/toolType";
+import { LineWidthType, ShapeOutlineType, ShapeToolType, ToolType } from "../../util/toolType";
 import { FC } from "react";
 import { useState } from "react";
 import TextBox from "./TextBox";
-import {
-  Pen,
-  Tool,
-  Eraser,
-  ColorExtract,
-  ColorFill,
-  Text,
-} from "../../util/tool";
+import { Pen, Tool, Eraser, ColorExtract, ColorFill, Text } from "../../util/tool";
 import Shape from "../../util/tool/shape";
 import { useContext } from "react";
 import { DispatcherContext } from "../../context";
-import {
-  CLEAR_EVENT,
-  REDO_EVENT,
-  RESIZE,
-  UNDO_EVENT,
-} from "../../util/dispatcher/event";
+import { CLEAR_EVENT, REDO_EVENT, UNDO_EVENT } from "../../util/dispatcher/event";
 import SnapShot from "../../util/snapshot";
 import Snapshot from "../../util/snapshot";
 
@@ -42,8 +25,10 @@ interface CanvasProps {
   fillColor: string;
   fontStyle: any;
   imgSrc?: string;
+  CanvasSize: any;
+  id: string;
   CanvasWidth?: number;
-  CanvasSize?: any;
+  background?: string;
   CanvasHeight?: number;
   onClick?: (type: any) => void;
   setColor: (value: string) => void;
@@ -51,23 +36,24 @@ interface CanvasProps {
 
 const Canvas: FC<CanvasProps> = (props) => {
   const {
+    id,
     toolType,
     lineWidthType,
     mainColor,
     subColor,
-    CanvasSize,
     setColor,
+    CanvasSize,
     fillColor,
     shapeType,
     shapeOutlineType,
     fontStyle,
     imgSrc,
-    CanvasHeight = 800,
-    CanvasWidth = 800,
-    lineSize = 1,
+    background,
+    CanvasWidth = 500,
+    CanvasHeight = 500,
+    lineSize = 1
   } = props;
   const [tool, setTool] = useState<Tool>();
-  const [showArea, setShow] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dispatcherContext = useContext(DispatcherContext);
   const [snapshot] = useState<SnapShot>(new Snapshot());
@@ -90,9 +76,7 @@ const Canvas: FC<CanvasProps> = (props) => {
         setTool(new Text(fontStyle));
         break;
       case ToolType.SHAPE:
-        setTool(
-          new Shape(shapeType, shapeOutlineType === ShapeOutlineType.DOTTED)
-        );
+        setTool(new Shape(shapeType, shapeOutlineType === ShapeOutlineType.DOTTED));
         break;
       default:
         break;
@@ -142,14 +126,39 @@ const Canvas: FC<CanvasProps> = (props) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
-      const height = CanvasHeight || canvas.clientHeight;
-      const width = CanvasWidth || canvas.clientWidth;
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
       canvas.height = height;
       canvas.width = width;
-      console.log("===546", width, height, CanvasWidth, CanvasHeight);
       Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       const ctx = canvas.getContext("2d");
-      canvasPain(ctx, width, height, null);
+
+      if (ctx) {
+        if (imgSrc) {
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          img.src = imgSrc;
+          img.onload = function () {
+            const { width, height } = img;
+            /*1.在canvas 中绘制图像*/
+            ctx.drawImage(img, 0, 0);
+            /*2.从canvas 中获取图像的ImageData*/
+            const imgData = ctx.getImageData(0, 0, width, height);
+            /*3.在canvas 中显示ImageData*/
+            ctx.putImageData(
+              imgData,
+              //位置
+              0,
+              height
+            );
+          };
+        } else {
+          ctx.fillStyle = background || "white";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        if (ctx.getImageData) snapshot.add(ctx.getImageData(0, 0, width, height));
+      }
+
       // 注册清空画布事件
       const dispatcher = dispatcherContext.dispatcher;
       const callback = () => {
@@ -188,15 +197,8 @@ const Canvas: FC<CanvasProps> = (props) => {
       dispatcher.on(UNDO_EVENT, back);
 
       const changeSize = () => {
-        const canvasData = Tool.ctx.getImageData(
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
-        console.log("---4", CanvasSize);
+        const canvasData = Tool.ctx.getImageData(0, 0, canvas.width, canvas.height);
         canvasPain(Tool.ctx, width, height, canvasData);
-        Tool.ctx.scale(122, 122);
         // canvas.height = canvas.clientHeight;
         // canvas.width = canvas.clientWidth;
         // // Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
@@ -204,7 +206,6 @@ const Canvas: FC<CanvasProps> = (props) => {
         // Tool.ctx.fillRect(0, 0, canvas.width, canvas.height);
         // Tool.ctx.putImageData(canvasData, 0, 0);
       };
-
       window.addEventListener("resize", changeSize);
 
       return () => {
@@ -215,14 +216,8 @@ const Canvas: FC<CanvasProps> = (props) => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    console.log("=====3", CanvasSize);
     if (canvas) {
-      const canvasData = Tool.ctx.getImageData(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
+      const canvasData = Tool.ctx.getImageData(0, 0, canvas.width, canvas.height);
       const height = CanvasSize.height || canvas.clientHeight;
       const width = CanvasSize.width || canvas.clientWidth;
       canvas.height = height;
@@ -232,16 +227,9 @@ const Canvas: FC<CanvasProps> = (props) => {
   }, [CanvasSize]);
 
   // 注册画布size事件
-
-  const canvasPain = (
-    ctx: any,
-    width: number,
-    height: number,
-    canvasData: any
-  ) => {
-    console.log("===45", ctx, width, height);
+  const canvasPain = (ctx: any, width: number, height: number, canvasData: any) => {
     if (ctx) {
-      ctx.fillStyle = "#fff";
+      ctx.fillStyle = "white";
       ctx.fillRect(0, 0, width, height);
       if (canvasData) {
         Tool.ctx.putImageData(canvasData, 0, 0);
@@ -268,14 +256,7 @@ const Canvas: FC<CanvasProps> = (props) => {
       tool.onMouseUp(event);
 
       // 存储canvas剪影
-      snapshot.add(
-        Tool.ctx.getImageData(
-          0,
-          0,
-          Tool.ctx.canvas.width,
-          Tool.ctx.canvas.height
-        )
-      );
+      snapshot.add(Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height));
     }
   };
 
@@ -297,9 +278,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
 
     // 存储canvas剪影
-    snapshot.add(
-      Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height)
-    );
+    snapshot.add(Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height));
   };
 
   useEffect(() => {
@@ -328,13 +307,16 @@ const Canvas: FC<CanvasProps> = (props) => {
   return (
     <>
       <canvas
-        id="ccc-paint-canvas"
+        id={`ccc-paint-canvas ${id}`}
         className="canvas"
         ref={canvasRef}
-        width="100%"
-        height="100%"
+        width={CanvasWidth || "100%"}
+        height={CanvasHeight || "100%"}
+        style={{ background: background || "#fff" }}
       ></canvas>
-      <TextBox />
+      <div className="canvas-text" style={{ width: CanvasWidth, height: CanvasHeight }}>
+        <TextBox />
+      </div>
     </>
   );
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { useContext } from "react";
-import { ColorContext } from "../../../../../context";
-import { ColorType } from "../../../../../util/toolType";
+import { ColorContext } from "@/context";
+import { ColorType } from "../../../../util/toolType";
 import { ColorBox, createColor } from "material-ui-color";
 import "./index.less";
 import { useState } from "react";
@@ -31,16 +31,9 @@ const ColorPanel: React.FC<ColorPanelProps> = (props) => {
           <div className="color-result">
             <div
               onClick={() => colorContext.setActiveColor(ColorType.MAIN)}
-              className={
-                activeColorType === ColorType.MAIN
-                  ? `main-color ${activeColorTypeCls}`
-                  : "main-color"
-              }
+              className={activeColorType === ColorType.MAIN ? `main-color ${activeColorTypeCls}` : "main-color"}
             >
-              <div
-                className="color-box1"
-                style={{ backgroundColor: colorContext.mainColor }}
-              />
+              <div className="color-box1" style={{ backgroundColor: colorContext.mainColor }} />
               <div>{title}</div>
             </div>
           </div>

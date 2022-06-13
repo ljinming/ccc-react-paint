@@ -27,6 +27,7 @@ import nested from "postcss-nested";
 import postcssPresetEnv from "postcss-preset-env";
 // css代码压缩
 import cssnano from "cssnano";
+import alias from "@rollup/plugin-alias";
 
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import ts from "rollup-plugin-typescript2";
@@ -35,7 +36,6 @@ import path from "path";
 const env = process.env.NODE_ENV;
 
 export default {
-  // 入口文件我这里在components下统一导出所有自定义的组件
   input: "src/entry.ts",
   // 输出文件夹，可以是个数组输出不同格式（umd,cjs,es...）通过env是否是生产环境打包来决定文件命名是否是.min
   output: [
@@ -61,7 +61,7 @@ export default {
     }
   },
   // 将模块视为外部模块，不会打包在库中
-  external: ["react", "react-is", "prop-types", "react/jsx-runtime",'material-ui-color','@material-ui/core/Slider'],  // 插件
+  external: ["react", "react-is", "prop-types", "react/jsx-runtime", "material-ui-color", "@material-ui/core/Slider"], // 插件
   // 插件
   plugins: [
     image(),
@@ -84,32 +84,21 @@ export default {
       plugins: ["@babel/plugin-external-helpers"]
     }),
     commonjs(),
-    // 这里有些引入使用某个库的api但报未导出改api通过namedExports来手动导出
-    // commonjs({
-    //   namedExports: {
-    //     "node_modules/react-is/index.js": ["isFragment"],
-    //     "node_modules/react/index.js": [
-    //       "Fragment",
-    //       "cloneElement",
-    //       "isValidElement",
-    //       "Children",
-    //       "createContext",
-    //       "Component",
-    //       "useRef",
-    //       "useImperativeHandle",
-    //       "forwardRef",
-    //       "useState",
-    //       "useEffect",
-    //       "useMemo"
-    //     ],
-    //     "node_modules/react-dom/index.js": ["render", "unmountComponentAtNode", "findDOMNode"]
-    //   }
-    // }),
     nodeResolve({
       extensions: [".js", ".jsx", ".ts", ".tsx"]
     }),
     ts({
       tsconfig: path.resolve(__dirname, "tsconfig.json")
+    }),
+    alias({
+      entries: {
+        "@/src": ["src/*"],
+        "@/components": ["src/components"],
+        "@/util": ["src/util"],
+        "@/context": ["src/context"],
+        "@/assets": ["src/assets"],
+        "@/icon": ["src/assets/icon"]
+      }
     }),
     // 全局替换NODE_ENV，exclude表示不包含某些文件夹下的文件
     replace({

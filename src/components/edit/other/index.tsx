@@ -4,7 +4,7 @@ import UndoIcon from "@material-ui/icons/Undo";
 import RedoIcon from "@material-ui/icons/Redo";
 import "./index.less";
 import { useContext } from "react";
-import { DispatcherContext } from "../../../context";
+import { DispatcherContext } from "@/context";
 import { CLEAR_EVENT, REDO_EVENT, UNDO_EVENT } from "../../../util/dispatcher/event";
 import Resize from "./Resize";
 const OtherOperator = () => {

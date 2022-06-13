@@ -4,83 +4,86 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
-import {
-  ShapeOutlineContext,
-  ShapeTypeContext,
-  ToolTypeContext,
-} from "../../../../../context";
-import {
-  ShapeOutlineType,
-  ShapeToolType,
-  ToolType,
-} from "../../../../../util/toolType";
+import { ShapeOutlineContext, ShapeTypeContext, ToolTypeContext } from "@/context";
+import { ShapeOutlineType, ShapeToolType, ToolType } from "../../../../util/toolType";
 import "./index.less";
 
+import shape_line from "@/icon/shape_line.svg";
+import shape_rect from "@/icon/shape_rect.svg";
+import shape_circle from "@/icon/shape_circle.svg";
+import shape_rhombus from "@/icon/shape_rhombus.svg";
+import shape_triangle from "@/icon/shape_triangle.svg";
+import shape_pentagon from "@/icon/shape_pentagon.svg";
+import shape_sexangle from "@/icon/shape_sexangle.svg";
+import shape_arrowtop from "@/icon/shape_arrowtop.svg";
+import shape_arrowright from "@/icon/shape_arrowright.svg";
+import shape_arrowdown from "@/icon/shape_arrowdown.svg";
+import shape_arrowleft from "@/icon/shape_arrowleft.svg";
+import shape_fourstar from "@/icon/shape_fourstar.svg";
 const selectedShapeClass = "selected-shape";
 
 const shapes = [
   {
     type: ShapeToolType.LINE,
-    img: "./icon/shape_line.svg",
-    title: "直线",
+    img: shape_line,
+    title: "直线"
   },
   {
     type: ShapeToolType.RECT,
-    img: "./icon/shape_rect.svg",
-    title: "矩形",
+    img: shape_rect,
+    title: "矩形"
   },
   {
     type: ShapeToolType.CIRCLE,
-    img: "./icon/shape_circle.svg",
-    title: "圆（椭圆）",
+    img: shape_circle,
+    title: "圆（椭圆）"
   },
   {
     type: ShapeToolType.RHOMBUS,
-    img: "./icon/shape_rhombus.svg",
-    title: "菱形",
+    img: shape_rhombus,
+    title: "菱形"
   },
   {
     type: ShapeToolType.TRIANGLE,
-    img: "./icon/shape_triangle.svg",
-    title: "三角形",
+    img: shape_triangle,
+    title: "三角形"
   },
   {
     type: ShapeToolType.PENTAGON,
-    img: "./icon/shape_pentagon.svg",
-    title: "五边形",
+    img: shape_pentagon,
+    title: "五边形"
   },
   {
     type: ShapeToolType.SEXANGLE,
-    img: "./icon/shape_sexangle.svg",
-    title: "六边形",
+    img: shape_sexangle,
+    title: "六边形"
   },
   {
     type: ShapeToolType.ARROW_TOP,
-    img: "./icon/shape_arrowtop.svg",
-    title: "上箭头",
+    img: shape_arrowtop,
+    title: "上箭头"
   },
   {
     type: ShapeToolType.ARROW_RIGHT,
-    img: "./icon/shape_arrowright.svg",
-    title: "右箭头",
+    img: shape_arrowright,
+    title: "右箭头"
   },
   {
     type: ShapeToolType.ARROW_DOWN,
-    img: "./icon/shape_arrowdown.svg",
-    title: "下箭头",
+    img: shape_arrowdown,
+    title: "下箭头"
   },
   {
     type: ShapeToolType.ARROW_LEFT,
-    img: "./icon/shape_arrowleft.svg",
-    title: "左箭头",
+    img: shape_arrowleft,
+    title: "左箭头"
   },
   {
     type: ShapeToolType.FOUR_STAR,
-    img: "./icon/shape_fourstar.svg",
-    title: "四角星",
-  },
+    img: shape_fourstar,
+    title: "四角星"
+  }
 ];
-
 interface ShapePanelProps {
   className?: string;
 }
@@ -94,18 +97,11 @@ const ShapePanel: React.FC<ShapePanelProps> = (props) => {
     <div className={className ? `shapepanel ${className}` : "shapepanel"}>
       <div className="shape-container">
         <div className="shape-style">
-          <FormControl
-            variant="outlined"
-            disabled={toolTypeContex.type === ToolType.SHAPE ? false : true}
-          >
+          <FormControl variant="outlined" disabled={toolTypeContex.type === ToolType.SHAPE ? false : true}>
             <InputLabel>轮廓</InputLabel>
             <Select
               value={shapeOutlineContext.type}
-              onChange={(event) =>
-                shapeOutlineContext.setType(
-                  event.target.value as ShapeOutlineType
-                )
-              }
+              onChange={(event) => shapeOutlineContext.setType(event.target.value as ShapeOutlineType)}
               label="轮廓"
             >
               <MenuItem value={ShapeOutlineType.SOLID}>实线</MenuItem>
@@ -122,8 +118,7 @@ const ShapePanel: React.FC<ShapePanelProps> = (props) => {
                   key={shape.img}
                   title={shape.title}
                   className={
-                    type === shape.type &&
-                    toolTypeContex.type === ToolType.SHAPE
+                    type === shape.type && toolTypeContex.type === ToolType.SHAPE
                       ? `shape-item ${selectedShapeClass}`
                       : "shape-item"
                   }

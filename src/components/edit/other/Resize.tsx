@@ -2,7 +2,7 @@ import React from "react";
 import { Dialog, TextField, Button } from "@material-ui/core";
 import "./index.less";
 import { useContext } from "react";
-import { SizeContext } from "../../../context";
+import { SizeContext } from "@/context";
 
 const OtherOperator = () => {
   const [open, setOpen] = React.useState(false);
@@ -13,7 +13,7 @@ const OtherOperator = () => {
   const setResize = () => {
     sizeContext.onSize({
       width: Number(width),
-      height: Number(height),
+      height: Number(height)
     });
   };
 
@@ -72,12 +72,7 @@ const OtherOperator = () => {
             >
               Cancel
             </Button>
-            <Button
-              color="primary"
-              variant="outlined"
-              className="resize-content-okBtn"
-              onClick={handleResize}
-            >
+            <Button color="primary" variant="outlined" className="resize-content-okBtn" onClick={handleResize}>
               Resize
             </Button>
           </div>

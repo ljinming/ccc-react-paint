@@ -1,15 +1,14 @@
 import React from "react";
 import CreateTwoTone from "@material-ui/icons/CreateTwoTone";
 import FormatColorFillTwoTone from "@material-ui/icons/FormatColorFillTwoTone";
-import ColorizeTwoToneIcon from "@material-ui/icons/ColorizeTwoTone";
 import AccessAlarm from "@material-ui/icons/AccessAlarm";
-// import SearchTwoToneIcon from "@material-ui/icons/SearchTwoTone";
 import TextFieldsIcon from "@material-ui/icons/TextFields";
-import { ToolType } from "../../../util/toolType";
-import { ToolTypeContext } from "../../../context";
+import { ToolType } from "../../util/toolType";
+import { ToolTypeContext } from "@/context";
 import "./index.less";
-
+import eraser from "@/icon/eraser.svg";
 const selectedToolClass = "selected-tool";
+
 export interface ToolPanelProps {
   className?: string;
 }
@@ -23,11 +22,7 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
           <>
             <span title="铅笔" className="tool-Icon">
               <CreateTwoTone
-                className={
-                  type === ToolType.PEN
-                    ? `tool-item ${selectedToolClass}`
-                    : "tool-item"
-                }
+                className={type === ToolType.PEN ? `tool-item ${selectedToolClass}` : "tool-item"}
                 onClick={() => {
                   setType(ToolType.PEN);
                 }}
@@ -35,12 +30,8 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
             </span>
             <span title="橡皮擦" className="tool-Icon">
               <img
-                src="./icon/eraser.svg"
-                className={
-                  type === ToolType.ERASER
-                    ? `tool-item ${selectedToolClass}`
-                    : "tool-item"
-                }
+                src={eraser}
+                className={type === ToolType.ERASER ? `tool-item ${selectedToolClass}` : "tool-item"}
                 onClick={() => {
                   setType(ToolType.ERASER);
                 }}
@@ -48,11 +39,7 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
             </span>
             <span title="填充" className="tool-Icon">
               <FormatColorFillTwoTone
-                className={
-                  type === ToolType.COLOR_FILL
-                    ? `tool-item ${selectedToolClass}`
-                    : "tool-item"
-                }
+                className={type === ToolType.COLOR_FILL ? `tool-item ${selectedToolClass}` : "tool-item"}
                 onClick={() => {
                   setType(ToolType.COLOR_FILL);
                 }}
@@ -60,11 +47,7 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
             </span>
             <span title="形状" className="tool-Icon">
               <AccessAlarm
-                className={
-                  type === ToolType.SHAPE
-                    ? `tool-item ${selectedToolClass}`
-                    : "tool-item"
-                }
+                className={type === ToolType.SHAPE ? `tool-item ${selectedToolClass}` : "tool-item"}
                 onClick={() => {
                   setType(ToolType.SHAPE);
                 }}
@@ -84,11 +67,7 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
             </span> */}
             <span title="文字" className="tool-Icon">
               <TextFieldsIcon
-                className={
-                  type === ToolType.TEXT
-                    ? `tool-item ${selectedToolClass}`
-                    : "tool-item"
-                }
+                className={type === ToolType.TEXT ? `tool-item ${selectedToolClass}` : "tool-item"}
                 onClick={() => {
                   setType(ToolType.TEXT);
                 }}

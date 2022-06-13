@@ -1,6 +1,6 @@
 {
   "name": "ccc-react-paint",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "keywords": [
     "ccc",
     "paint",
@@ -13,6 +13,7 @@
     "@babel/preset-typescript": "^7.17.12",
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
+    "@rollup/plugin-alias": "^3.1.9",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "color": "^3.1.3",
     "customize-cra": "^1.0.0",
@@ -35,7 +36,7 @@
     "dist": "webpack --config webpack/webpack.dist.prod.config.js",
     "rollup-build": "cross-env NODE_ENV=production rollup -c"
   },
-   "peerDependencies": {
+  "peerDependencies": {
     "react": ">=17"
   },
   "lint-staged": {

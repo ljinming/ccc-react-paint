@@ -79,7 +79,7 @@ class Text extends Tool {
   public onMouseDown(event: MouseEvent): void {
     // 鼠标按下位置保存
 
-    event.preventDefault();
+    // event.preventDefault();
 
     if (this.isMouseDown) {
       this.textContent = this.textBox.value;
@@ -97,10 +97,10 @@ class Text extends Tool {
           this.textBox.style[va] = this.fontStyle[va];
         });
       }
+      this.textBox.style.visibility = "visible";
       this.textBox.style.left = this._x + "px";
       this.textBox.style.top = this._y + "px";
       this.textBox.style["z-index"] = 6;
-      this.textBox.style.visibility = "visible";
     }
   }
 }

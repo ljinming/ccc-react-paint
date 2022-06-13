@@ -1,13 +1,11 @@
 import React, { useEffect } from "react";
 import "./index.less";
-import { ToolType } from "../../../util/toolType";
+import { ToolType } from "../../util/toolType";
 import { FC } from "react";
 import ShowPen from "./pen";
-import ShowShape from "./shape";
+import ShowShape from "./showShape";
 import FormatColor from "./formatColor";
 import Text from "./text";
-import { useMemo } from "react";
-import { useState } from "react";
 interface ToolbarProps {
   toolType: ToolType;
 }

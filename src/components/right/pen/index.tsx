@@ -1,9 +1,6 @@
-import React from "react";
-import { FC } from "react";
+import React, { FC } from "react";
 import { useContext } from "react";
-import { LineWidthContext } from "../../../../context";
-import { LineWidthType } from "../../../../util/toolType";
-
+import { LineWidthContext } from "@/context";
 import IntegerStep from "../components/slider";
 import ColorPanel from "../components/colorPanel";
 import "./index.less";

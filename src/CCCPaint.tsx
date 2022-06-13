@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Ref, useImperativeHandle } from "react";
 import Canvas from "./components/canvas";
 import {
   ToolTypeContext,
@@ -9,45 +9,37 @@ import {
   FillContext,
   TextContext,
   SizeContext,
-  DispatcherContext,
+  DispatcherContext
 } from "./context";
 import "./style.less";
 import { useState } from "react";
-import {
-  ColorType,
-  LineWidthType,
-  ShapeOutlineType,
-  ShapeToolType,
-  ToolType,
-} from "./util/toolType";
-import ToolPanel from "./components/toolBar/tool";
+import { ColorType, LineWidthType, ShapeOutlineType, ShapeToolType, ToolType } from "./util/toolType";
+import ToolPanel from "./components/tool";
 import Dispatcher from "./util/dispatcher";
-import Right from "./components/toolBar/right";
+import Right from "./components/right";
 import Edit from "./components/edit";
+import "@/assets/font.css";
 
 interface PaintProps {
   imgSrc?: string;
   width?: number;
   height?: number;
+  background?: string;
+  id?: string;
+  cRef?: any;
   onClick?: (type: any) => void;
 }
 
 function Paint(props: PaintProps): JSX.Element {
-  const { imgSrc, width, height, onClick } = props;
-  const [size, setSize] = useState({});
+  const { id = "test", imgSrc, width, height, background, onClick, cRef } = props;
   const [toolType, setToolType] = useState<ToolType>(ToolType.PEN);
   const [shapeType, setShapeType] = useState<ShapeToolType>(ShapeToolType.LINE);
-  const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(
-    ShapeOutlineType.SOLID
-  );
-  const [lineWidthType, setLineWidthType] = useState<LineWidthType>(
-    LineWidthType.LINESIZE
-  );
+  const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(ShapeOutlineType.SOLID);
+  const [lineWidthType, setLineWidthType] = useState<LineWidthType>(LineWidthType.LINESIZE);
   const [lineSize, setLineFontSize] = useState<number>(1);
   const [fillColor, setFillColor] = useState<string>("");
-  const [activeColorType, setActiveColorType] = useState<ColorType>(
-    ColorType.MAIN
-  );
+  const [size, setSize] = useState({ width, height });
+  const [activeColorType, setActiveColorType] = useState<ColorType>(ColorType.MAIN);
   const [fontStyle, setFontStyle] = useState({});
   const [mainColor, setMainColor] = useState<string>("black");
   const [subColor, setSubColor] = useState<string>("white");
@@ -61,6 +53,14 @@ function Paint(props: PaintProps): JSX.Element {
     }
   };
 
+  useImperativeHandle(cRef, () => ({
+    getCurrentImageData: () => {
+      const canvasElem: any = document.getElementById(`ccc-paint-canvas ${id}`);
+      const imageData = canvasElem.toDataURL("image/png");
+      return imageData;
+    }
+  }));
+
   return (
     <ToolTypeContext.Provider value={{ type: toolType, setType: setToolType }}>
       <ShapeTypeContext.Provider
@@ -69,18 +69,16 @@ function Paint(props: PaintProps): JSX.Element {
           setType: (type: ShapeToolType) => {
             setToolType(ToolType.SHAPE);
             setShapeType(type);
-          },
+          }
         }}
       >
-        <ShapeOutlineContext.Provider
-          value={{ type: shapeOutlineType, setType: setShapeOutlineType }}
-        >
+        <ShapeOutlineContext.Provider value={{ type: shapeOutlineType, setType: setShapeOutlineType }}>
           <LineWidthContext.Provider
             value={{
               type: lineWidthType,
               lineSize: lineSize,
               setType: setLineWidthType,
-              setLineSize: setLineFontSize,
+              setLineSize: setLineFontSize
             }}
           >
             <DispatcherContext.Provider value={{ dispatcher }}>
@@ -90,20 +88,20 @@ function Paint(props: PaintProps): JSX.Element {
                   subColor,
                   activeColor: activeColorType,
                   setColor,
-                  setActiveColor: setActiveColorType,
+                  setActiveColor: setActiveColorType
                 }}
               >
                 <SizeContext.Provider value={{ size, onSize: setSize }}>
                   <FillContext.Provider
                     value={{
                       fillColor,
-                      setFillColor,
+                      setFillColor
                     }}
                   >
                     <TextContext.Provider
                       value={{
                         fontStyle,
-                        setFont: setFontStyle,
+                        setFont: setFontStyle
                       }}
                     >
                       <div className="ccc">
@@ -114,9 +112,12 @@ function Paint(props: PaintProps): JSX.Element {
                           <div className="ToolPanel">
                             <ToolPanel className="toolbar-item" />
                           </div>
-                          <div className="show-Canvas" id="show-canvas">
+                          <div className="show-Canvas">
                             <Canvas
+                              id={id}
+                              CanvasSize={size}
                               imgSrc={imgSrc}
+                              background={background}
                               onClick={onClick}
                               CanvasWidth={width}
                               CanvasHeight={height}
@@ -128,7 +129,6 @@ function Paint(props: PaintProps): JSX.Element {
                               mainColor={mainColor}
                               subColor={subColor}
                               lineSize={lineSize}
-                              CanvasSize={size}
                               lineWidthType={lineWidthType}
                               setColor={setColor}
                             />
