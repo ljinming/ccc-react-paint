@@ -5,9 +5,11 @@ import { ColorBox, createColor } from "material-ui-color";
 import "./index.less";
 import { useState } from "react";
 import { useEffect } from "react";
-import { Select, MenuItem, FormControl } from "@material-ui/core";
+import { Select } from "antd";
 import IntegerStep from "../components/slider";
 import { useMemo } from "react";
+
+const { Option } = Select;
 
 interface FormatColor {
   className?: string;
@@ -46,26 +48,23 @@ const FormatColor: React.FC<FormatColor> = (props) => {
       <div className="content">
         <div className="font">
           <h3>Font</h3>
-          <FormControl fullWidth>
-            <Select
-              autoWidth
-              className="ccc-text-family"
-              onChange={(event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-                TextToolContext.setFont({
-                  ...fontStyle,
-                  fontFamily: event.target.value as string
-                });
-              }}
-            >
-              {textFamily.map((va) => {
-                return (
-                  <MenuItem key={va} value={va}>
-                    {va}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
+          <Select
+            className="ccc-text-family"
+            onChange={(value: string) => {
+              TextToolContext.setFont({
+                ...fontStyle,
+                fontFamily: value
+              });
+            }}
+          >
+            {textFamily.map((va) => {
+              return (
+                <Option key={va} value={va}>
+                  {va}
+                </Option>
+              );
+            })}
+          </Select>
         </div>
         <div className="font">
           <h3>Letter Spacing</h3>

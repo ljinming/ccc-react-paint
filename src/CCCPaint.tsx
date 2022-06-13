@@ -18,7 +18,6 @@ import ToolPanel from "./components/tool";
 import Dispatcher from "./util/dispatcher";
 import Right from "./components/right";
 import Edit from "./components/edit";
-import "@/assets/font.css";
 
 interface PaintProps {
   imgSrc?: string;
