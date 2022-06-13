@@ -223,12 +223,6 @@ const Canvas: FC<CanvasProps> = (props) => {
       const changeSize = () => {
         const canvasData = Tool.ctx.getImageData(0, 0, canvas.width, canvas.height);
         canvasPain(Tool.ctx, width, height, canvasData);
-        // canvas.height = canvas.clientHeight;
-        // canvas.width = canvas.clientWidth;
-        // // Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-        // Tool.ctx.fillStyle = "white";
-        // Tool.ctx.fillRect(0, 0, canvas.width, canvas.height);
-        // Tool.ctx.putImageData(canvasData, 0, 0);
       };
       window.addEventListener("resize", changeSize);
 
@@ -253,10 +247,8 @@ const Canvas: FC<CanvasProps> = (props) => {
   // 注册画布size事件
   const canvasPain = (ctx: any, width: number, height: number, canvasData: any) => {
     if (ctx) {
-      // ctx.fillStyle = "white";
       ctx.fillRect(0, 0, width, height);
       if (canvasData) {
-        // const bg = ctx.createPattern(canvasData, "no-repeat");
         Tool.ctx.putImageData(canvasData, 0, 0);
       } else {
         snapshot.add(ctx.getImageData(0, 0, width, height));

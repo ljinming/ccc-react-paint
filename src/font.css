@@ -1,0 +1,54 @@
+@font-face {
+  font-family: "Barlow-ExtraBold";
+  src: url("@/assets/font/Barlow-Extra-Bold.ttf");
+}
+
+@font-face {
+  font-family: "DIN-AlternateBold";
+  src: url("@/assets/font/DIN-Alternate-Bold.ttf");
+}
+
+@font-face {
+  font-family: "Trebuchet-MSBold";
+  src: url("@/assets/font/Trebuchet-MS-Bold.ttf");
+}
+
+@font-face {
+  font-family: "Trebuchet-MS";
+  src: url("@/assets/font/Trebuchet-MS.ttf");
+}
+
+@font-face {
+  font-family: "Poppins-Bold";
+  src: url("@/assets/font/poppins/Poppins-Bold.ttf");
+}
+
+@font-face {
+  font-family: "Poppins-Light";
+  src: url("@/assets/font/poppins/Poppins-Light.ttf");
+}
+
+@font-face {
+  font-family: "Poppins-Medium";
+  src: url("@/assets/font/poppins/Poppins-Medium.ttf");
+}
+
+@font-face {
+  font-family: "Poppins-Regular";
+  src: url("@/assets/font/poppins/Poppins-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Poppins-SemiBold";
+  src: url("@/assets/font/poppins/Poppins-SemiBold.ttf");
+}
+
+body {
+  margin: 0;
+  font-family: Poppins, Poppins-Bold, Poppins-Light, Poppins-Medium, Poppins-Regular, Poppins-SemiBold,
+    BlinkMacSystemFont, Trebuchet-MS, Trebuchet-MSBold, Barlow-ExtraBold, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
+    Fira Sans, Droid Sans;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}

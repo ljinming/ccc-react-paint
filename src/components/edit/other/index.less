@@ -24,55 +24,60 @@
     bottom: 0px;
   }
 }
-
-.resize-content {
-  width: 454px;
-  height: 254px;
-  padding: 40px;
-  background: #ffffff;
-  border-radius: 8px;
-  backdrop-filter: blur(5px);
-  grid-gap: 40px;
-
-  &-input {
-    width: 150px;
-    height: 50px;
-    border-radius: 8px;
-    border: 1px solid #cdd2d9;
+.resize-modal {
+  .ant-modal-content {
+    width: 454px;
+    height: 254px;
   }
-  &-body {
+  .resize-content {
     display: flex;
-    .x {
-      margin: 0px 20px;
-      align-items: center;
-      display: inline-flex;
-      color: #a6aeb7;
-    }
-  }
-  &-footer {
-    margin-top: 40px;
-    display: flex;
-    grid-gap: 40px;
-  }
-  &-celBtn {
-    width: 158px;
-    height: 50px;
+    flex-direction: column;
+    align-items: center;
     background: #ffffff;
-    border-radius: 10px;
-    border: 1px solid #000000 !important;
-    &:focus-visible {
-      border: 1px solid #000000 !important;
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+    &-input {
+      align-items: center;
+      display: flex;
+      width: 150px;
+      height: 50px;
+      border-radius: 8px;
+      border: 1px solid #cdd2d9;
     }
-    &:hover {
-      border: 1px solid #000000 !important;
-      background-color: transparent !important;
+    &-body {
+      display: flex;
+      .x {
+        margin: 0px 20px;
+        align-items: center;
+        display: inline-flex;
+        color: #a6aeb7;
+      }
     }
-  }
-  &-okBtn {
-    width: 158px;
-    height: 50px;
-    background: #000000 !important;
-    border-radius: 10px !important;
-    color: #fff !important;
+    &-footer {
+      margin-top: 40px;
+      display: flex;
+      grid-gap: 40px;
+    }
+    &-celBtn {
+      width: 158px;
+      height: 50px;
+      background: #ffffff;
+      border-radius: 10px;
+      border: 1px solid #000000 !important;
+      &:focus-visible {
+        border: 1px solid #000000 !important;
+      }
+      &:hover {
+        border: 1px solid #000000 !important;
+        background-color: transparent !important;
+      }
+    }
+    &-okBtn {
+      width: 158px;
+      height: 50px;
+      background: #000000 !important;
+      border-radius: 10px !important;
+      color: #fff !important;
+    }
   }
 }

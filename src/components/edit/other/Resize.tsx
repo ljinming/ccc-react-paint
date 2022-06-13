@@ -1,14 +1,13 @@
-import React from "react";
-import { Dialog, Button, TextField } from "@material-ui/core";
-//import { Button } from "antd";
+import React, { useState } from "react";
+import { Button, Modal, InputNumber } from "antd";
 import "./index.less";
 import { useContext } from "react";
 import { SizeContext } from "@/context";
 
 const OtherOperator = () => {
-  const [open, setOpen] = React.useState(false);
-  const [width, setWidth] = React.useState(null);
-  const [height, setHeight] = React.useState(null);
+  const [open, setOpen] = useState(false);
+  const [width, setWidth] = React.useState(undefined);
+  const [height, setHeight] = React.useState(undefined);
   const sizeContext = useContext(SizeContext);
 
   const setResize = () => {
@@ -23,43 +22,47 @@ const OtherOperator = () => {
     setResize();
   };
 
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  console.log("=open", open);
   return (
     <span title="resize">
       <span
         onClick={() => {
+          console.log("click");
           setOpen(true);
         }}
       >
         RESIZE
       </span>
-      <Dialog
-        open={open}
-        aria-describedby="modal-description"
-        onClose={() => setOpen(false)}
-        aria-labelledby="Resize Graphic"
+      <Modal
+        visible={open}
+        title="Resize Graphic"
+        wrapClassName="resize-modal"
+        footer={null}
+        width={454}
+        onCancel={() => setOpen(false)}
       >
         <div className="resize-content">
           <div className="resize-content-body">
-            <TextField
+            <InputNumber
               className="resize-content-input"
               value={width}
               id="outlined-basic"
-              label="width (px)"
-              variant="outlined"
-              onChange={(e: any) => {
-                setWidth(e.target.value);
+              onChange={(value: any) => {
+                setWidth(value);
               }}
             />
             <span className="x">X</span>
-            <TextField
+            <InputNumber
               value={height}
-              onChange={(e: any) => {
-                setHeight(e.target.value);
+              onChange={(value: any) => {
+                setHeight(value);
               }}
               className="resize-content-input"
               id="outlined-basic"
-              label="height (px)"
-              variant="outlined"
             />
           </div>
 
@@ -82,7 +85,7 @@ const OtherOperator = () => {
             </Button>
           </div>
         </div>
-      </Dialog>
+      </Modal>
     </span>
   );
 };
