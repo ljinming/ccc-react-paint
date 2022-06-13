@@ -1,6 +1,4 @@
-import zIndex from "@material-ui/core/styles/zIndex";
-import { ShapeToolType } from "../toolType";
-import Tool, { Point, getMousePos, getTouchPos, hexToRgb, updateImageData } from "./tool";
+import Tool from "./tool";
 
 // interface propsInput = {
 //             x?: number,
@@ -23,7 +21,6 @@ class Text extends Tool {
     this._x = NaN;
     this._y = NaN;
     this.textBox = document.getElementById("textBox");
-    this.canvas = document.getElementById("ccc-paint-canvas");
     this.canvasText = document.getElementById("canvas-text");
 
     this.textContent = "";
@@ -36,21 +33,17 @@ class Text extends Tool {
       return;
     } else {
       // 设置画笔的颜色和大小
-
       context.fillStyle = "#000"; // 填充颜色为红色
-      // context.strokeStyle = "blue"; // 画笔的颜色
       context.lineWidth = 5; // 指定描边线的宽度
       context.font = "10px";
-
-      if (this.canvas && this.fontStyle) {
-        const { fontSize = 12, fontFamily, letterSpacing } = this.fontStyle;
+      if (context && this.fontStyle) {
+        const { fontSize = "12px", fontFamily, letterSpacing } = this.fontStyle;
         context.fillStyle = this.textBox.color || "#000";
-        context.font = `${fontSize} ${fontFamily}`; // 指定描边线的宽度
-        this.canvas.style.letterSpacing = letterSpacing;
+        context.font = `${fontSize} ${fontFamily}`;
+        if (context.canvas && letterSpacing) {
+          context.canvas.style.letterSpacing = letterSpacing;
+        }
       }
-
-      context.save();
-      context.beginPath();
 
       // 写字
       //   const width = this.canvas.offsetWidth;
@@ -75,8 +68,6 @@ class Text extends Tool {
       //     +"</body></foreignObject></svg>";
       context.fillText(this.textContent, parseInt(this.textBox.style.left), parseInt(this.textBox.style.top));
       // this.wrapText(this.textContent, parseInt(this.textBox.style.left), parseInt(this.textBox.style.top));
-      context.restore();
-      context.closePath();
     }
   }
 
@@ -87,8 +78,8 @@ class Text extends Tool {
     if (this.isMouseDown) {
       this.textContent = this.textBox.value;
       this.isMouseDown = false;
-      this.textBox.style["z-index"] = 1;
-      //  this.canvasText.style["z-index"] = 1;
+      this.textBox.style["z-index"] = -1;
+      this.canvasText.style["z-index"] = -1;
       this.textBox.style.visibility = "hidden";
       this.drawing(this._x, this._y);
       this.textBox.value = "";
@@ -96,12 +87,13 @@ class Text extends Tool {
       this._x = event.offsetX; // 鼠标按下时保存当前位置，为起始位置
       this._y = event.offsetY;
       this.isMouseDown = true;
+      this.textBox.value = "";
       if (typeof this.fontStyle === "object") {
         Object.keys(this.fontStyle).forEach((va) => {
           this.textBox.style[va] = this.fontStyle[va];
         });
       }
-      //  this.canvasText.style["z-index"] = 5;
+      this.canvasText.style["z-index"] = 5;
       this.textBox.style["z-index"] = 6;
       this.textBox.style.visibility = "visible";
       this.textBox.style.left = this._x + "px";

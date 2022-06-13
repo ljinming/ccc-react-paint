@@ -1,12 +1,13 @@
 import React from "react";
-import CreateTwoTone from "@material-ui/icons/CreateTwoTone";
 import FormatColorFillTwoTone from "@material-ui/icons/FormatColorFillTwoTone";
-import AccessAlarm from "@material-ui/icons/AccessAlarm";
 import TextFieldsIcon from "@material-ui/icons/TextFields";
 import { ToolType } from "../../util/toolType";
 import { ToolTypeContext } from "@/context";
 import "./index.less";
 import eraser from "@/icon/eraser.svg";
+import shape from "@/icon/shape.svg";
+import pen from "@/icon/pen.svg";
+
 const selectedToolClass = "selected-tool";
 
 export interface ToolPanelProps {
@@ -21,7 +22,8 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
         {({ type, setType }) => (
           <>
             <span title="铅笔" className="tool-Icon">
-              <CreateTwoTone
+              <img
+                src={pen}
                 className={type === ToolType.PEN ? `tool-item ${selectedToolClass}` : "tool-item"}
                 onClick={() => {
                   setType(ToolType.PEN);
@@ -46,7 +48,8 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
               />
             </span>
             <span title="形状" className="tool-Icon">
-              <AccessAlarm
+              <img
+                src={shape}
                 className={type === ToolType.SHAPE ? `tool-item ${selectedToolClass}` : "tool-item"}
                 onClick={() => {
                   setType(ToolType.SHAPE);
@@ -55,16 +58,13 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
             </span>
             {/* <span title="颜色选取器" className="tool-Icon">
               <ColorizeTwoToneIcon
-                className={
-                  type === ToolType.COLOR_EXTRACT
-                    ? `tool-item ${selectedToolClass}`
-                    : "tool-item"
-                }
+                className={type === ToolType.COLOR_EXTRACT ? `tool-item ${selectedToolClass}` : "tool-item"}
                 onClick={() => {
                   setType(ToolType.COLOR_EXTRACT);
                 }}
               />
-            </span> */}
+            </span>{" "} */}
+
             <span title="文字" className="tool-Icon">
               <TextFieldsIcon
                 className={type === ToolType.TEXT ? `tool-item ${selectedToolClass}` : "tool-item"}

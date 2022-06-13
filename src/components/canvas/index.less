@@ -6,20 +6,20 @@
   transform: translate(-50%, -50%);
 }
 
-// .canvas-text {
-//   position: absolute;
-//   left: 50%;
-//   top: 50%;
-//   transform: translate(-50%, -50%);
-//   z-index: 1;
-//   pointer-events: none;
-
-// }
-.text-box {
-  float: left;
-  pointer-events: painted;
+.canvas-text {
   position: absolute;
-  word-break: break-all;
-  z-index: -1;
-  border: 1px solid blue;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
+  .text-box {
+    float: left;
+    width: 50%;
+    pointer-events: painted;
+    position: absolute;
+    word-break: break-all;
+    z-index: -1;
+    border: 1px solid blue;
+  }
 }

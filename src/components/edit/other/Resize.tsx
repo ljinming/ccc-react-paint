@@ -26,12 +26,10 @@ const OtherOperator = () => {
     setOpen(true);
   };
 
-  console.log("=open", open);
   return (
     <span title="resize">
       <span
         onClick={() => {
-          console.log("click");
           setOpen(true);
         }}
       >

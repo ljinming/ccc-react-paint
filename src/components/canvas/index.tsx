@@ -5,7 +5,6 @@ import { useRef } from "react";
 import { LineWidthType, ShapeOutlineType, ShapeToolType, ToolType } from "../../util/toolType";
 import { FC } from "react";
 import { useState } from "react";
-import TextBox from "./TextBox";
 import { Pen, Tool, Eraser, ColorExtract, ColorFill, Text } from "../../util/tool";
 import Shape from "../../util/tool/shape";
 import { useContext } from "react";
@@ -13,7 +12,9 @@ import { DispatcherContext } from "../../context";
 import { CLEAR_EVENT, REDO_EVENT, UNDO_EVENT } from "../../util/dispatcher/event";
 import SnapShot from "../../util/snapshot";
 import Snapshot from "../../util/snapshot";
-import { getImageColor } from "./utils";
+import { Input } from "antd";
+
+const { TextArea } = Input;
 
 interface CanvasProps {
   toolType: ToolType;
@@ -59,7 +60,6 @@ const Canvas: FC<CanvasProps> = (props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dispatcherContext = useContext(DispatcherContext);
   const [snapshot] = useState<SnapShot>(new Snapshot());
-  let bgColor = "#fff";
 
   useEffect(() => {
     switch (toolType) {
@@ -67,7 +67,8 @@ const Canvas: FC<CanvasProps> = (props) => {
         setTool(new Pen());
         break;
       case ToolType.ERASER:
-        setTool(new Eraser());
+        setTool(new Eraser(lineSize));
+        //  setTool(new ColorExtract(setColor));
         break;
       case ToolType.COLOR_EXTRACT:
         setTool(new ColorExtract(setColor));
@@ -147,8 +148,6 @@ const Canvas: FC<CanvasProps> = (props) => {
             /*2.从canvas 中获取图像的ImageData*/
             const imgData = ctx.getImageData(0, 0, width, height);
             /*3.在canvas 中显示ImageData*/
-            bgColor = getImageColor(imgData.data, img);
-            Tool.subColor = bgColor;
             ctx.putImageData(
               imgData,
               //位置
@@ -240,6 +239,7 @@ const Canvas: FC<CanvasProps> = (props) => {
       const width = CanvasSize.width || canvas.clientWidth;
       canvas.height = height;
       canvas.width = width;
+      Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       canvasPain(Tool.ctx, width, height, canvasData);
     }
   }, [CanvasSize]);
@@ -331,10 +331,9 @@ const Canvas: FC<CanvasProps> = (props) => {
         height={CanvasHeight || "100%"}
         style={{ background: background || "#fff" }}
       ></canvas>
-      <TextBox />
-
-      {/* <div className="canvas-text" id="canvas-text" style={{ width: CanvasWidth, height: CanvasHeight }}>
-      </div> */}
+      <div className="canvas-text" id="canvas-text" style={{ width: CanvasWidth, height: CanvasHeight }}>
+        <TextArea id="textBox" name="story" autoFocus={true} className="text-box" rows={1} />
+      </div>
     </>
   );
 };
