@@ -7,6 +7,7 @@
       "dom.iterable",
       "esnext"
     ],
+    "jsx": "react",
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -19,7 +20,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
     "baseUrl": ".",
     "allowJs": false,
     "noUnusedLocals": false,
