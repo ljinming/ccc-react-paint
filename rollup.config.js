@@ -36,7 +36,7 @@ const env = process.env.NODE_ENV;
 
 export default {
   // 入口文件我这里在components下统一导出所有自定义的组件
-  input: "src/entry.ts",
+  input: "src/index.ts",
   // 输出文件夹，可以是个数组输出不同格式（umd,cjs,es...）通过env是否是生产环境打包来决定文件命名是否是.min
   output: [
     {
@@ -61,8 +61,7 @@ export default {
     }
   },
   // 将模块视为外部模块，不会打包在库中
-  external: ["react", "react-is", "prop-types", "react/jsx-runtime", "material-ui-color", "mater-ui/core"],
-  // 插件
+  external: ["react", "react-is", "prop-types", "react/jsx-runtime",'material-ui-color','@material-ui/core/Slider'],  // 插件
   plugins: [
     image(),
     postcss({
