@@ -1,7 +1,7 @@
 import React from "react";
 import { useContext } from "react";
 import { ColorContext } from "@/context";
-import { ColorType } from "../../../../util/toolType";
+import { ColorType } from "../../../util/toolType";
 import { ColorBox, createColor } from "material-ui-color";
 import "./index.less";
 import { useState } from "react";

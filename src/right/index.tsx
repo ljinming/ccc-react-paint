@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.less";
-import { ToolType } from "../../util/toolType";
+import { ToolType } from "../util/toolType";
 import { FC } from "react";
 import ShowPen from "./pen";
 import ShowShape from "./showShape";

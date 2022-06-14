@@ -1,5 +1,5 @@
 import React, { Ref, useEffect, useImperativeHandle } from "react";
-import Canvas from "./components/canvas";
+import Canvas from "./canvas";
 import {
   ToolTypeContext,
   ShapeTypeContext,
@@ -14,10 +14,10 @@ import {
 import "./style.less";
 import { useState } from "react";
 import { ColorType, LineWidthType, ShapeOutlineType, ShapeToolType, ToolType } from "./util/toolType";
-import ToolPanel from "./components/tool";
+import ToolPanel from "./left-tool";
 import Dispatcher from "./util/dispatcher";
-import Right from "./components/right";
-import Edit from "./components/edit";
+import Right from "./right";
+import Edit from "./edit";
 import { getImageSize } from "./utils";
 
 interface PaintProps {

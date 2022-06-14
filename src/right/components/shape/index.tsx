@@ -2,7 +2,7 @@ import React from "react";
 import { useContext } from "react";
 import { Select } from "antd";
 import { ShapeOutlineContext, ShapeTypeContext, ToolTypeContext } from "@/context";
-import { ShapeOutlineType, ShapeToolType, ToolType } from "../../../../util/toolType";
+import { ShapeOutlineType, ShapeToolType, ToolType } from "../../../util/toolType";
 import "./index.less";
 
 import shape_line from "@/icon/shape_line.svg";

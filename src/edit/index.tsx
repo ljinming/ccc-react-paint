@@ -3,9 +3,9 @@ import "./index.less";
 import { useContext } from "react";
 import { DispatcherContext } from "@/context";
 import { MenuOutlined } from "@ant-design/icons";
-import { CLEAR_EVENT, REDO_EVENT, UNDO_EVENT } from "../../util/dispatcher/event";
+import { CLEAR_EVENT, REDO_EVENT, UNDO_EVENT } from "../util/dispatcher/event";
 import Resize from "./Resize";
-import { undoIcon } from "../util";
+import { undoIcon } from "../left-tool/util";
 
 interface propsEdit {
   CanvasSize: {
