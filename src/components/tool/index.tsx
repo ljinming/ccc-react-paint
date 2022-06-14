@@ -7,7 +7,7 @@ import "./index.less";
 import eraser from "@/icon/eraser.svg";
 import shape from "@/icon/shape.svg";
 import pen from "@/icon/pen.svg";
-
+import ColorFillTwo from "@/icon/ColorFillTwo.svg";
 const selectedToolClass = "selected-tool";
 
 export interface ToolPanelProps {
