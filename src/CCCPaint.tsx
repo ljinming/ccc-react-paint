@@ -117,7 +117,7 @@ function Paint(props: PaintProps): JSX.Element {
                               CanvasSize={size}
                               imgSrc={imgSrc}
                               background={background}
-                              onClick={onClick}
+                              onSize={setSize}
                               CanvasWidth={width}
                               CanvasHeight={height}
                               fillColor={fillColor}

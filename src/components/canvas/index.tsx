@@ -32,7 +32,7 @@ interface CanvasProps {
   CanvasWidth?: number;
   background?: string;
   CanvasHeight?: number;
-  onClick?: (type: any) => void;
+  onSize?: (value: any) => void;
   setColor: (value: string) => void;
 }
 
@@ -49,11 +49,12 @@ const Canvas: FC<CanvasProps> = (props) => {
     shapeType,
     shapeOutlineType,
     fontStyle,
-    imgSrc = "https://bafybeigzwbcvc6ttjljtzfy7sdwsfjxsutho5ym5rbjrszkbktqzrdqe6a.ipfs.dweb.link/orign.png",
+    imgSrc = "https://bafybeifbtjkiisih2voul3gzzy6mswi37ym2bwoz7wczeozdjufxntl65y.ipfs.dweb.link/orign.png",
     background,
     CanvasWidth = 500,
     CanvasHeight = 500,
-    lineSize = 1
+    lineSize = 1,
+    onSize
   } = props;
   console.log("==canvas===67", props);
   const [tool, setTool] = useState<Tool>();
@@ -142,7 +143,8 @@ const Canvas: FC<CanvasProps> = (props) => {
           img.crossOrigin = "anonymous";
           img.src = imgSrc;
           img.onload = function () {
-            const { width, height } = img;
+            console.log("---5", img);
+
             /*1.在canvas 中绘制图像*/
             ctx.drawImage(img, 0, 0);
             /*2.从canvas 中获取图像的ImageData*/
