@@ -24,7 +24,10 @@ export function getImageColor(data: any, img: any) {
   return "rgb(" + r + "," + g + "," + b + ")";
 }
 
-export function getImageSize(url: string) {
+export function getImageSize(url: string): Promise<{
+  width: number;
+  height: number;
+}> {
   return new Promise(function (resolve, reject) {
     const image = new Image();
     image.onload = function () {

@@ -11,7 +11,6 @@ import { useContext } from "react";
 import { DispatcherContext } from "../context";
 import { CLEAR_EVENT, REDO_EVENT, UNDO_EVENT } from "../util/dispatcher/event";
 import SnapShot from "../util/snapshot";
-import Snapshot from "../util/snapshot";
 import { Input } from "antd";
 
 const { TextArea } = Input;
@@ -27,7 +26,10 @@ interface CanvasProps {
   fillColor: string;
   fontStyle: any;
   imgSrc?: string;
-  CanvasSize: any;
+  CanvasSize: {
+    width?: number;
+    height?: number;
+  };
   id: string;
   background?: string;
   onSize?: (value: any) => void;
@@ -56,7 +58,7 @@ const Canvas: FC<CanvasProps> = (props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const allCanvasRef = useRef<HTMLDivElement>(null);
   const dispatcherContext = useContext(DispatcherContext);
-  const [snapshot] = useState<SnapShot>(new Snapshot());
+  const [snapshot] = useState<SnapShot>(new SnapShot());
 
   useEffect(() => {
     switch (toolType) {
@@ -148,7 +150,6 @@ const Canvas: FC<CanvasProps> = (props) => {
           ctx.fillStyle = background || "white";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
-        if (ctx.getImageData) snapshot.add(ctx.getImageData(0, 0, width, height));
       }
 
       // 注册清空画布事件
@@ -229,9 +230,7 @@ const Canvas: FC<CanvasProps> = (props) => {
         const height = CanvasSize.height;
         const width = CanvasSize.width;
         if (width && height) {
-          canvas.height = height;
-          canvas.width = width;
-          Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+          Tool.ctx = ctx as CanvasRenderingContext2D;
           canvasPain(Tool.ctx, width, height, canvasData);
         }
       }
@@ -239,22 +238,20 @@ const Canvas: FC<CanvasProps> = (props) => {
   }, [CanvasSize]);
 
   // 注册画布size事件
-  const canvasPain = (ctx: any, width: number, height: number, canvasData: any) => {
+  const canvasPain = async (ctx: CanvasRenderingContext2D, width: number, height: number, canvasData: ImageData) => {
     if (ctx) {
-      //ctx.fillRect(0, 0, width, height);
-      if (canvasData && imgSrc) {
+      const canvas = canvasRef.current;
+      if (canvasData && imgSrc && canvas) {
         if (canvasData.width !== width || canvasData.height !== height) {
-          const scaleX = width / canvasData.width;
-          const scaleY = height / canvasData.height;
-          // ctx.scale(0, 0, scaleX, scaleY);
-          //ctx.setTransform(scaleX, scaleY, width, height);
-          ctx.putImageData(canvasData, 0, 0);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          canvas.height = height;
+          canvas.width = width;
+          ctx.drawImage(await createImageBitmap(canvasData), 0, 0, width, height);
         } else {
           ctx.putImageData(canvasData, 0, 0);
         }
-      } else {
-        snapshot.add(ctx.getImageData(0, 0, width, height));
       }
+      snapshot.add(ctx.getImageData(0, 0, width, height));
     }
   };
 
@@ -300,14 +297,6 @@ const Canvas: FC<CanvasProps> = (props) => {
     snapshot.add(Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height));
   };
 
-  // const onMousewheel = (e: any) => {
-  //   console.log("=====57", e);
-  //   const canvas = canvasRef.current;
-  //   if (canvas) {
-  //     const ctx = canvas.getContext("2d");
-  //   }
-  // };
-
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
@@ -339,7 +328,7 @@ const Canvas: FC<CanvasProps> = (props) => {
   if (allCanvasRef && CanvasSize) {
     const allCanvas = allCanvasRef.current;
     if (allCanvas) {
-      style.margin = allCanvas.offsetWidth < CanvasSize.width ? "unset" : "auto";
+      style.margin = allCanvas.offsetWidth < (CanvasSize?.width || 0) ? "unset" : "auto";
     }
   }
   return (

@@ -63,7 +63,7 @@ function Paint(props: PaintProps): JSX.Element {
   };
 
   const loadImgSize = async () => {
-    const size: any = await getImageSize(imgSrc);
+    const size = await getImageSize(imgSrc);
     setSize(size);
   };
 
