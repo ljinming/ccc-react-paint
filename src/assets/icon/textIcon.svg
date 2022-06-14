@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="21px" viewBox="0 0 20 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
+    <title>文案标题</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="80" height="1080"></rect>
+        <filter x="-46.9%" y="-2.1%" width="162.5%" height="104.2%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="-15" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.02 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画布-画笔" transform="translate(-30.000000, -300.000000)">
+            <rect fill="#2D2D2D" x="0" y="0" width="1920" height="1080"></rect>
+            <g id="矩形备份-2">
+                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <g id="文案标题" transform="translate(30.000000, 300.500000)" fill="#A6AEB7" fill-rule="nonzero">
+                <path d="M18.2168767,-3.55271368e-15 L20.0000233,6.38440196 L18.4618184,6.38440196 C18.4618184,6.38440196 18.1475602,3.65248472 15.2861506,3.05707387 L11.6535292,3.05707387 L11.6535292,15.7217175 C11.6535292,15.7217175 12.1711079,18.5445138 15.148377,18.6327951 L15.148377,20.0000233 L9.99010928,20.0000233 L9.92555842,-3.55271368e-15 L18.2168767,-3.55271368e-15 L18.2168767,-3.55271368e-15 Z" id="路径"></path>
+                <path d="M1.78314661,-3.55271368e-15 L0,6.38440196 L1.53822445,6.38440196 C1.53822445,6.38440196 1.85246309,3.65248472 4.71387267,3.05707387 L8.34649409,3.05707387 L8.34649409,15.7217175 C8.34649409,15.7217175 7.82893489,18.5445138 4.85168533,18.6327951 L4.85168533,20.0000233 L10.009914,20.0000233 L9.97682802,-3.55271368e-15 L1.78314661,-3.55271368e-15 Z" id="路径"></path>
+            </g>
+        </g>
+    </g>
+</svg>

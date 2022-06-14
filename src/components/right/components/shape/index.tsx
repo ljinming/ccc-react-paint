@@ -1,9 +1,6 @@
 import React from "react";
 import { useContext } from "react";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
+import { Select } from "antd";
 import { ShapeOutlineContext, ShapeTypeContext, ToolTypeContext } from "@/context";
 import { ShapeOutlineType, ShapeToolType, ToolType } from "../../../../util/toolType";
 import "./index.less";
@@ -97,17 +94,14 @@ const ShapePanel: React.FC<ShapePanelProps> = (props) => {
     <div className={className ? `shapepanel ${className}` : "shapepanel"}>
       <div className="shape-container">
         <div className="shape-style">
-          <FormControl variant="outlined" disabled={toolTypeContex.type === ToolType.SHAPE ? false : true}>
-            <InputLabel>轮廓</InputLabel>
-            <Select
-              value={shapeOutlineContext.type}
-              onChange={(event) => shapeOutlineContext.setType(event.target.value as ShapeOutlineType)}
-              label="轮廓"
-            >
-              <MenuItem value={ShapeOutlineType.SOLID}>实线</MenuItem>
-              <MenuItem value={ShapeOutlineType.DOTTED}>虚线</MenuItem>
-            </Select>
-          </FormControl>
+          <Select
+            style={{ width: "100%" }}
+            value={shapeOutlineContext.type}
+            onChange={(value) => shapeOutlineContext.setType(value as ShapeOutlineType)}
+          >
+            <Select.Option value={ShapeOutlineType.SOLID}>实线</Select.Option>
+            <Select.Option value={ShapeOutlineType.DOTTED}>虚线</Select.Option>
+          </Select>
         </div>
         <div className="shape-content">
           <ShapeTypeContext.Consumer>

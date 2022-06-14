@@ -1,4 +1,4 @@
-import React, { Ref, useImperativeHandle } from "react";
+import React, { Ref, useEffect, useImperativeHandle } from "react";
 import Canvas from "./components/canvas";
 import {
   ToolTypeContext,
@@ -18,6 +18,7 @@ import ToolPanel from "./components/tool";
 import Dispatcher from "./util/dispatcher";
 import Right from "./components/right";
 import Edit from "./components/edit";
+import { getImageSize } from "./utils";
 
 interface PaintProps {
   imgSrc?: string;
@@ -30,7 +31,16 @@ interface PaintProps {
 }
 
 function Paint(props: PaintProps): JSX.Element {
-  const { id = "test", imgSrc, width, height, background, onClick, cRef } = props;
+  const {
+    id = "test",
+    imgSrc = "https://bafybeifbtjkiisih2voul3gzzy6mswi37ym2bwoz7wczeozdjufxntl65y.ipfs.dweb.link/orign.png",
+    width,
+    height,
+    background,
+    onClick,
+    cRef
+  } = props;
+
   const [toolType, setToolType] = useState<ToolType>(ToolType.PEN);
   const [shapeType, setShapeType] = useState<ShapeToolType>(ShapeToolType.LINE);
   const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(ShapeOutlineType.SOLID);
@@ -51,6 +61,19 @@ function Paint(props: PaintProps): JSX.Element {
       setSubColor(value);
     }
   };
+
+  const loadImgSize = async () => {
+    const size: any = await getImageSize(imgSrc);
+    setSize(size);
+  };
+
+  useEffect(() => {
+    if (imgSrc) {
+      loadImgSize();
+    } else {
+      setSize({ width, height });
+    }
+  }, [width, height, imgSrc]);
 
   useImperativeHandle(cRef, () => ({
     getCurrentImageData: () => {
@@ -105,11 +128,11 @@ function Paint(props: PaintProps): JSX.Element {
                     >
                       <div className="ccc">
                         <div className="ccc-edit">
-                          <Edit />
+                          <Edit CanvasSize={size} />
                         </div>
                         <div className="ccc-content">
                           <div className="ToolPanel">
-                            <ToolPanel className="toolbar-item" />
+                            <ToolPanel className="toolbar-item" fillColor={fillColor} />
                           </div>
                           <div className="show-Canvas">
                             <Canvas
@@ -118,8 +141,6 @@ function Paint(props: PaintProps): JSX.Element {
                               imgSrc={imgSrc}
                               background={background}
                               onSize={setSize}
-                              CanvasWidth={width}
-                              CanvasHeight={height}
                               fillColor={fillColor}
                               toolType={toolType}
                               fontStyle={fontStyle}

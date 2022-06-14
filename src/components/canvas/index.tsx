@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import "./index.less";
 import { useEffect } from "react";
 import { useRef } from "react";
@@ -29,9 +29,7 @@ interface CanvasProps {
   imgSrc?: string;
   CanvasSize: any;
   id: string;
-  CanvasWidth?: number;
   background?: string;
-  CanvasHeight?: number;
   onSize?: (value: any) => void;
   setColor: (value: string) => void;
 }
@@ -49,16 +47,14 @@ const Canvas: FC<CanvasProps> = (props) => {
     shapeType,
     shapeOutlineType,
     fontStyle,
-    imgSrc = "https://bafybeifbtjkiisih2voul3gzzy6mswi37ym2bwoz7wczeozdjufxntl65y.ipfs.dweb.link/orign.png",
+    imgSrc,
     background,
-    CanvasWidth = 500,
-    CanvasHeight = 500,
     lineSize = 1,
     onSize
   } = props;
-  console.log("==canvas===67", props);
   const [tool, setTool] = useState<Tool>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const allCanvasRef = useRef<HTMLDivElement>(null);
   const dispatcherContext = useContext(DispatcherContext);
   const [snapshot] = useState<SnapShot>(new Snapshot());
 
@@ -143,19 +139,10 @@ const Canvas: FC<CanvasProps> = (props) => {
           img.crossOrigin = "anonymous";
           img.src = imgSrc;
           img.onload = function () {
-            console.log("---5", img);
-
+            canvas.height = img.height;
+            canvas.width = img.width;
             /*1.在canvas 中绘制图像*/
-            ctx.drawImage(img, 0, 0);
-            /*2.从canvas 中获取图像的ImageData*/
-            const imgData = ctx.getImageData(0, 0, width, height);
-            /*3.在canvas 中显示ImageData*/
-            ctx.putImageData(
-              imgData,
-              //位置
-              0,
-              height
-            );
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           };
         } else {
           ctx.fillStyle = background || "white";
@@ -231,27 +218,40 @@ const Canvas: FC<CanvasProps> = (props) => {
         dispatcher.off(CLEAR_EVENT, callback);
       };
     }
-  }, [canvasRef, imgSrc]);
+  }, [canvasRef]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
-      const canvasData = Tool.ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const height = CanvasSize.height || canvas.clientHeight;
-      const width = CanvasSize.width || canvas.clientWidth;
-      canvas.height = height;
-      canvas.width = width;
-      Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-      canvasPain(Tool.ctx, width, height, canvasData);
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        const canvasData = ctx?.getImageData(0, 0, canvas.width, canvas.height);
+        const height = CanvasSize.height;
+        const width = CanvasSize.width;
+        if (width && height) {
+          canvas.height = height;
+          canvas.width = width;
+          Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+          canvasPain(Tool.ctx, width, height, canvasData);
+        }
+      }
     }
   }, [CanvasSize]);
 
   // 注册画布size事件
   const canvasPain = (ctx: any, width: number, height: number, canvasData: any) => {
     if (ctx) {
-      ctx.fillRect(0, 0, width, height);
-      if (canvasData) {
-        Tool.ctx.putImageData(canvasData, 0, 0);
+      //ctx.fillRect(0, 0, width, height);
+      if (canvasData && imgSrc) {
+        if (canvasData.width !== width || canvasData.height !== height) {
+          const scaleX = width / canvasData.width;
+          const scaleY = height / canvasData.height;
+          // ctx.scale(0, 0, scaleX, scaleY);
+          //ctx.setTransform(scaleX, scaleY, width, height);
+          ctx.putImageData(canvasData, 0, 0);
+        } else {
+          ctx.putImageData(canvasData, 0, 0);
+        }
       } else {
         snapshot.add(ctx.getImageData(0, 0, width, height));
       }
@@ -300,12 +300,21 @@ const Canvas: FC<CanvasProps> = (props) => {
     snapshot.add(Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height));
   };
 
+  // const onMousewheel = (e: any) => {
+  //   console.log("=====57", e);
+  //   const canvas = canvasRef.current;
+  //   if (canvas) {
+  //     const ctx = canvas.getContext("2d");
+  //   }
+  // };
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
       canvas.addEventListener("mousedown", onMouseDown);
       canvas.addEventListener("mousemove", onMouseMove);
       canvas.addEventListener("mouseup", onMouseUp);
+      // canvas.addEventListener("mousewheel", onMousewheel);
 
       canvas.addEventListener("touchstart", onTouchStart);
       canvas.addEventListener("touchmove", onTouchMove);
@@ -315,6 +324,7 @@ const Canvas: FC<CanvasProps> = (props) => {
         canvas.removeEventListener("mousedown", onMouseDown);
         canvas.removeEventListener("mousemove", onMouseMove);
         canvas.removeEventListener("mouseup", onMouseUp);
+        // canvas.removeEventListener("mousewheel", onMousewheel);
 
         canvas.removeEventListener("touchstart", onTouchStart);
         canvas.removeEventListener("touchmove", onTouchMove);
@@ -323,20 +333,33 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
   }, [canvasRef, onMouseDown, onMouseMove, onMouseUp]);
 
+  const style = {
+    margin: "auto"
+  };
+  if (allCanvasRef && CanvasSize) {
+    const allCanvas = allCanvasRef.current;
+    if (allCanvas) {
+      style.margin = allCanvas.offsetWidth < CanvasSize.width ? "unset" : "auto";
+    }
+  }
   return (
-    <>
+    <div className="all-canvas" ref={allCanvasRef}>
       <canvas
         id={`ccc-paint-canvas ${id}`}
         className="ccc-paint-canvas"
         ref={canvasRef}
-        width={CanvasWidth || "100%"}
-        height={CanvasHeight || "100%"}
-        style={{ background: background || "#fff" }}
+        width={"100%"}
+        height={"100%"}
+        style={{ background: background || "#fff", ...style }}
       ></canvas>
-      <div className="canvas-text" id="canvas-text" style={{ width: CanvasWidth, height: CanvasHeight }}>
+      <div
+        className="canvas-text"
+        id="canvas-text"
+        style={{ width: CanvasSize.width, height: CanvasSize.height, ...style }}
+      >
         <TextArea id="textBox" name="story" autoFocus={true} className="text-box" rows={1} />
       </div>
-    </>
+    </div>
   );
 };
 

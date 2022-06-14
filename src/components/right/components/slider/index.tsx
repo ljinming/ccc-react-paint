@@ -1,4 +1,3 @@
-//import Slider from "@material-ui/core/Slider";
 import "./index.less";
 import { Slider } from "antd";
 

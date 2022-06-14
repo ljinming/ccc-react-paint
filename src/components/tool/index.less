@@ -11,17 +11,36 @@
     justify-content: center;
     margin-top: 40px;
   }
+  .color-tool {
+    position: relative;
+    .bgColorIcon {
+      display: block;
+      content: "";
+      width: 12px;
+      height: 12px;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      background-color: #a6aeb7;
+    }
+  }
   .tool-item {
     cursor: pointer;
     border: 1px solid transparent;
 
+    svg {
+      fill: #a6aeb7;
+    }
     // &:hover {
     //     border: 1px solid #64a5e7;
     // }
   }
 
   .selected-tool {
-    background-color: #bcdbfa;
+    //background-color: #bcdbfa;
+    svg {
+      fill: #4338ca;
+    }
   }
 
   // .top,.down {

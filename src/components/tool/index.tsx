@@ -1,81 +1,75 @@
 import React from "react";
-import FormatColorFillTwoTone from "@material-ui/icons/FormatColorFillTwoTone";
-import TextFieldsIcon from "@material-ui/icons/TextFields";
 import { ToolType } from "../../util/toolType";
 import { ToolTypeContext } from "@/context";
 import "./index.less";
-import eraser from "@/icon/eraser.svg";
-import shape from "@/icon/shape.svg";
-import pen from "@/icon/pen.svg";
-import ColorFillTwo from "@/icon/ColorFillTwo.svg";
+import { toolPen, toolShape, formatColor, textIcon, toolEraser } from "../util";
 const selectedToolClass = "selected-tool";
 
 export interface ToolPanelProps {
   className?: string;
+  fillColor?: string;
 }
 
 const ToolPanel: React.FC<ToolPanelProps> = (props) => {
-  const { className } = props;
+  const { className, fillColor } = props;
   return (
     <div className={className ? `toolpanel ${className}` : "toolpanel"}>
       <ToolTypeContext.Consumer>
         {({ type, setType }) => (
           <>
-            <span title="铅笔" className="tool-Icon">
-              <img
-                src={pen}
+            <span title="pen" className="tool-Icon">
+              <span
                 className={type === ToolType.PEN ? `tool-item ${selectedToolClass}` : "tool-item"}
                 onClick={() => {
                   setType(ToolType.PEN);
                 }}
-              />
+              >
+                {toolPen}
+              </span>
             </span>
-            <span title="橡皮擦" className="tool-Icon">
-              <img
-                src={eraser}
-                className={type === ToolType.ERASER ? `tool-item ${selectedToolClass}` : "tool-item"}
-                onClick={() => {
-                  setType(ToolType.ERASER);
-                }}
-              />
-            </span>
-            <span title="填充" className="tool-Icon">
-              <FormatColorFillTwoTone
-                className={type === ToolType.COLOR_FILL ? `tool-item ${selectedToolClass}` : "tool-item"}
-                onClick={() => {
-                  setType(ToolType.COLOR_FILL);
-                }}
-              />
-            </span>
-            <span title="形状" className="tool-Icon">
-              <img
-                src={shape}
+            <span title="shape" className="tool-Icon">
+              <span
                 className={type === ToolType.SHAPE ? `tool-item ${selectedToolClass}` : "tool-item"}
                 onClick={() => {
                   setType(ToolType.SHAPE);
                 }}
-              />
+              >
+                {toolShape}
+              </span>
             </span>
-            {/* <span title="颜色选取器" className="tool-Icon">
-              <ColorizeTwoToneIcon
-                className={type === ToolType.COLOR_EXTRACT ? `tool-item ${selectedToolClass}` : "tool-item"}
+            <span title="eraser" className="tool-Icon">
+              <span
+                className={type === ToolType.ERASER ? `tool-item ${selectedToolClass}` : "tool-item"}
                 onClick={() => {
-                  setType(ToolType.COLOR_EXTRACT);
+                  setType(ToolType.ERASER);
                 }}
-              />
-            </span>{" "} */}
-
+              >
+                {toolEraser}
+              </span>
+            </span>
+            <span title="bgColor" className="tool-Icon">
+              <span
+                className={
+                  type === ToolType.COLOR_FILL ? `tool-item color-tool ${selectedToolClass}` : "tool-item color-tool"
+                }
+                onClick={() => {
+                  setType(ToolType.COLOR_FILL);
+                }}
+              >
+                {formatColor}
+                <span className="bgColorIcon" style={{ background: type === ToolType.COLOR_FILL ? fillColor : "" }} />
+              </span>
+            </span>
             <span title="文字" className="tool-Icon">
-              <TextFieldsIcon
+              <span
                 className={type === ToolType.TEXT ? `tool-item ${selectedToolClass}` : "tool-item"}
                 onClick={() => {
                   setType(ToolType.TEXT);
                 }}
-              />
+              >
+                {textIcon}
+              </span>
             </span>
-            {/* <span title="放大镜">
-                                    <SearchTwoToneIcon className={type === ToolType.MAGNIFYING ? `tool-item ${selectedToolClass}` : "tool-item"} onClick={() => {setType(ToolType.MAGNIFYING)}} />
-                                </span>  */}
           </>
         )}
       </ToolTypeContext.Consumer>

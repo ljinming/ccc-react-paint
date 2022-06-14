@@ -23,3 +23,19 @@ export function getImageColor(data: any, img: any) {
 
   return "rgb(" + r + "," + g + "," + b + ")";
 }
+
+export function getImageSize(url: string) {
+  return new Promise(function (resolve, reject) {
+    const image = new Image();
+    image.onload = function () {
+      resolve({
+        width: image.width,
+        height: image.height
+      });
+    };
+    image.onerror = function () {
+      reject(new Error("error"));
+    };
+    image.src = url;
+  });
+}
