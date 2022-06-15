@@ -6,24 +6,26 @@ import ShowPen from "./pen";
 import ShowShape from "./showShape";
 import FormatColor from "./formatColor";
 import Text from "./text";
+import Eraser from "./earser";
 interface ToolbarProps {
   toolType: ToolType;
+  lineSize: number;
 }
 
 const ToolRightBar: FC<ToolbarProps> = (props) => {
-  const { toolType } = props;
+  const { toolType, lineSize } = props;
 
   const renderChild = (): any => {
     let content = null;
     switch (toolType) {
       case ToolType.PEN:
-        content = <ShowPen />;
+        content = <ShowPen lineSize={lineSize} />;
         break;
       case ToolType.SHAPE:
         content = <ShowShape />;
         break;
       case ToolType.ERASER:
-        // setTool(new Eraser());
+        content = <Eraser lineSize={lineSize} />;
         break;
       case ToolType.TEXT:
         content = <Text />;
@@ -40,6 +42,4 @@ const ToolRightBar: FC<ToolbarProps> = (props) => {
   return <div className="ccc-showTool">{renderChild()}</div>;
 };
 
-export default React.memo(ToolRightBar, (preProps: ToolbarProps, nextProps: ToolbarProps) => {
-  return nextProps.toolType === ToolType.ERASER;
-});
+export default React.memo(ToolRightBar);

@@ -27,17 +27,15 @@ interface PaintProps {
   background?: string;
   id?: string;
   cRef?: any;
-  onClick?: (type: any) => void;
 }
 
 function Paint(props: PaintProps): JSX.Element {
   const {
     id = "test",
     imgSrc = "https://bafybeifbtjkiisih2voul3gzzy6mswi37ym2bwoz7wczeozdjufxntl65y.ipfs.dweb.link/orign.png",
-    width,
-    height,
+    width = 500,
+    height = 500,
     background,
-    onClick,
     cRef
   } = props;
 
@@ -45,7 +43,7 @@ function Paint(props: PaintProps): JSX.Element {
   const [shapeType, setShapeType] = useState<ShapeToolType>(ShapeToolType.LINE);
   const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(ShapeOutlineType.SOLID);
   const [lineWidthType, setLineWidthType] = useState<LineWidthType>(LineWidthType.LINESIZE);
-  const [lineSize, setLineFontSize] = useState<number>(1);
+  const [lineSize, setLineFontSize] = useState<number>(5);
   const [fillColor, setFillColor] = useState<string>("");
   const [size, setSize] = useState({ width, height });
   const [activeColorType, setActiveColorType] = useState<ColorType>(ColorType.MAIN);
@@ -62,16 +60,18 @@ function Paint(props: PaintProps): JSX.Element {
     }
   };
 
-  const loadImgSize = async () => {
-    const size = await getImageSize(imgSrc);
+  const loadImgSize = async (src: string) => {
+    const size = await getImageSize(src);
     setSize(size);
   };
 
   useEffect(() => {
     if (imgSrc) {
-      loadImgSize();
+      loadImgSize(imgSrc);
     } else {
-      setSize({ width, height });
+      if (width && height) {
+        setSize({ width, height });
+      }
     }
   }, [width, height, imgSrc]);
 
@@ -84,12 +84,19 @@ function Paint(props: PaintProps): JSX.Element {
   }));
 
   return (
-    <ToolTypeContext.Provider value={{ type: toolType, setType: setToolType }}>
+    <ToolTypeContext.Provider
+      value={{
+        type: toolType,
+        setType: (value) => {
+          setToolType(value);
+          setLineFontSize(5);
+        }
+      }}
+    >
       <ShapeTypeContext.Provider
         value={{
           type: shapeType,
           setType: (type: ShapeToolType) => {
-            setToolType(ToolType.SHAPE);
             setShapeType(type);
           }
         }}
@@ -154,7 +161,7 @@ function Paint(props: PaintProps): JSX.Element {
                             />
                           </div>
                           <div className="show-type">
-                            <Right toolType={toolType} />
+                            <Right toolType={toolType} lineSize={lineSize} />
                           </div>
                         </div>
                       </div>

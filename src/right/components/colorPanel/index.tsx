@@ -6,17 +6,20 @@ import { ColorBox, createColor } from "material-ui-color";
 import "./index.less";
 import { useState } from "react";
 import { useEffect } from "react";
+import { getRandomColor } from "../../../utils";
 
 interface ColorPanelProps {
   className?: string;
   title?: string;
+  type?: string;
 }
 
 const activeColorTypeCls = "active-color-type";
 
 const ColorPanel: React.FC<ColorPanelProps> = (props) => {
-  const { className, title } = props;
-  const [pickerColor, setPickerColor] = useState(createColor("#000000FF"));
+  const { className, title, type } = props;
+
+  const [pickerColor, setPickerColor] = useState(createColor(type && type === "pen" ? getRandomColor() : "#000000FF"));
   const colorContext = useContext(ColorContext);
   const activeColorType = colorContext.activeColor;
 
@@ -27,19 +30,7 @@ const ColorPanel: React.FC<ColorPanelProps> = (props) => {
   return (
     <div className={className ? `colorpanel ${className}` : "colorpanel"}>
       <div className="content">
-        {title ? (
-          <div className="color-result">
-            <div
-              onClick={() => colorContext.setActiveColor(ColorType.MAIN)}
-              className={activeColorType === ColorType.MAIN ? `main-color ${activeColorTypeCls}` : "main-color"}
-            >
-              <div className="color-box1" style={{ backgroundColor: colorContext.mainColor }} />
-              <div>{title}</div>
-            </div>
-          </div>
-        ) : (
-          <h3>color</h3>
-        )}
+        <h3>color</h3>
         <div className="material-color-box">
           <ColorBox
             value={pickerColor}
@@ -49,6 +40,17 @@ const ColorPanel: React.FC<ColorPanelProps> = (props) => {
             }}
           />
         </div>
+        {/* {title && (
+          <div className="color-result">
+            <div
+              onClick={() => colorContext.setActiveColor(ColorType.MAIN)}
+              className={activeColorType === ColorType.MAIN ? `main-color ${activeColorTypeCls}` : "main-color"}
+            >
+              <div className="color-box1" style={{ backgroundColor: colorContext.mainColor }} />
+              <div>{title}</div>
+            </div>
+          </div>
+        )} */}
       </div>
     </div>
   );

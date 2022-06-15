@@ -5,7 +5,7 @@ import { DispatcherContext } from "@/context";
 import { MenuOutlined } from "@ant-design/icons";
 import { CLEAR_EVENT, REDO_EVENT, UNDO_EVENT } from "../util/dispatcher/event";
 import Resize from "./Resize";
-import { undoIcon } from "../left-tool/util";
+import { undoIcon, clearIcon } from "../left-tool/util";
 
 interface propsEdit {
   CanvasSize: {
@@ -38,7 +38,7 @@ const OtherOperator = (props: propsEdit) => {
           <Resize />
         </span>
         <span title="clear" className="operator-item">
-          <MenuOutlined onClick={clearCanvas} style={{ fontSize: 17 }} />
+          <span onClick={clearCanvas}>{clearIcon}</span>
         </span>
         <span title="undo" className="operator-item">
           <span onClick={undo}>{undoIcon}</span>

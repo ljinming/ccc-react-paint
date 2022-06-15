@@ -2,22 +2,19 @@ import React, { FC } from "react";
 import { useContext } from "react";
 import { LineWidthContext } from "@/context";
 import IntegerStep from "../components/slider";
-import ColorPanel from "../components/colorPanel";
 import "./index.less";
 
-interface PenType {
+interface earserType {
   lineSize: number;
 }
 
-const ShowPen = (props: PenType) => {
-  const lineWidthContext = useContext(LineWidthContext);
-
+const Eraser = (props: earserType) => {
   const { lineSize } = props;
-
+  const lineWidthContext = useContext(LineWidthContext);
   return (
     <div className="ccc-pen">
       <div className="ccc-slider-item">
-        <h3>Brush thickness</h3>
+        <h3>Eraser thickness</h3>
         <IntegerStep
           min={1}
           max={20}
@@ -27,9 +24,8 @@ const ShowPen = (props: PenType) => {
           }}
         />
       </div>
-      <ColorPanel type="pen" className="toolbar-item" title="Color Panel" />
     </div>
   );
 };
 
-export default ShowPen;
+export default Eraser;

@@ -67,7 +67,6 @@ const Canvas: FC<CanvasProps> = (props) => {
         break;
       case ToolType.ERASER:
         setTool(new Eraser(lineSize));
-        //  setTool(new ColorExtract(setColor));
         break;
       case ToolType.COLOR_EXTRACT:
         setTool(new ColorExtract(setColor));
@@ -84,7 +83,7 @@ const Canvas: FC<CanvasProps> = (props) => {
       default:
         break;
     }
-  }, [toolType, shapeType, fontStyle]);
+  }, [toolType, shapeType, fontStyle, lineSize]);
 
   useEffect(() => {
     if (tool instanceof Shape) {
@@ -93,6 +92,7 @@ const Canvas: FC<CanvasProps> = (props) => {
   }, [shapeOutlineType]);
 
   useEffect(() => {
+    console.log("=====5", lineSize);
     switch (lineWidthType) {
       case LineWidthType.THIN:
         Tool.lineWidthFactor = 1;
@@ -211,7 +211,9 @@ const Canvas: FC<CanvasProps> = (props) => {
 
       const changeSize = () => {
         const canvasData = Tool.ctx.getImageData(0, 0, canvas.width, canvas.height);
-        canvasPain(Tool.ctx, width, height, canvasData);
+        // const changWidth = allCanvasRef.current?.clientWidth || width;
+        // const changHeight = allCanvasRef.current?.clientHeight || height;
+        //  canvasPain(Tool.ctx, changWidth, changHeight, canvasData);
       };
       window.addEventListener("resize", changeSize);
 
@@ -239,16 +241,18 @@ const Canvas: FC<CanvasProps> = (props) => {
 
   // 注册画布size事件
   const canvasPain = async (ctx: CanvasRenderingContext2D, width: number, height: number, canvasData: ImageData) => {
+    console.log("===56", width, height);
     if (ctx) {
       const canvas = canvasRef.current;
-      if (canvasData && imgSrc && canvas) {
-        if (canvasData.width !== width || canvasData.height !== height) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          canvas.height = height;
-          canvas.width = width;
+      if (canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.height = height;
+        canvas.width = width;
+        if (canvasData) {
           ctx.drawImage(await createImageBitmap(canvasData), 0, 0, width, height);
         } else {
-          ctx.putImageData(canvasData, 0, 0);
+          ctx.fillStyle = background || "white";
+          ctx.fillRect(0, 0, width, height);
         }
       }
       snapshot.add(ctx.getImageData(0, 0, width, height));
@@ -337,8 +341,6 @@ const Canvas: FC<CanvasProps> = (props) => {
         id={`ccc-paint-canvas ${id}`}
         className="ccc-paint-canvas"
         ref={canvasRef}
-        width={"100%"}
-        height={"100%"}
         style={{ background: background || "#fff", ...style }}
       ></canvas>
       <div

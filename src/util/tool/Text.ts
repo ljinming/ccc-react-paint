@@ -37,8 +37,8 @@ class Text extends Tool {
       context.lineWidth = 5; // 指定描边线的宽度
       context.font = "10px";
       if (context && this.fontStyle) {
-        const { fontSize = "12px", fontFamily, letterSpacing } = this.fontStyle;
-        context.fillStyle = this.textBox.color || "#000";
+        const { fontSize = "12px", fontFamily, color, letterSpacing } = this.fontStyle;
+        context.fillStyle = color || "#000";
         context.font = `${fontSize} ${fontFamily}`;
         if (context.canvas && letterSpacing) {
           context.canvas.style.letterSpacing = letterSpacing;
@@ -96,8 +96,8 @@ class Text extends Tool {
       this.canvasText.style["z-index"] = 5;
       this.textBox.style["z-index"] = 6;
       this.textBox.style.visibility = "visible";
-      this.textBox.style.left = this._x + "px";
-      this.textBox.style.top = this._y + "px";
+      this.textBox.style.left = this._x - 4 + "px";
+      this.textBox.style.top = this._y - 2 + "px";
     }
   }
 }
