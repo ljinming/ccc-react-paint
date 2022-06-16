@@ -9,7 +9,7 @@ class Eraser extends Tool {
     x: 0,
     y: 0
   };
-  public constructor(lineSize = 1) {
+  public constructor(lineSize:number) {
     super();
     this.lineWidthBase = lineSize;
     this.color = "";

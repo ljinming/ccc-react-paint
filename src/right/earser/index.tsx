@@ -14,7 +14,7 @@ const Eraser = (props: earserType) => {
   return (
     <div className="ccc-pen">
       <div className="ccc-slider-item">
-        <h3>Eraser thickness</h3>
+        <h3>Eraser Thickness</h3>
         <IntegerStep
           min={1}
           max={20}

@@ -17,7 +17,7 @@ const ShowPen = (props: PenType) => {
   return (
     <div className="ccc-pen">
       <div className="ccc-slider-item">
-        <h3>Brush thickness</h3>
+        <h3>Brush Thickness</h3>
         <IntegerStep
           min={1}
           max={20}

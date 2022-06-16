@@ -1,8 +1,16 @@
 import React from "react";
 import { useContext } from "react";
 import { Select } from "antd";
-import { ShapeOutlineContext, ShapeTypeContext, ToolTypeContext } from "@/context";
-import { ShapeOutlineType, ShapeToolType, ToolType } from "../../../util/toolType";
+import {
+  ShapeOutlineContext,
+  ShapeTypeContext,
+  ToolTypeContext,
+} from "@/context";
+import {
+  ShapeOutlineType,
+  ShapeToolType,
+  ToolType,
+} from "../../../util/toolType";
 import "./index.less";
 
 import shape_line from "@/icon/shape_line.svg";
@@ -23,63 +31,63 @@ const shapes = [
   {
     type: ShapeToolType.LINE,
     img: shape_line,
-    title: "直线"
+    title: "Line",
   },
   {
     type: ShapeToolType.RECT,
     img: shape_rect,
-    title: "矩形"
+    title: "Rectangle",
   },
   {
     type: ShapeToolType.CIRCLE,
     img: shape_circle,
-    title: "圆（椭圆）"
+    title: "Oval",
   },
   {
     type: ShapeToolType.RHOMBUS,
     img: shape_rhombus,
-    title: "菱形"
+    title: "Decision",
   },
   {
     type: ShapeToolType.TRIANGLE,
     img: shape_triangle,
-    title: "三角形"
+    title: "Triangle",
   },
   {
     type: ShapeToolType.PENTAGON,
     img: shape_pentagon,
-    title: "五边形"
+    title: "Regular Pentagon",
   },
   {
     type: ShapeToolType.SEXANGLE,
     img: shape_sexangle,
-    title: "六边形"
+    title: "Hexagon",
   },
   {
     type: ShapeToolType.ARROW_TOP,
     img: shape_arrowtop,
-    title: "上箭头"
+    title: "Up Arrow",
   },
   {
     type: ShapeToolType.ARROW_RIGHT,
     img: shape_arrowright,
-    title: "右箭头"
+    title: "Right Arrow",
   },
   {
     type: ShapeToolType.ARROW_DOWN,
     img: shape_arrowdown,
-    title: "下箭头"
+    title: "Down Arrow",
   },
   {
     type: ShapeToolType.ARROW_LEFT,
     img: shape_arrowleft,
-    title: "左箭头"
+    title: "Left Arrow",
   },
   {
     type: ShapeToolType.FOUR_STAR,
     img: shape_fourstar,
-    title: "四角星"
-  }
+    title: "4-Point Star",
+  },
 ];
 interface ShapePanelProps {
   className?: string;
@@ -97,10 +105,16 @@ const ShapePanel: React.FC<ShapePanelProps> = (props) => {
           <Select
             style={{ width: "100%" }}
             value={shapeOutlineContext.type}
-            onChange={(value) => shapeOutlineContext.setType(value as ShapeOutlineType)}
+            onChange={(value) =>
+              shapeOutlineContext.setType(value as ShapeOutlineType)
+            }
           >
-            <Select.Option value={ShapeOutlineType.SOLID}>实线</Select.Option>
-            <Select.Option value={ShapeOutlineType.DOTTED}>虚线</Select.Option>
+            <Select.Option value={ShapeOutlineType.SOLID}>
+              Solid Line
+            </Select.Option>
+            <Select.Option value={ShapeOutlineType.DOTTED}>
+              Dotted Line
+            </Select.Option>
           </Select>
         </div>
         <div className="shape-content">
@@ -112,7 +126,8 @@ const ShapePanel: React.FC<ShapePanelProps> = (props) => {
                   key={shape.img}
                   title={shape.title}
                   className={
-                    type === shape.type && toolTypeContex.type === ToolType.SHAPE
+                    type === shape.type &&
+                    toolTypeContex.type === ToolType.SHAPE
                       ? `shape-item ${selectedShapeClass}`
                       : "shape-item"
                   }

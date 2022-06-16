@@ -37,13 +37,17 @@ const OtherOperator = (props: propsEdit) => {
         <span className="operator-resize">
           <Resize />
         </span>
-        <span title="clear" className="operator-item">
+        <span title="Clear All" className="operator-item">
           <span onClick={clearCanvas}>{clearIcon}</span>
         </span>
-        <span title="undo" className="operator-item">
+        <span title="Undo" className="operator-item">
           <span onClick={undo}>{undoIcon}</span>
         </span>
-        <span title="redo" style={{ transform: "rotateY(180deg)" }} className="operator-item">
+        <span
+          title="Redo"
+          style={{ transform: "rotateY(180deg)" }}
+          className="operator-item"
+        >
           <span onClick={redo}>{undoIcon}</span>
         </span>
       </div>

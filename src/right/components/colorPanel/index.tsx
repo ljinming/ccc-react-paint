@@ -19,7 +19,9 @@ const activeColorTypeCls = "active-color-type";
 const ColorPanel: React.FC<ColorPanelProps> = (props) => {
   const { className, title, type } = props;
 
-  const [pickerColor, setPickerColor] = useState(createColor(type && type === "pen" ? getRandomColor() : "#000000FF"));
+  const [pickerColor, setPickerColor] = useState(
+    createColor(type && type === "pen" ? getRandomColor() : "#000000FF")
+  );
   const colorContext = useContext(ColorContext);
   const activeColorType = colorContext.activeColor;
 
@@ -30,7 +32,7 @@ const ColorPanel: React.FC<ColorPanelProps> = (props) => {
   return (
     <div className={className ? `colorpanel ${className}` : "colorpanel"}>
       <div className="content">
-        <h3>color</h3>
+        <h3>Color</h3>
         <div className="material-color-box">
           <ColorBox
             value={pickerColor}

@@ -17,9 +17,13 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
       <ToolTypeContext.Consumer>
         {({ type, setType }) => (
           <>
-            <span title="pen" className="tool-Icon">
+            <span title="Pencil Tool" className="tool-Icon">
               <span
-                className={type === ToolType.PEN ? `tool-item ${selectedToolClass}` : "tool-item"}
+                className={
+                  type === ToolType.PEN
+                    ? `tool-item ${selectedToolClass}`
+                    : "tool-item"
+                }
                 onClick={() => {
                   setType(ToolType.PEN);
                 }}
@@ -27,9 +31,13 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
                 {toolPen}
               </span>
             </span>
-            <span title="shape" className="tool-Icon">
+            <span title="Draw Shape" className="tool-Icon">
               <span
-                className={type === ToolType.SHAPE ? `tool-item ${selectedToolClass}` : "tool-item"}
+                className={
+                  type === ToolType.SHAPE
+                    ? `tool-item ${selectedToolClass}`
+                    : "tool-item"
+                }
                 onClick={() => {
                   setType(ToolType.SHAPE);
                 }}
@@ -37,9 +45,13 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
                 {toolShape}
               </span>
             </span>
-            <span title="eraser" className="tool-Icon">
+            <span title="Eraser Tool" className="tool-Icon">
               <span
-                className={type === ToolType.ERASER ? `tool-item ${selectedToolClass}` : "tool-item"}
+                className={
+                  type === ToolType.ERASER
+                    ? `tool-item ${selectedToolClass}`
+                    : "tool-item"
+                }
                 onClick={() => {
                   setType(ToolType.ERASER);
                 }}
@@ -47,22 +59,33 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
                 {toolEraser}
               </span>
             </span>
-            <span title="bgColor" className="tool-Icon">
+            <span title="Paint Bucket Tool" className="tool-Icon">
               <span
                 className={
-                  type === ToolType.COLOR_FILL ? `tool-item color-tool ${selectedToolClass}` : "tool-item color-tool"
+                  type === ToolType.COLOR_FILL
+                    ? `tool-item color-tool ${selectedToolClass}`
+                    : "tool-item color-tool"
                 }
                 onClick={() => {
                   setType(ToolType.COLOR_FILL);
                 }}
               >
                 {formatColor}
-                <span className="bgColorIcon" style={{ background: type === ToolType.COLOR_FILL ? fillColor : "" }} />
+                <span
+                  className="bgColorIcon"
+                  style={{
+                    background: type === ToolType.COLOR_FILL ? fillColor : "",
+                  }}
+                />
               </span>
             </span>
-            <span title="文字" className="tool-Icon">
+            <span title="Text" className="tool-Icon">
               <span
-                className={type === ToolType.TEXT ? `tool-item ${selectedToolClass}` : "tool-item"}
+                className={
+                  type === ToolType.TEXT
+                    ? `tool-item ${selectedToolClass}`
+                    : "tool-item"
+                }
                 onClick={() => {
                   setType(ToolType.TEXT);
                 }}

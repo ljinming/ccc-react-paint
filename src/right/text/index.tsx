@@ -24,7 +24,7 @@ const textFamily = [
   "Poppins-Light",
   "Poppins-Medium",
   "Poppins-Regular",
-  "Poppins-SemiBold"
+  "Poppins-SemiBold",
 ];
 
 const FormatColor: React.FC<FormatColor> = (props) => {
@@ -44,7 +44,11 @@ const FormatColor: React.FC<FormatColor> = (props) => {
   }, [pickerColor]);
 
   return (
-    <div className={className ? ` ccc-text formatColor ${className}` : "ccc-text colorpanel"}>
+    <div
+      className={
+        className ? ` ccc-text formatColor ${className}` : "ccc-text colorpanel"
+      }
+    >
       <div className="content">
         <div className="font">
           <h3>Font</h3>
@@ -53,7 +57,7 @@ const FormatColor: React.FC<FormatColor> = (props) => {
             onChange={(value: string) => {
               TextToolContext.setFont({
                 ...fontStyle,
-                fontFamily: value
+                fontFamily: value,
               });
             }}
           >
@@ -74,7 +78,7 @@ const FormatColor: React.FC<FormatColor> = (props) => {
             onPropsChange={(value) => {
               TextToolContext.setFont({
                 ...fontStyle,
-                letterSpacing: value + "px"
+                letterSpacing: value + "px",
               });
             }}
           />
@@ -87,25 +91,25 @@ const FormatColor: React.FC<FormatColor> = (props) => {
             onPropsChange={(value) => {
               TextToolContext.setFont({
                 ...fontStyle,
-                fontSize: value + "px"
+                fontSize: value + "px",
               });
             }}
           />
         </div>
         <div className="font">
-          <h3>FLine Height</h3>
+          <h3>Line Height</h3>
           <IntegerStep
             min={24}
             max={56}
             onPropsChange={(value) => {
               TextToolContext.setFont({
                 ...fontStyle,
-                lineHeight: value + "px"
+                lineHeight: value + "px",
               });
             }}
           />
         </div>
-        <h3>color</h3>
+        <h3>Color</h3>
         <div className="material-color-box">
           <ColorBox
             value={pickerColor}
@@ -114,7 +118,7 @@ const FormatColor: React.FC<FormatColor> = (props) => {
               setPickerColor(color);
               TextToolContext.setFont({
                 ...fontStyle,
-                color: "#" + color.hex
+                color: "#" + color.hex,
               });
             }}
           />

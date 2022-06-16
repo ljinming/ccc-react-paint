@@ -12,8 +12,10 @@ const OtherOperator = () => {
   const setResize = () => {
     sizeContext.onSize({
       width: Number(width),
-      height: Number(height)
+      height: Number(height),
     });
+    setWidth(undefined);
+    setHeight(undefined);
   };
 
   const handleResize = () => {
@@ -44,6 +46,7 @@ const OtherOperator = () => {
             <InputNumber
               className="resize-content-input"
               value={width}
+              placeholder={"width"}
               max={3000}
               id="outlined-basic"
               onChange={(value: any) => {
@@ -54,6 +57,7 @@ const OtherOperator = () => {
             <InputNumber
               value={height}
               max={3000}
+              placeholder={"height"}
               onChange={(value: any) => {
                 setHeight(value);
               }}

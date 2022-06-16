@@ -9,7 +9,7 @@ const showShape: FC = () => {
   return (
     <div className="ccc-shape">
       <h3 className="ccc-shape-title">
-        <span>Shope</span>
+        <span>Shapes</span>
         <DownOutlined />
       </h3>
       <Shape className="toolbar-item" />

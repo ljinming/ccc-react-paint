@@ -23,7 +23,7 @@ const FormatColor: React.FC<FormatColor> = (props) => {
   return (
     <div className={className ? `formatColor ${className}` : "colorpanel"}>
       <div className="content">
-        <h3>color</h3>
+        <h3>Color</h3>
         <div className="material-color-box">
           <ColorBox
             value={pickerColor}
