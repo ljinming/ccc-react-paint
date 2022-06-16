@@ -2,7 +2,12 @@ import React, { useMemo } from "react";
 import "./index.less";
 import { useEffect } from "react";
 import { useRef } from "react";
-import { LineWidthType, ShapeOutlineType, ShapeToolType, ToolType } from "../util/toolType";
+import {
+  LineWidthType,
+  ShapeOutlineType,
+  ShapeToolType,
+  ToolType,
+} from "../util/toolType";
 import { FC } from "react";
 import { useState } from "react";
 import { Pen, Tool, Eraser, ColorExtract, ColorFill, Text } from "../util/tool";
@@ -27,8 +32,8 @@ interface CanvasProps {
   fontStyle: any;
   imgSrc?: string;
   CanvasSize: {
-    width?: number;
-    height?: number;
+    width: number;
+    height: number;
   };
   id: string;
   background?: string;
@@ -52,7 +57,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     imgSrc,
     background,
     lineSize = 1,
-    onSize
+    onSize,
   } = props;
   const [tool, setTool] = useState<Tool>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -78,7 +83,9 @@ const Canvas: FC<CanvasProps> = (props) => {
         setTool(new Text(fontStyle));
         break;
       case ToolType.SHAPE:
-        setTool(new Shape(shapeType, shapeOutlineType === ShapeOutlineType.DOTTED));
+        setTool(
+          new Shape(shapeType, shapeOutlineType === ShapeOutlineType.DOTTED)
+        );
         break;
       default:
         break;
@@ -127,10 +134,15 @@ const Canvas: FC<CanvasProps> = (props) => {
   }, [subColor]);
 
   useEffect(() => {
+    //第一次进入页面,渲染首次页面
     const canvas = canvasRef.current;
-    if (canvas) {
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
+    const box = allCanvasRef.current;
+    console.log("------4", canvas);
+    if (canvas && box) {
+      const boxWidth = box.clientWidth;
+      const boxHeight = box.clientHeight;
+      const width = CanvasSize.width;
+      const height = CanvasSize.height;
       canvas.height = height;
       canvas.width = width;
       Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
@@ -141,14 +153,14 @@ const Canvas: FC<CanvasProps> = (props) => {
           img.crossOrigin = "anonymous";
           img.src = imgSrc;
           img.onload = function () {
-            canvas.height = img.height;
-            canvas.width = img.width;
             /*1.在canvas 中绘制图像*/
+            const scale = (Math.min(boxWidth, boxHeight) - 100) / img.width;
+            canvas.style.transform = `translate(-50%, -50%) scale(${scale})`;
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           };
         } else {
           ctx.fillStyle = background || "white";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillRect(0, 0, width, height);
         }
       }
 
@@ -210,7 +222,12 @@ const Canvas: FC<CanvasProps> = (props) => {
       dispatcher.on(UNDO_EVENT, back);
 
       const changeSize = () => {
-        const canvasData = Tool.ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const canvasData = Tool.ctx.getImageData(
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
         // const changWidth = allCanvasRef.current?.clientWidth || width;
         // const changHeight = allCanvasRef.current?.clientHeight || height;
         //  canvasPain(Tool.ctx, changWidth, changHeight, canvasData);
@@ -221,26 +238,31 @@ const Canvas: FC<CanvasProps> = (props) => {
         dispatcher.off(CLEAR_EVENT, callback);
       };
     }
-  }, [canvasRef]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        const canvasData = ctx?.getImageData(0, 0, canvas.width, canvas.height);
-        const height = CanvasSize.height;
-        const width = CanvasSize.width;
-        if (width && height) {
-          Tool.ctx = ctx as CanvasRenderingContext2D;
-          canvasPain(Tool.ctx, width, height, canvasData);
-        }
-      }
-    }
   }, [CanvasSize]);
 
+  // useEffect(() => {
+  //   const canvas = canvasRef.current;
+  //   if (canvas) {
+  //     const ctx = canvas.getContext("2d");
+  //     if (ctx) {
+  //       const canvasData = ctx?.getImageData(0, 0, canvas.width, canvas.height);
+  //       const height = CanvasSize.height;
+  //       const width = CanvasSize.width;
+  //       if (width && height) {
+  //         Tool.ctx = ctx as CanvasRenderingContext2D;
+  //         canvasPain(Tool.ctx, width, height, canvasData);
+  //       }
+  //     }
+  //   }
+  // }, [CanvasSize]);
+
   // 注册画布size事件
-  const canvasPain = async (ctx: CanvasRenderingContext2D, width: number, height: number, canvasData: ImageData) => {
+  const canvasPain = async (
+    ctx: CanvasRenderingContext2D,
+    width: number,
+    height: number,
+    canvasData: ImageData
+  ) => {
     console.log("===56", width, height);
     if (ctx) {
       const canvas = canvasRef.current;
@@ -249,7 +271,13 @@ const Canvas: FC<CanvasProps> = (props) => {
         canvas.height = height;
         canvas.width = width;
         if (canvasData) {
-          ctx.drawImage(await createImageBitmap(canvasData), 0, 0, width, height);
+          ctx.drawImage(
+            await createImageBitmap(canvasData),
+            0,
+            0,
+            width,
+            height
+          );
         } else {
           ctx.fillStyle = background || "white";
           ctx.fillRect(0, 0, width, height);
@@ -276,7 +304,14 @@ const Canvas: FC<CanvasProps> = (props) => {
       tool.onMouseUp(event);
 
       // 存储canvas剪影
-      snapshot.add(Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height));
+      snapshot.add(
+        Tool.ctx.getImageData(
+          0,
+          0,
+          Tool.ctx.canvas.width,
+          Tool.ctx.canvas.height
+        )
+      );
     }
   };
 
@@ -298,7 +333,37 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
 
     // 存储canvas剪影
-    snapshot.add(Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height));
+    snapshot.add(
+      Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height)
+    );
+  };
+
+  const onMousewheel = (event: WheelEvent) => {
+    console.log("====", event);
+    const { clientX, clientY, deltaY } = event;
+    const currSacle = 1 + (deltaY < 0 ? 0.1 : -0.1);
+    const zoom = Math.max(currSacle > 0 ? currSacle : 1, 0.1);
+    const x = clientX * (1 - zoom);
+    const y = clientY * (1 - zoom);
+    const t = new Float32Array([
+      zoom,
+      0,
+      0,
+      0,
+      0,
+      zoom,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      x,
+      y,
+      0,
+      1,
+    ]);
+    // ov = reDraw(ctx, ov, t);
   };
 
   useEffect(() => {
@@ -307,7 +372,7 @@ const Canvas: FC<CanvasProps> = (props) => {
       canvas.addEventListener("mousedown", onMouseDown);
       canvas.addEventListener("mousemove", onMouseMove);
       canvas.addEventListener("mouseup", onMouseUp);
-      // canvas.addEventListener("mousewheel", onMousewheel);
+      canvas.addEventListener("wheel", onMousewheel);
 
       canvas.addEventListener("touchstart", onTouchStart);
       canvas.addEventListener("touchmove", onTouchMove);
@@ -317,7 +382,7 @@ const Canvas: FC<CanvasProps> = (props) => {
         canvas.removeEventListener("mousedown", onMouseDown);
         canvas.removeEventListener("mousemove", onMouseMove);
         canvas.removeEventListener("mouseup", onMouseUp);
-        // canvas.removeEventListener("mousewheel", onMousewheel);
+        canvas.removeEventListener("wheel", onMousewheel);
 
         canvas.removeEventListener("touchstart", onTouchStart);
         canvas.removeEventListener("touchmove", onTouchMove);
@@ -326,29 +391,26 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
   }, [canvasRef, onMouseDown, onMouseMove, onMouseUp]);
 
-  const style = {
-    margin: "auto"
-  };
-  if (allCanvasRef && CanvasSize) {
-    const allCanvas = allCanvasRef.current;
-    if (allCanvas) {
-      style.margin = allCanvas.offsetWidth < (CanvasSize?.width || 0) ? "unset" : "auto";
-    }
-  }
   return (
     <div className="all-canvas" ref={allCanvasRef}>
       <canvas
         id={`ccc-paint-canvas ${id}`}
         className="ccc-paint-canvas"
         ref={canvasRef}
-        style={{ background: background || "#fff", ...style }}
+        style={{ background: background || "#fff" }}
       ></canvas>
       <div
         className="canvas-text"
         id="canvas-text"
-        style={{ width: CanvasSize.width, height: CanvasSize.height, ...style }}
+        style={{ width: CanvasSize.width, height: CanvasSize.height }}
       >
-        <TextArea id="textBox" name="story" autoFocus={true} className="text-box" rows={1} />
+        <TextArea
+          id="textBox"
+          name="story"
+          autoFocus={true}
+          className="text-box"
+          rows={1}
+        />
       </div>
     </div>
   );

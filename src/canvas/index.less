@@ -1,7 +1,7 @@
 .all-canvas {
   display: flex;
   position: relative;
-  overflow: auto;
+  //overflow: auto;
   background-color: #2d2d2d;
   justify-content: center;
   align-items: center;
@@ -12,28 +12,16 @@
 .ccc-paint-canvas {
   position: absolute;
   z-index: 5;
-  // left: 50%;
-  // top: 50%;
-  // transform: translate(-50%, -50%);
-
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .canvas-text {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  // position: absolute;
-  // left: 50%;
-  // top: 50%;
-  // transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: -1;
   pointer-events: none;
   .text-box {
