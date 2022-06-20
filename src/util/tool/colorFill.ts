@@ -103,7 +103,7 @@ class ColorFill extends Tool {
   }
   public onMouseDown(event: MouseEvent): void {
     event.preventDefault();
-    const mousepos = getMousePos(Tool.ctx.canvas, event);
+    const mousepos = getMousePos(Tool.ctx.canvas, event,'colorFill');
     this.operateStart(mousepos);
   }
 

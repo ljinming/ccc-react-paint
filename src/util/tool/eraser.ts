@@ -18,7 +18,7 @@ class Eraser extends Tool {
     if (!Tool.ctx) return;
     this.saveImageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
     this.mouseDown = true;
-    this.color = getPixelColorOnCanvas(Tool.ctx, pos.x - this.lineWidthBase, pos.y - this.lineWidthBase);
+    this.color = getPixelColorOnCanvas(Tool.ctx, pos.x -1, pos.y - 1);
     Tool.ctx.lineWidth = 3 * this.lineWidthBase;
     Tool.ctx.strokeStyle = this.color;
     Tool.ctx.lineJoin = "round";

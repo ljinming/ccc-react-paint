@@ -17,15 +17,8 @@ import { DispatcherContext } from "../context";
 import { CLEAR_EVENT, REDO_EVENT, UNDO_EVENT } from "../util/dispatcher/event";
 import SnapShot from "../util/snapshot";
 import { Input } from "antd";
-import * as glMatrix from "gl-matrix";
-//import { glMatrix as glMatrix } from "gl-matrix";
 
 const { TextArea } = Input;
-
-interface IPos {
-  x: number;
-  y: number;
-}
 
 interface CanvasProps {
   toolType: ToolType;
@@ -39,14 +32,16 @@ interface CanvasProps {
   fontStyle: any;
   imgSrc?: string;
   CanvasSize: {
-    width: number;
-    height: number;
+    width?: number;
+    height?: number;
   };
   id: string;
   background?: string;
   onSize?: (value: any) => void;
   setColor: (value: string) => void;
 }
+
+let show_scale = 1;
 
 const Canvas: FC<CanvasProps> = (props) => {
   const {
@@ -69,10 +64,10 @@ const Canvas: FC<CanvasProps> = (props) => {
   const [tool, setTool] = useState<Tool>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const allCanvasRef = useRef<HTMLDivElement>(null);
+  const canvasTextRef = useRef<HTMLDivElement>(null);
   const dispatcherContext = useContext(DispatcherContext);
   const [snapshot] = useState<SnapShot>(new SnapShot());
-  const [scale, setScale] = useState<number>(1);
-
+  const [scale, setScale] = useState(1);
   useEffect(() => {
     switch (toolType) {
       case ToolType.PEN:
@@ -98,7 +93,7 @@ const Canvas: FC<CanvasProps> = (props) => {
       default:
         break;
     }
-  }, [toolType, shapeType, fontStyle, lineSize]);
+  }, [toolType, shapeType, fontStyle, lineSize, scale]);
 
   useEffect(() => {
     if (tool instanceof Shape) {
@@ -107,7 +102,6 @@ const Canvas: FC<CanvasProps> = (props) => {
   }, [shapeOutlineType]);
 
   useEffect(() => {
-    console.log("=====5", lineSize);
     switch (lineWidthType) {
       case LineWidthType.THIN:
         Tool.lineWidthFactor = 1;
@@ -142,36 +136,38 @@ const Canvas: FC<CanvasProps> = (props) => {
   }, [subColor]);
 
   useEffect(() => {
-    //第一次进入页面,渲染首次页面
     const canvas = canvasRef.current;
-    const box = allCanvasRef.current;
-    console.log("------4", canvas);
-    if (canvas && box) {
-      const boxWidth = box.clientWidth;
-      const boxHeight = box.clientHeight;
-      const width = CanvasSize.width;
-      const height = CanvasSize.height;
-      canvas.height = height;
-      canvas.width = width;
+    const container = allCanvasRef.current;
+    if (canvas) {
+      const width = container!.clientWidth;
+      const height = container!.clientHeight;
       Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       const ctx = canvas.getContext("2d");
+      let showScale = scale;
       if (ctx) {
         if (imgSrc) {
           const img = new Image();
           img.crossOrigin = "anonymous";
           img.src = imgSrc;
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
           img.onload = function () {
+            canvas.height = img.height;
+            canvas.width = img.width;
             /*1.在canvas 中绘制图像*/
-            const scale = (Math.min(boxWidth, boxHeight) - 100) / img.width;
-            setScale(scale);
-            canvas.style.transform = `translate(-50%, -50%) scale(${scale})`;
+            showScale =
+              Math.min(width, height) / Math.max(img.height, img.width);
+            console.log("===5", showScale);
+            ctx.scale(showScale, showScale);
+            //show_scale = showScale;
+            const showWidth: number = img.width * showScale;
+            const showHeight = img.height * showScale;
+            defaultCanvas(showWidth, showHeight);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           };
         } else {
-          ctx.fillStyle = background || "white";
-          ctx.fillRect(0, 0, width, height);
+          ctx.fillStyle = background || "#2d2d2d";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
+        setScale(showScale);
       }
 
       // 注册清空画布事件
@@ -248,7 +244,18 @@ const Canvas: FC<CanvasProps> = (props) => {
         dispatcher.off(CLEAR_EVENT, callback);
       };
     }
-  }, [CanvasSize]);
+  }, [canvasRef]);
+
+  const defaultCanvas = (width: number, height: number) => {
+    const textBox = canvasTextRef.current;
+    const canvas = canvasRef.current;
+    if (textBox && canvas) {
+      canvas.setAttribute("height", `${height}px`);
+      canvas.setAttribute("width", `${width}px`);
+      textBox.setAttribute("height", `${height}px`);
+      textBox.setAttribute("width", `${width}px`);
+    }
+  };
 
   // useEffect(() => {
   //   const canvas = canvasRef.current;
@@ -278,6 +285,8 @@ const Canvas: FC<CanvasProps> = (props) => {
       const canvas = canvasRef.current;
       if (canvas) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.height = height;
+        canvas.width = width;
         if (canvasData) {
           ctx.drawImage(
             await createImageBitmap(canvasData),
@@ -295,24 +304,6 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
   };
 
-  const onMousewheel = (event: WheelEvent) => {
-    const { deltaX, deltaY } = event;
-  };
-
-  const onDraw = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
-    //先清除画布，清除两倍的画布，因为要改变坐标原点，只有这样才能不管原点在哪里都能完全清除画布
-    ctx.clearRect(
-      canvas.width,
-      canvas.height,
-      canvas.width * 2,
-      canvas.height * 2
-    );
-    // //画图片，因为原点在图片的中心点，所以每次画图只需要从图片的负一半坐标开始画，就能看到我们想要的效果
-    // ctx.drawImage(imgData, imgData.wi / 2, -imgH / 2, imgW, imgH); //这里再加上两个参数，这两个参数是告诉canvas需要画多宽多高
-    // //可旋转图标
-    // ctx.drawImage(imgIcon, imgW / 2, -imgH / 2 - iconR);
-  };
-
   const onMouseDown = (event: MouseEvent) => {
     if (tool) {
       tool.onMouseDown(event);
@@ -328,7 +319,6 @@ const Canvas: FC<CanvasProps> = (props) => {
   const onMouseUp = (event: MouseEvent) => {
     if (tool) {
       tool.onMouseUp(event);
-
       // 存储canvas剪影
       snapshot.add(
         Tool.ctx.getImageData(
@@ -364,6 +354,40 @@ const Canvas: FC<CanvasProps> = (props) => {
     );
   };
 
+  const onMousewheel = async (event: any) => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const canvasData = Tool.ctx.getImageData(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+      const { wheelDelta } = event;
+      console.log("==4", show_scale);
+      if (wheelDelta < 0) {
+        //缩小
+        if (show_scale > 0.6) {
+          Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
+          show_scale = show_scale - 0.01;
+          Tool.ctx.scale(show_scale, show_scale);
+          Tool.currentScale = show_scale;
+        }
+        if (canvasData) {
+          Tool.ctx.drawImage(
+            await createImageBitmap(canvasData),
+            0,
+            0,
+            canvas.width,
+            canvas.height
+          );
+        }
+      }
+    }
+
+    //const showScale =
+  };
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
@@ -389,18 +413,29 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
   }, [canvasRef, onMouseDown, onMouseMove, onMouseUp]);
 
+  const style = {
+    margin: "auto",
+  };
+  if (allCanvasRef && CanvasSize) {
+    const allCanvas = allCanvasRef.current;
+    if (allCanvas) {
+      style.margin =
+        allCanvas.offsetWidth < (CanvasSize?.width || 0) ? "unset" : "auto";
+    }
+  }
   return (
     <div className="all-canvas" ref={allCanvasRef}>
       <canvas
         id={`ccc-paint-canvas ${id}`}
         className="ccc-paint-canvas"
         ref={canvasRef}
-        style={{ background: background || "#fff" }}
+        style={{ background: background || "#fff", ...style }}
       ></canvas>
       <div
         className="canvas-text"
         id="canvas-text"
-        style={{ width: CanvasSize.width, height: CanvasSize.height }}
+        ref={canvasTextRef}
+        style={{ width: CanvasSize.width, height: CanvasSize.height, ...style }}
       >
         <TextArea
           id="textBox"
