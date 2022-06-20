@@ -17,8 +17,15 @@ import { DispatcherContext } from "../context";
 import { CLEAR_EVENT, REDO_EVENT, UNDO_EVENT } from "../util/dispatcher/event";
 import SnapShot from "../util/snapshot";
 import { Input } from "antd";
+import * as glMatrix from "gl-matrix";
+//import { glMatrix as glMatrix } from "gl-matrix";
 
 const { TextArea } = Input;
+
+interface IPos {
+  x: number;
+  y: number;
+}
 
 interface CanvasProps {
   toolType: ToolType;
@@ -64,6 +71,7 @@ const Canvas: FC<CanvasProps> = (props) => {
   const allCanvasRef = useRef<HTMLDivElement>(null);
   const dispatcherContext = useContext(DispatcherContext);
   const [snapshot] = useState<SnapShot>(new SnapShot());
+  const [scale, setScale] = useState<number>(1);
 
   useEffect(() => {
     switch (toolType) {
@@ -152,11 +160,13 @@ const Canvas: FC<CanvasProps> = (props) => {
           const img = new Image();
           img.crossOrigin = "anonymous";
           img.src = imgSrc;
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
           img.onload = function () {
             /*1.在canvas 中绘制图像*/
             const scale = (Math.min(boxWidth, boxHeight) - 100) / img.width;
+            setScale(scale);
             canvas.style.transform = `translate(-50%, -50%) scale(${scale})`;
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           };
         } else {
           ctx.fillStyle = background || "white";
@@ -268,8 +278,6 @@ const Canvas: FC<CanvasProps> = (props) => {
       const canvas = canvasRef.current;
       if (canvas) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        canvas.height = height;
-        canvas.width = width;
         if (canvasData) {
           ctx.drawImage(
             await createImageBitmap(canvasData),
@@ -285,6 +293,24 @@ const Canvas: FC<CanvasProps> = (props) => {
       }
       snapshot.add(ctx.getImageData(0, 0, width, height));
     }
+  };
+
+  const onMousewheel = (event: WheelEvent) => {
+    const { deltaX, deltaY } = event;
+  };
+
+  const onDraw = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
+    //先清除画布，清除两倍的画布，因为要改变坐标原点，只有这样才能不管原点在哪里都能完全清除画布
+    ctx.clearRect(
+      canvas.width,
+      canvas.height,
+      canvas.width * 2,
+      canvas.height * 2
+    );
+    // //画图片，因为原点在图片的中心点，所以每次画图只需要从图片的负一半坐标开始画，就能看到我们想要的效果
+    // ctx.drawImage(imgData, imgData.wi / 2, -imgH / 2, imgW, imgH); //这里再加上两个参数，这两个参数是告诉canvas需要画多宽多高
+    // //可旋转图标
+    // ctx.drawImage(imgIcon, imgW / 2, -imgH / 2 - iconR);
   };
 
   const onMouseDown = (event: MouseEvent) => {
@@ -336,34 +362,6 @@ const Canvas: FC<CanvasProps> = (props) => {
     snapshot.add(
       Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height)
     );
-  };
-
-  const onMousewheel = (event: WheelEvent) => {
-    console.log("====", event);
-    const { clientX, clientY, deltaY } = event;
-    const currSacle = 1 + (deltaY < 0 ? 0.1 : -0.1);
-    const zoom = Math.max(currSacle > 0 ? currSacle : 1, 0.1);
-    const x = clientX * (1 - zoom);
-    const y = clientY * (1 - zoom);
-    const t = new Float32Array([
-      zoom,
-      0,
-      0,
-      0,
-      0,
-      zoom,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      x,
-      y,
-      0,
-      1,
-    ]);
-    // ov = reDraw(ctx, ov, t);
   };
 
   useEffect(() => {
