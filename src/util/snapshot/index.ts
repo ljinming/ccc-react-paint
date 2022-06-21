@@ -13,8 +13,12 @@ class Snapshot {
     }
     this.imageData1.push(imageData);
   }
+ 
+
+
   public getCurrent() {
-    return this.imageData1[this.imageData1.length - 1];
+    console.log('===e',this.imageData1)
+    return  this.imageData1[this.imageData1.length - 1];
   }
   public back() {
     if (this.imageData1.length > 1) {

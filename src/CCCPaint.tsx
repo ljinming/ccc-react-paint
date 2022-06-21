@@ -55,7 +55,6 @@ function Paint(props: PaintProps): JSX.Element {
   );
   const [lineSize, setLineFontSize] = useState<number>(5);
   const [fillColor, setFillColor] = useState<string>("");
-  const [size, setSize] = useState({ width, height });
   const [activeColorType, setActiveColorType] = useState<ColorType>(
     ColorType.MAIN
   );
@@ -71,21 +70,6 @@ function Paint(props: PaintProps): JSX.Element {
       setSubColor(value);
     }
   };
-
-  const loadImgSize = async (src: string) => {
-    const size = await getImageSize(src);
-    setSize(size);
-  };
-
-  useEffect(() => {
-    if (imgSrc) {
-      loadImgSize(imgSrc);
-    } else {
-      if (width && height) {
-        setSize({ width, height });
-      }
-    }
-  }, [width, height, imgSrc]);
 
   useImperativeHandle(cRef, () => ({
     getCurrentImageData: () => {
@@ -134,57 +118,54 @@ function Paint(props: PaintProps): JSX.Element {
                   setActiveColor: setActiveColorType,
                 }}
               >
-                <SizeContext.Provider value={{ size, onSize: setSize }}>
-                  <FillContext.Provider
+                <FillContext.Provider
+                  value={{
+                    fillColor,
+                    setFillColor,
+                  }}
+                >
+                  <TextContext.Provider
                     value={{
-                      fillColor,
-                      setFillColor,
+                      fontStyle,
+                      setFont: setFontStyle,
                     }}
                   >
-                    <TextContext.Provider
-                      value={{
-                        fontStyle,
-                        setFont: setFontStyle,
-                      }}
-                    >
-                      <div className="ccc">
-                        <div className="ccc-edit">
-                          <Edit CanvasSize={size} />
+                    <div className="ccc">
+                      <div className="ccc-edit">
+                        <Edit />
+                      </div>
+                      <div className="ccc-content">
+                        <div className="ToolPanel">
+                          <ToolPanel
+                            className="toolbar-item"
+                            fillColor={fillColor}
+                          />
                         </div>
-                        <div className="ccc-content">
-                          <div className="ToolPanel">
-                            <ToolPanel
-                              className="toolbar-item"
-                              fillColor={fillColor}
-                            />
-                          </div>
-                          <div className="show-Canvas">
-                            <Canvas
-                              id={id}
-                              CanvasSize={size}
-                              imgSrc={imgSrc}
-                              background={background}
-                              onSize={setSize}
-                              fillColor={fillColor}
-                              toolType={toolType}
-                              fontStyle={fontStyle}
-                              shapeType={shapeType}
-                              shapeOutlineType={shapeOutlineType}
-                              mainColor={mainColor}
-                              subColor={subColor}
-                              lineSize={lineSize}
-                              lineWidthType={lineWidthType}
-                              setColor={setColor}
-                            />
-                          </div>
-                          <div className="show-type">
-                            <Right toolType={toolType} lineSize={lineSize} />
-                          </div>
+                        <div className="show-Canvas">
+                          <Canvas
+                            id={id}
+                            CanvasSize={{ width, height }}
+                            imgSrc={imgSrc}
+                            background={background}
+                            fillColor={fillColor}
+                            toolType={toolType}
+                            fontStyle={fontStyle}
+                            shapeType={shapeType}
+                            shapeOutlineType={shapeOutlineType}
+                            mainColor={mainColor}
+                            subColor={subColor}
+                            lineSize={lineSize}
+                            lineWidthType={lineWidthType}
+                            setColor={setColor}
+                          />
+                        </div>
+                        <div className="show-type">
+                          <Right toolType={toolType} lineSize={lineSize} />
                         </div>
                       </div>
-                    </TextContext.Provider>
-                  </FillContext.Provider>
-                </SizeContext.Provider>
+                    </div>
+                  </TextContext.Provider>
+                </FillContext.Provider>
               </ColorContext.Provider>
             </DispatcherContext.Provider>
           </LineWidthContext.Provider>

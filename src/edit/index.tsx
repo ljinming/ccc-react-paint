@@ -2,20 +2,19 @@ import React from "react";
 import "./index.less";
 import { useContext } from "react";
 import { DispatcherContext } from "@/context";
-import { MenuOutlined } from "@ant-design/icons";
 import { CLEAR_EVENT, REDO_EVENT, UNDO_EVENT } from "../util/dispatcher/event";
-import Resize from "./Resize";
+//import Resize from "./Resize";
 import { undoIcon, clearIcon } from "../left-tool/util";
 
-interface propsEdit {
-  CanvasSize: {
-    width: number | undefined;
-    height: number | undefined;
-  };
-}
+// interface propsEdit {
+//   // CanvasSize: {
+//   //   width: number | undefined;
+//   //   height: number | undefined;
+//   // };
+// }
 
-const OtherOperator = (props: propsEdit) => {
-  const { CanvasSize } = props;
+const OtherOperator = () => {
+  // const { CanvasSize } = props;
   const dispatcherContext = useContext(DispatcherContext);
 
   const clearCanvas = () => {
@@ -31,12 +30,12 @@ const OtherOperator = (props: propsEdit) => {
   return (
     <div className="edit-other otherOperator">
       <div className="operator-content">
-        <span className="showSizeSpan">
+        {/* <span className="showSizeSpan">
           {CanvasSize.width}*{CanvasSize.height}
         </span>
         <span className="operator-resize">
           <Resize />
-        </span>
+        </span> */}
         <span title="Clear All" className="operator-item">
           <span onClick={clearCanvas}>{clearIcon}</span>
         </span>
