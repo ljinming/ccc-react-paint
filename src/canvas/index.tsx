@@ -345,27 +345,35 @@ const Canvas: FC<CanvasProps> = (props) => {
     if (canvas) {
       const canvasData = snapshot.getCurrent();
       const { wheelDelta } = event;
+      const x = event.offsetX; // 鼠标位置换算到相对原点的坐标
+      const y = event.offsetX;
+      let OffsetX = 0;
+      let OffsetY = 0;
+      Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
+
       if (wheelDelta > 0) {
         if (Tool.currentScale < 5) {
-          Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
           const show_scale = 1 + 0.01;
           Tool.ctx.scale(show_scale, show_scale);
+          OffsetX = -(x * Tool.currentScale * show_scale - x); // x * 绝对缩放率 得到位移
+          OffsetY = -(y * Tool.currentScale * show_scale - y); // y * 绝对缩放率 得到位移
           Tool.currentScale = Tool.currentScale * show_scale;
         }
       } else if (wheelDelta < 0) {
         //缩小
-        Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
         if (Tool.currentScale > 1) {
           const show_scale = 1 - 0.01;
           Tool.ctx.scale(show_scale, show_scale);
+          OffsetX = x - x * Tool.currentScale * show_scale; // x * 绝对缩放率 得到位移
+          OffsetY = x - y * Tool.currentScale * show_scale;
           Tool.currentScale = Tool.currentScale * show_scale;
         }
       }
       if (canvasData) {
         Tool.ctx.drawImage(
           await createImageBitmap(canvasData),
-          0,
-          0,
+          OffsetX,
+          OffsetY,
           canvas.width,
           canvas.height
         );
