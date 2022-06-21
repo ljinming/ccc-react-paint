@@ -3,7 +3,7 @@ import Tool, { Point, getMousePos, getPixelColorOnCanvas, getTouchPos, hexToRgb,
 class Eraser extends Tool {
   protected lineWidthBase = 1;
   private mouseDown = false;
-  private color = "";
+  private color = "transparent";
   private saveImageData?: ImageData;
   private previousPos: Point = {
     x: 0,
@@ -12,13 +12,14 @@ class Eraser extends Tool {
   public constructor(lineSize:number) {
     super();
     this.lineWidthBase = lineSize;
-    this.color = "";
+    this.color = "transparent";
   }
   private operateStart(pos: Point) {
     if (!Tool.ctx) return;
     this.saveImageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
     this.mouseDown = true;
-    this.color = getPixelColorOnCanvas(Tool.ctx, pos.x -1, pos.y - 1);
+    this.color = getPixelColorOnCanvas(Tool.ctx, pos.x - 2, pos.y - 2);
+    console.log('===eraser==3',this.color,pos.x)
     Tool.ctx.lineWidth = 3 * this.lineWidthBase;
     Tool.ctx.strokeStyle = this.color;
     Tool.ctx.lineJoin = "round";
@@ -52,7 +53,7 @@ class Eraser extends Tool {
   public onMouseDown(event: MouseEvent): void {
     event.preventDefault();
 
-    const mousePos = getMousePos(Tool.ctx.canvas, event);
+    const mousePos = getMousePos(Tool.ctx.canvas, event,'eraser');
 
     this.operateStart(mousePos);
   }

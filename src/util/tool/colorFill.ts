@@ -27,7 +27,6 @@ const efficentFloodFill = (
   ];
 
   if (startColor[0] === fillColor[0] && startColor[1] === fillColor[1] && startColor[2] === fillColor[2]) return;
-
   while (pixelStack.length > 0) {
     const newPos = pixelStack.pop() as [number, number];
 

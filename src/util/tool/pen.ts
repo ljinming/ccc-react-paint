@@ -47,9 +47,7 @@ class Pen extends Tool {
   }
   public onMouseDown(event: MouseEvent): void {
     event.preventDefault();
-    console.log('=4',event)
     const mousePos = getMousePos(Tool.ctx.canvas, event);
-    console.log('=mousePos==',mousePos)
     this.operateStart(mousePos);
   }
 

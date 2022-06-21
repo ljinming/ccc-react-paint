@@ -41,8 +41,6 @@ interface CanvasProps {
   setColor: (value: string) => void;
 }
 
-let show_scale = 1;
-
 const Canvas: FC<CanvasProps> = (props) => {
   const {
     id,
@@ -155,9 +153,8 @@ const Canvas: FC<CanvasProps> = (props) => {
             /*1.在canvas 中绘制图像*/
             showScale =
               Math.min(width, height) / Math.max(img.height, img.width);
-            console.log("===5", showScale);
+            Tool.currentScale = showScale;
             ctx.scale(showScale, showScale);
-            //show_scale = showScale;
             const showWidth: number = img.width * showScale;
             const showHeight = img.height * showScale;
             defaultCanvas(showWidth, showHeight);
@@ -192,9 +189,10 @@ const Canvas: FC<CanvasProps> = (props) => {
                 0,
                 height
               );
+              snapshot.add(imgData);
             };
           } else {
-            ctx.fillStyle = "white";
+            ctx.fillStyle = "#2d2d2d";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
           }
         }
@@ -248,30 +246,17 @@ const Canvas: FC<CanvasProps> = (props) => {
 
   const defaultCanvas = (width: number, height: number) => {
     const textBox = canvasTextRef.current;
+    const container = allCanvasRef.current;
+
     const canvas = canvasRef.current;
-    if (textBox && canvas) {
-      canvas.setAttribute("height", `${height}px`);
-      canvas.setAttribute("width", `${width}px`);
-      textBox.setAttribute("height", `${height}px`);
+    console.log("======", width);
+    if (textBox && container) {
+      //container.setAttribute("height", `${height}px`);
+      container.setAttribute("width", `${width}px`);
+      //  textBox.setAttribute("height", `${height}px`);
       textBox.setAttribute("width", `${width}px`);
     }
   };
-
-  // useEffect(() => {
-  //   const canvas = canvasRef.current;
-  //   if (canvas) {
-  //     const ctx = canvas.getContext("2d");
-  //     if (ctx) {
-  //       const canvasData = ctx?.getImageData(0, 0, canvas.width, canvas.height);
-  //       const height = CanvasSize.height;
-  //       const width = CanvasSize.width;
-  //       if (width && height) {
-  //         Tool.ctx = ctx as CanvasRenderingContext2D;
-  //         canvasPain(Tool.ctx, width, height, canvasData);
-  //       }
-  //     }
-  //   }
-  // }, [CanvasSize]);
 
   // 注册画布size事件
   const canvasPain = async (
@@ -280,7 +265,6 @@ const Canvas: FC<CanvasProps> = (props) => {
     height: number,
     canvasData: ImageData
   ) => {
-    console.log("===56", width, height);
     if (ctx) {
       const canvas = canvasRef.current;
       if (canvas) {
@@ -355,33 +339,36 @@ const Canvas: FC<CanvasProps> = (props) => {
   };
 
   const onMousewheel = async (event: any) => {
+    event.preventDefault();
+
     const canvas = canvasRef.current;
     if (canvas) {
-      const canvasData = Tool.ctx.getImageData(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
+      const canvasData = snapshot.getCurrent();
       const { wheelDelta } = event;
-      console.log("==4", show_scale);
-      if (wheelDelta < 0) {
-        //缩小
-        if (show_scale > 0.6) {
+      if (wheelDelta > 0) {
+        if (Tool.currentScale < 5) {
           Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
-          show_scale = show_scale - 0.01;
+          const show_scale = 1 + 0.01;
           Tool.ctx.scale(show_scale, show_scale);
-          Tool.currentScale = show_scale;
+          Tool.currentScale = Tool.currentScale * show_scale;
         }
-        if (canvasData) {
-          Tool.ctx.drawImage(
-            await createImageBitmap(canvasData),
-            0,
-            0,
-            canvas.width,
-            canvas.height
-          );
+      } else if (wheelDelta < 0) {
+        //缩小
+        Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (Tool.currentScale > 1) {
+          const show_scale = 1 - 0.01;
+          Tool.ctx.scale(show_scale, show_scale);
+          Tool.currentScale = Tool.currentScale * show_scale;
         }
+      }
+      if (canvasData) {
+        Tool.ctx.drawImage(
+          await createImageBitmap(canvasData),
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
       }
     }
 
@@ -394,7 +381,7 @@ const Canvas: FC<CanvasProps> = (props) => {
       canvas.addEventListener("mousedown", onMouseDown);
       canvas.addEventListener("mousemove", onMouseMove);
       canvas.addEventListener("mouseup", onMouseUp);
-      canvas.addEventListener("wheel", onMousewheel);
+      canvas.addEventListener("wheel", onMousewheel, { passive: false });
 
       canvas.addEventListener("touchstart", onTouchStart);
       canvas.addEventListener("touchmove", onTouchMove);

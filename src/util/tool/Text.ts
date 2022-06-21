@@ -1,4 +1,4 @@
-import Tool from "./tool";
+import Tool, { Point, getMousePos, } from "./tool";
 
 // interface propsInput = {
 //             x?: number,
@@ -16,6 +16,7 @@ class Text extends Tool {
   private fontStyle: any;
   private canvas: any;
   private canvasText: any;
+  mousePos:Point | undefined;
   public constructor(fontType: any) {
     super();
     this._x = NaN;
@@ -66,7 +67,7 @@ class Text extends Tool {
       //     ';">' +
       //     this.textContent),
       //     +"</body></foreignObject></svg>";
-      context.fillText(this.textContent, parseInt(this.textBox.style.left), parseInt(this.textBox.style.top));
+      context.fillText(this.textContent, x, y);
       // this.wrapText(this.textContent, parseInt(this.textBox.style.left), parseInt(this.textBox.style.top));
     }
   }
@@ -81,10 +82,12 @@ class Text extends Tool {
       this.textBox.style["z-index"] = -1;
       this.canvasText.style["z-index"] = -1;
       this.textBox.style.visibility = "hidden";
-      this.drawing(this._x, this._y);
+      this.drawing(this.mousePos!.x,this.mousePos!.y);
       this.textBox.value = "";
     } else if (!this.isMouseDown) {
-      this._x = event.offsetX; // 鼠标按下时保存当前位置，为起始位置
+      const mousePos = getMousePos(Tool.ctx.canvas, event);
+      this.mousePos = mousePos
+      this._x =  event.offsetX; // 鼠标按下时保存当前位置，为起始位置
       this._y = event.offsetY;
       this.isMouseDown = true;
       this.textBox.value = "";
