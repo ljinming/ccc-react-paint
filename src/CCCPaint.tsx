@@ -36,14 +36,7 @@ interface PaintProps {
 }
 
 function Paint(props: PaintProps): JSX.Element {
-  const {
-    id = "test",
-    imgSrc = "https://bafybeib43atlw6hxffw7xysnhtznpiey2cqln2akufhixfsequpnfjf5dq.ipfs.dweb.link/orign.png",
-    width,
-    height,
-    background,
-    cRef,
-  } = props;
+  const { id = "test", imgSrc, width, height, background, cRef } = props;
 
   const [toolType, setToolType] = useState<ToolType>(ToolType.PEN);
   const [shapeType, setShapeType] = useState<ShapeToolType>(ShapeToolType.LINE);

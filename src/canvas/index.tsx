@@ -225,6 +225,8 @@ const Canvas: FC<CanvasProps> = (props) => {
         canvas.style.cursor = `url(${cursorPen}),auto`;
       } else if (toolType === 4) {
         canvas.style.cursor = `url(${cursorErase}),auto`;
+      } else {
+        canvas.style.cursor = `auto`;
       }
     }
   };
@@ -275,7 +277,7 @@ const Canvas: FC<CanvasProps> = (props) => {
       } else {
         canvas.height = CanvasSize.height || 500;
         canvas.width = CanvasSize.width || 500;
-        ctx.fillStyle = background || "#2d2d2d";
+        ctx.fillStyle = background || "#fff";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         snapshot.add(ctx.getImageData(0, 0, canvas.width, canvas.height));
       }
