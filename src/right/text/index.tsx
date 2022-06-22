@@ -112,6 +112,7 @@ const FormatColor: React.FC<FormatColor> = (props) => {
         </div>
         <div className="material-color-box">
           <ColorPanel
+            type="text"
             className="toolbar-item"
             onChange={(color: string) => {
               TextToolContext.setFont({

@@ -7,7 +7,7 @@ export interface Point {
 
 // 吸色功能
 export const setStraw = (pos?: Point) => {
-  if (Tool.strawFlag && pos && !Tool.strawColor ) {
+  if (Tool.strawFlag && pos) {
     // 吸色
     const color = getPixelColorOnCanvas(Tool.ctx, pos.x, pos!.y);
     Tool.strawColor = color;

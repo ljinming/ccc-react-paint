@@ -1,6 +1,6 @@
 {
   "name": "ccc-react-paint",
-  "version": "0.2.20",
+  "version": "1.0.0",
   "keywords": [
     "ccc",
     "paint",
@@ -27,34 +27,9 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "react-app-rewired start --hot",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "eject": "react-scripts eject",
-    "lint:fix": "eslint --fix './src/**/*.{ts,tsx}'",
-    "dist": "webpack --config webpack/webpack.dist.prod.config.js",
     "rollup-build": "rm -rf dist & cross-env NODE_ENV=production rollup -c"
   },
-  "peerDependencies": {
-    "react": ">=17"
-  },
-  "lint-staged": {
-    "src/**/*.{jsx,tsx,ts,js,vue}": [
-      "eslint --fix",
-      "git add"
-    ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "cz-customizable"
-    }
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
+ 
   "browserslist": {
     "production": [
       ">0.2%",

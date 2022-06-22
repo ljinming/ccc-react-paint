@@ -19,13 +19,7 @@ import SnapShot from "../util/snapshot";
 import { Input } from "antd";
 import cursorPen from "@/assets/icon/cursorPen.jpg";
 import cursorErase from "@/assets/icon/cursorErase.jpg";
-import {
-  toolPen,
-  toolShape,
-  formatColor,
-  textIcon,
-  toolEraser,
-} from "../ToolTypeIcon";
+
 const { TextArea } = Input;
 
 interface CanvasProps {
@@ -39,9 +33,9 @@ interface CanvasProps {
   fillColor: string;
   fontStyle: any;
   imgSrc?: string;
-  CanvasSize: {
-    width?: number;
-    height?: number;
+  CanvasSize?: {
+    width: number;
+    height: number;
   };
   id: string;
   background?: string;
@@ -50,10 +44,6 @@ interface CanvasProps {
 }
 
 let show_scale = 1;
-let imgSize = {
-  width: 1000,
-  height: 1000,
-};
 
 const Canvas: FC<CanvasProps> = (props) => {
   const {
@@ -150,8 +140,8 @@ const Canvas: FC<CanvasProps> = (props) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
-      drawCanvas();
       showCanvasCursor();
+      drawCanvas();
       Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       // 注册清空画布事件
       const dispatcher = dispatcherContext.dispatcher;
@@ -247,11 +237,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     const canvas = canvasRef.current;
     const container = allCanvasRef!.current;
     const textRef = canvasTextRef.current;
-
     if (canvas && container && textRef) {
-      const width = container!.clientWidth;
-      let showScale = 1;
-      const height = container!.clientHeight;
       const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       if (imgSrc) {
         const img = new Image();
@@ -261,12 +247,7 @@ const Canvas: FC<CanvasProps> = (props) => {
           canvas.height = img.height;
           canvas.width = img.width;
           /*1.在canvas 中绘制图像*/
-          showScale = Math.min(width, height) / Math.max(img.height, img.width);
-          show_scale = showScale;
-          Tool.currentScale = showScale;
-          imgSize = { width: img.width, height: img.height };
           // ctx.scale(showScale, showScale);
-          defaultCanvas(showScale);
           textRef.setAttribute(
             "style",
             `width:${canvas.width};height:${canvas.height}`
@@ -274,15 +255,32 @@ const Canvas: FC<CanvasProps> = (props) => {
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           snapshot.add(ctx.getImageData(0, 0, canvas.width, canvas.height));
         };
-      } else {
-        canvas.height = CanvasSize.height || 500;
-        canvas.width = CanvasSize.width || 500;
+      } else if (CanvasSize) {
+        canvas.height = CanvasSize.height;
+        canvas.width = CanvasSize.width;
         ctx.fillStyle = background || "#fff";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         snapshot.add(ctx.getImageData(0, 0, canvas.width, canvas.height));
       }
     }
   };
+
+  useEffect(() => {
+    const container = allCanvasRef!.current;
+    console.log("===45", CanvasSize);
+    if (CanvasSize) {
+      drawCanvas();
+      let showScale = 1;
+      const height = container!.clientHeight;
+      const width = container!.clientWidth;
+      showScale =
+        Math.min(width, height) / Math.max(CanvasSize.height, CanvasSize.width);
+      show_scale = showScale;
+      console.log("===435", width, height, show_scale);
+      Tool.currentScale = showScale;
+      defaultCanvas(showScale);
+    }
+  }, [CanvasSize]);
 
   const onMouseDown = (event: MouseEvent) => {
     if (tool) {

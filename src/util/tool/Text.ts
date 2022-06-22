@@ -65,8 +65,9 @@ class Text extends Tool {
     } else if (!this.isMouseDown) {
       const mousePos = getMousePos(Tool.ctx.canvas, event);
       this.mousePos = mousePos
-      this._x = event.layerX // event.offsetX; // 鼠标按下时保存当前位置，为起始位置
-      this._y =  event.clientY -80 //event.offsetY;
+      console.log('==text=456',event)
+      this._x = event.clientX - 80 // event.offsetX; // 鼠标按下时保存当前位置，为起始位置
+      this._y =  event.clientY - 80   //event.offsetY;
       this.isMouseDown = true;
       this.textBox.value = "";
       if (typeof this.fontStyle === "object") {

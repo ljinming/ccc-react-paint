@@ -30,7 +30,6 @@ const activeColorTypeCls = "active-color-type";
 
 const ColorPanel: React.FC<ColorPanelProps> = (props) => {
   const { className, type, onChange, testTool } = props;
-  const [flag, setFlag] = useState(false);
   const [pickerColor, setPickerColor] = useState(
     createColor(type && type === "pen" ? getRandomColor() : "#000000FF")
   );
@@ -70,16 +69,18 @@ const ColorPanel: React.FC<ColorPanelProps> = (props) => {
               }
             }}
           />
-          <span
-            className={`straw-color ${Tool.strawFlag ? "select-item" : ""}`}
-            onClick={() => {
-              setFlag(!setFlag);
-              Tool.strawFlag = true;
-              getStrawColor();
-            }}
-          >
-            {strawIcon}
-          </span>
+          {type !== "text" && (
+            <span
+              className={`straw-color ${Tool.strawFlag ? "select-item" : ""}`}
+              onClick={() => {
+                Tool.strawFlag = true;
+                Tool.strawColor = "";
+                getStrawColor();
+              }}
+            >
+              {strawIcon}
+            </span>
+          )}
         </div>
       </div>
     </div>

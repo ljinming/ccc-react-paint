@@ -34,12 +34,21 @@ interface PaintProps {
   id?: string;
   cRef?: any;
 }
+//= "https://bafybeiauevqh55vn44gxddqtjcn2doxoc6gxebibqt3t2pdafuftmtnqkm.ipfs.dweb.link/orign.png"
 
 function Paint(props: PaintProps): JSX.Element {
-  const { id = "test", imgSrc, width, height, background, cRef } = props;
+  const {
+    id = "test",
+    imgSrc,
+    width = 500,
+    height = 500,
+    background,
+    cRef,
+  } = props;
 
   const [toolType, setToolType] = useState<ToolType>(ToolType.PEN);
   const [shapeType, setShapeType] = useState<ShapeToolType>(ShapeToolType.LINE);
+  const [size, setSize] = useState({ width, height });
   const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(
     ShapeOutlineType.SOLID
   );
@@ -71,6 +80,21 @@ function Paint(props: PaintProps): JSX.Element {
       return imageData;
     },
   }));
+
+  const loadImage = async (imgSrc: string) => {
+    const size = await getImageSize(imgSrc);
+    console.log("===546", size);
+
+    setSize(size);
+  };
+
+  useEffect(() => {
+    if (imgSrc) {
+      loadImage(imgSrc);
+    } else if (width && height) {
+      setSize({ width, height });
+    }
+  }, [width, height, imgSrc]);
 
   return (
     <ToolTypeContext.Provider
@@ -137,7 +161,7 @@ function Paint(props: PaintProps): JSX.Element {
                         <div className="show-Canvas">
                           <Canvas
                             id={id}
-                            CanvasSize={{ width, height }}
+                            CanvasSize={size}
                             imgSrc={imgSrc}
                             background={background}
                             fillColor={fillColor}
