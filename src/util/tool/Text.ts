@@ -15,15 +15,18 @@ class Text extends Tool {
   private textBox: any;
   private fontStyle: any;
   private canvas: any;
-  private canvasText: any;
-  mousePos:Point | undefined;
+  private canvasBox: any;
+  mousePos:Point;
   public constructor(fontType: any) {
     super();
     this._x = NaN;
     this._y = NaN;
     this.textBox = document.getElementById("textBox");
-    this.canvasText = document.getElementById("canvas-text");
-
+    this.canvasBox = document.getElementById("ccc-all-canvas");
+    this.mousePos = {
+      x: 0,
+      y:0
+    }
     this.textContent = "";
     this.fontStyle = fontType;
   }
@@ -80,15 +83,15 @@ class Text extends Tool {
       this.textContent = this.textBox.value;
       this.isMouseDown = false;
       this.textBox.style["z-index"] = -1;
-      this.canvasText.style["z-index"] = -1;
-      this.textBox.style.visibility = "hidden";
-      this.drawing(this.mousePos!.x,this.mousePos!.y);
+      this.textBox.setAttribute("style", `visibility:hidden;z-index:-1;`)
+
+      this.drawing(this.mousePos.x ,this.mousePos.y);
       this.textBox.value = "";
     } else if (!this.isMouseDown) {
       const mousePos = getMousePos(Tool.ctx.canvas, event);
       this.mousePos = mousePos
-      this._x =  event.offsetX; // 鼠标按下时保存当前位置，为起始位置
-      this._y = event.offsetY;
+      this._x =   event.clientX - 80; // 鼠标按下时保存当前位置，为起始位置
+      this._y = event.clientY -80;
       this.isMouseDown = true;
       this.textBox.value = "";
       if (typeof this.fontStyle === "object") {
@@ -96,11 +99,7 @@ class Text extends Tool {
           this.textBox.style[va] = this.fontStyle[va];
         });
       }
-      this.canvasText.style["z-index"] = 5;
-      this.textBox.style["z-index"] = 6;
-      this.textBox.style.visibility = "visible";
-      this.textBox.style.left = this._x - 4 + "px";
-      this.textBox.style.top = this._y - 2 + "px";
+      this.textBox.setAttribute("style", `position:absolute;visibility:visible;z-index:6;min-width:120px; left:${this._x}px;top:${this._y}px;`)
     }
   }
 }
