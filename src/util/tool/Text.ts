@@ -22,7 +22,7 @@ class Text extends Tool {
     this._x = NaN;
     this._y = NaN;
     this.textBox = document.getElementById("textBox");
-    this.canvasBox = document.getElementById("ccc-all-canvas");
+    this.canvasBox = document.getElementById("text-container");
     this.mousePos = {
       x: 0,
       y:0
@@ -48,50 +48,26 @@ class Text extends Tool {
           context.canvas.style.letterSpacing = letterSpacing;
         }
       }
-
-      // 写字
-      //   const width = this.canvas.offsetWidth;
-      //   console.log("----546", this.canvas);
-      //   const height = this.canvas.offsetHeight;
-      //   const tempImg = new Image();
-      //   tempImg.width = width;
-      //   tempImg.height = height;
-      //   tempImg.onload = function () {
-      //     // 把img绘制在canvas画布上
-      //     context.drawImage(tempImg, 0, 0, width, height);
-      //   };
-      //   (tempImg.src =
-      //     'data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><foreignObject width="' +
-      //     width +
-      //     '" height="' +
-      //     height +
-      //     '"><body xmlns="http://www.w3.org/1999/xhtml" style="margin:0;font:' +
-      //     context.font +
-      //     ';">' +
-      //     this.textContent),
-      //     +"</body></foreignObject></svg>";
       context.fillText(this.textContent, x, y);
-      // this.wrapText(this.textContent, parseInt(this.textBox.style.left), parseInt(this.textBox.style.top));
     }
   }
 
-  public onMouseDown(event: MouseEvent): void {
+  public onMouseDown(event: any): void {
     // 鼠标按下位置保存
-
     event.preventDefault();
     if (this.isMouseDown) {
       this.textContent = this.textBox.value;
       this.isMouseDown = false;
-      this.textBox.style["z-index"] = -1;
-      this.textBox.setAttribute("style", `visibility:hidden;z-index:-1;`)
+      this.textBox.setAttribute("style", `z-index:-1;display:none`)
+      this.canvasBox.setAttribute('style', `z-index:-2;display:none`);
 
-      this.drawing(this.mousePos.x ,this.mousePos.y);
-      this.textBox.value = "";
+      this.drawing(this.mousePos.x ,this.mousePos.y)
+      this.textBox.value = null;
     } else if (!this.isMouseDown) {
       const mousePos = getMousePos(Tool.ctx.canvas, event);
       this.mousePos = mousePos
-      this._x =   event.clientX - 80; // 鼠标按下时保存当前位置，为起始位置
-      this._y = event.clientY -80;
+      this._x = event.layerX // event.offsetX; // 鼠标按下时保存当前位置，为起始位置
+      this._y =  event.clientY -80 //event.offsetY;
       this.isMouseDown = true;
       this.textBox.value = "";
       if (typeof this.fontStyle === "object") {
@@ -99,7 +75,8 @@ class Text extends Tool {
           this.textBox.style[va] = this.fontStyle[va];
         });
       }
-      this.textBox.setAttribute("style", `position:absolute;visibility:visible;z-index:6;min-width:120px; left:${this._x}px;top:${this._y}px;`)
+      this.canvasBox.setAttribute('style', `z-index:5;display:block,pointer-events:auto`);
+      this.textBox.setAttribute("style", `display:block;position:absolute;z-index:6;width:auto; left:${this._x}px;top:${this._y}px;`)
     }
   }
 }

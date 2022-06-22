@@ -6,14 +6,13 @@ export interface Point {
 
 export const getMousePos = (canvas: HTMLCanvasElement, event: MouseEvent, type?: string): Point => {
   const rect = canvas.getBoundingClientRect();
-  console.log('==r', Tool.currentScale)
   const scale = Tool.currentScale || 1
- if (type) { 
-      return {
-          x: (event.clientX - rect.left),
-          y: (event.clientY - rect.top)
-        };
-  }
+//  if (type) { 
+//       return {
+//           x: (event.clientX - rect.left),
+//           y: (event.clientY - rect.top)
+//         };
+//   }
   return {
     x: (event.clientX - rect.left)/scale,
     y: (event.clientY - rect.top)/scale

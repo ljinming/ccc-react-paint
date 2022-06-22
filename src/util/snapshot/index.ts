@@ -7,7 +7,6 @@ class Snapshot {
   private imageData1: ImageData[] = [];
   private imageData2: ImageData[] = [];
   public add(imageData: ImageData) {
-    console.log('add----------------------------------------------------add',imageData)
     if (this.imageData1.length === MAX_DATA_LENGTH) {
       this.imageData1.shift();
     }
@@ -17,7 +16,6 @@ class Snapshot {
 
 
   public getCurrent() {
-    console.log('===e',this.imageData1)
     return  this.imageData1[this.imageData1.length - 1];
   }
   public back() {

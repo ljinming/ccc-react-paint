@@ -41,6 +41,12 @@ interface CanvasProps {
   setColor: (value: string) => void;
 }
 
+let show_scale = 1;
+let imgSize = {
+  width: 1000,
+  height: 1000,
+};
+
 const Canvas: FC<CanvasProps> = (props) => {
   const {
     id,
@@ -64,6 +70,9 @@ const Canvas: FC<CanvasProps> = (props) => {
   const canvasTextRef = useRef<HTMLDivElement>(null);
   const dispatcherContext = useContext(DispatcherContext);
   const [snapshot] = useState<SnapShot>(new SnapShot());
+  const [scale, setScale] = useState<number>(1);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+
   useEffect(() => {
     switch (toolType) {
       case ToolType.PEN:
@@ -200,13 +209,23 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
   }, [canvasRef]);
 
-  const defaultCanvas = (width: number, height: number) => {
-    const textBox = canvasTextRef.current;
-    const container = allCanvasRef.current;
-
+  const defaultCanvas = (showScale: number) => {
+    const container = allCanvasRef!.current;
     const canvas = canvasRef.current;
-    if (textBox && container) {
-      // container.setAttribute("style", `height:${height}px;width:${width}px`);
+    const textRef = canvasTextRef.current;
+    if (container && canvas && textRef) {
+      // const width = imgSize.width * showScale;
+      // const height = imgSize.height * showScale;
+      const styleCanvas = canvas.getBoundingClientRect();
+      canvas.setAttribute(
+        "style",
+        `transform:scale(${showScale},${showScale})`
+      );
+      //  container.setAttribute("style", `height:${height}px;width:${width}px`);
+      // textRef.setAttribute(
+      //   "style",
+      //   `transform:scale(${showScale},${showScale})`
+      // );
       //textBox.setAttribute("width", `${width}px`);
     }
   };
@@ -214,12 +233,14 @@ const Canvas: FC<CanvasProps> = (props) => {
   const drawCanvas = () => {
     const canvas = canvasRef.current;
     const container = allCanvasRef!.current;
-    if (canvas && container) {
+    const textRef = canvasTextRef.current;
+
+    if (canvas && container && textRef) {
       const width = container!.clientWidth;
+      let showScale = 1;
       const height = container!.clientHeight;
       const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       if (imgSrc) {
-        let showScale = 1;
         const img = new Image();
         img.crossOrigin = "anonymous";
         img.src = imgSrc;
@@ -228,9 +249,15 @@ const Canvas: FC<CanvasProps> = (props) => {
           canvas.width = img.width;
           /*1.在canvas 中绘制图像*/
           showScale = Math.min(width, height) / Math.max(img.height, img.width);
+          show_scale = showScale;
           Tool.currentScale = showScale;
-          ctx.scale(showScale, showScale);
-          // drawCanvas(width, height);
+          imgSize = { width: img.width, height: img.height };
+          // ctx.scale(showScale, showScale);
+          defaultCanvas(showScale);
+          textRef.setAttribute(
+            "style",
+            `width:${canvas.width};height:${canvas.height}`
+          );
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           snapshot.add(ctx.getImageData(0, 0, canvas.width, canvas.height));
         };
@@ -243,10 +270,6 @@ const Canvas: FC<CanvasProps> = (props) => {
       }
     }
   };
-
-  // useEffect(() => {
-  //   drawCanvas();
-  // }, [CanvasSize, imgSrc]);
 
   const onMouseDown = (event: MouseEvent) => {
     if (tool) {
@@ -301,60 +324,69 @@ const Canvas: FC<CanvasProps> = (props) => {
   const onMousewheel = (event: any) => {
     event.preventDefault();
     const canvas = canvasRef.current;
+    const offset = {
+      x: 0,
+      y: 0,
+    };
+
     if (canvas) {
-      const canvasData =
-        snapshot.getCurrent() ||
-        Tool.ctx.getImageData(
-          0,
-          0,
-          Tool.ctx.canvas.width,
-          Tool.ctx.canvas.height
-        );
       const { wheelDelta } = event;
-      const x = event.offsetX; // 鼠标位置换算到相对原点的坐标
-      const y = event.offsetX;
-      let OffsetX = 0;
-      let OffsetY = 0;
       if (wheelDelta > 0) {
-        if (Tool.currentScale < 5) {
-          Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
-          const show_scale = 1 + 0.01;
-          Tool.ctx.scale(show_scale, show_scale);
-          OffsetX = -(x * Tool.currentScale * show_scale - x); // x * 绝对缩放率 得到位移
-          OffsetY = -(y * Tool.currentScale * show_scale - y); // y * 绝对缩放率 得到位移
-          Tool.currentScale = Tool.currentScale * show_scale;
-          renderDraw(canvasData, OffsetX, OffsetY, canvas);
-        }
-      } else if (wheelDelta < 0) {
-        //缩小
-        if (Tool.currentScale > 0.5) {
-          Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
-          const show_scale = 1 - 0.01;
-          Tool.ctx.scale(show_scale, show_scale);
-          OffsetX = x - x * Tool.currentScale * show_scale; // x * 绝对缩放率 得到位移
-          OffsetY = x - y * Tool.currentScale * show_scale;
-          Tool.currentScale = Tool.currentScale * show_scale;
-          renderDraw(canvasData, OffsetX, OffsetY, canvas);
+        show_scale += 0.1;
+        defaultCanvas(show_scale);
+        // canvas.setAttribute(
+        //   "style",
+        //   `transform:scale(${show_scale},${show_scale})`
+        // );
+      } else {
+        if (show_scale > 0.5) {
+          show_scale = show_scale - 0.1;
+          defaultCanvas(show_scale);
+          // canvas.setAttribute(
+          //   "style",
+          //   `transform:scale(${show_scale},${show_scale})`
+          // );
         }
       }
+      Tool.currentScale = show_scale;
     }
-  };
-
-  const renderDraw = async (
-    canvasData: any,
-    OffsetX: number,
-    OffsetY: number,
-    canvas: HTMLCanvasElement
-  ) => {
-    if (canvasData) {
-      Tool.ctx.drawImage(
-        await createImageBitmap(canvasData),
-        OffsetX,
-        OffsetY,
-        canvas.width,
-        canvas.height
-      );
-    }
+    // if (canvas) {
+    //   const canvasData =
+    //     snapshot.getCurrent() ||
+    //     Tool.ctx.getImageData(
+    //       0,
+    //       0,
+    //       Tool.ctx.canvas.width,
+    //       Tool.ctx.canvas.height
+    //     );
+    //   const { wheelDelta } = event;
+    //   const x = event.offsetX; // 鼠标位置换算到相对原点的坐标
+    //   const y = event.offsetX;
+    //   let OffsetX = 0;
+    //   let OffsetY = 0;
+    //   if (wheelDelta > 0) {
+    //     if (Tool.currentScale < 5) {
+    //       Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //       const show_scale = 1 + 0.01;
+    //       Tool.ctx.scale(show_scale, show_scale);
+    //       OffsetX = -(x * Tool.currentScale * show_scale - x); // x * 绝对缩放率 得到位移
+    //       OffsetY = -(y * Tool.currentScale * show_scale - y); // y * 绝对缩放率 得到位移
+    //       Tool.currentScale = Tool.currentScale * show_scale;
+    //       renderDraw(canvasData, OffsetX, OffsetY, canvas);
+    //     }
+    //   } else if (wheelDelta < 0) {
+    //     //缩小
+    //     if (Tool.currentScale > 0.5) {
+    //       Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //       const show_scale = 1 - 0.01;
+    //       Tool.ctx.scale(show_scale, show_scale);
+    //       OffsetX = x - x * Tool.currentScale * show_scale; // x * 绝对缩放率 得到位移
+    //       OffsetY = x - y * Tool.currentScale * show_scale;
+    //       Tool.currentScale = Tool.currentScale * show_scale;
+    //       renderDraw(canvasData, OffsetX, OffsetY, canvas);
+    //     }
+    //   }
+    // }
   };
 
   useEffect(() => {
@@ -398,15 +430,23 @@ const Canvas: FC<CanvasProps> = (props) => {
         id={`ccc-paint-canvas ${id}`}
         className="ccc-paint-canvas"
         ref={canvasRef}
-        style={{ background: background || "#fff", ...style }}
+        style={{
+          background: background || "#fff",
+          ...style,
+          // transform: `translateX:${offset.x}; translateY:${offset.y},scaleX:${scale};scaleY:${scale} `,
+        }}
       ></canvas>
-      <TextArea
-        id="textBox"
-        name="story"
-        autoFocus={true}
-        className="text-box"
-        rows={1}
-      />
+      <div className="canvas-text" id="text-container" ref={canvasTextRef}>
+        <TextArea
+          id="textBox"
+          name="story"
+          autoFocus={true}
+          bordered={true}
+          autoSize={{ minRows: 2, maxRows: 2 }}
+          className="text-box"
+          // rows={1}
+        />
+      </div>
     </div>
   );
 };

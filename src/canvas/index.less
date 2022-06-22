@@ -2,26 +2,27 @@
   display: flex;
   position: relative;
   overflow: auto;
-  background-color: #2d2d2d;
+  margin: auto;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
   //width: 100%;
   height: 100%;
-  border:1px solid #2d2d2d
+  border: 1px solid red ;
 }
 
 .ccc-paint-canvas {
-  position: absolute;
+ // position: absolute;
   z-index: 5;
   // left: 50%;
   // top: 50%;
   // transform: translate(-50%, -50%);
 
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  // position: absolute;
+  // top: 0;
+  // bottom: 0;
+  // left: 0;
+  // right: 0;
 }
 
 .canvas-text {
@@ -30,7 +31,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-
+  width: auto;
   // position: absolute;
   // left: 50%;
   // top: 50%;
@@ -43,7 +44,8 @@
  .text-box {
    position: absolute;
    float: left;
-   width: 50%;
+   width: 100%;
+   height: 100%;
    pointer-events: painted;
    position: absolute;
    word-break: break-all;
