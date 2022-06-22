@@ -1,5 +1,6 @@
 import { ColorType } from "../toolType";
-import Tool, { Point, getMousePos, getTouchPos, hexToRgb, updateImageData } from "./tool";
+import Tool, { Point, getMousePos,setStraw, getTouchPos, hexToRgb, updateImageData } from "./tool";
+
 class Pen extends Tool {
   protected lineWidthBase = 1;
   protected drawColorType = ColorType.MAIN;
@@ -12,10 +13,13 @@ class Pen extends Tool {
   };
   private operateStart(pos: Point) {
     if (!Tool.ctx) return;
+    setStraw(pos)
     this.saveImageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
     this.mouseDown = true;
+    const showColor = Tool.strawColor ?  Tool.strawColor : this.drawColorType === ColorType.MAIN ? Tool.mainColor : Tool.subColor;
     Tool.ctx.lineWidth = Tool.lineWidthFactor * this.lineWidthBase;
-    Tool.ctx.strokeStyle = this.drawColorType === ColorType.MAIN ? Tool.mainColor : Tool.subColor;
+    Tool.ctx.strokeStyle = showColor
+
     Tool.ctx.lineJoin = "round";
     Tool.ctx.lineCap = "round";
     Tool.ctx.beginPath();
@@ -35,7 +39,6 @@ class Pen extends Tool {
     if (this.mouseDown) {
       Tool.ctx.closePath();
       this.mouseDown = false;
-
       let imageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
       const colorRgb = hexToRgb(this.drawColorType === ColorType.MAIN ? Tool.mainColor : Tool.subColor);
       if (colorRgb && this.saveImageData) {

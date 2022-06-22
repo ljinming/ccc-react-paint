@@ -6,7 +6,11 @@ import { ColorType, LineWidthType, ShapeOutlineType, ShapeToolType, ToolType } f
 
 export const ToolTypeContext = createContext({
   type: ToolType.PEN,
-  setType: (type: ToolType) => {}
+  setType: (type: ToolType) => { },
+  // strawType: false,
+  // setStraw: (type: boolean, cb?: () => void) => { 
+    
+  // }
 });
 
 export const ShapeTypeContext = createContext({
@@ -18,6 +22,7 @@ export const ShapeOutlineContext = createContext({
   type: ShapeOutlineType.SOLID,
   setType: (type: ShapeOutlineType) => {}
 });
+
 
 export const LineWidthContext = createContext({
   type: LineWidthType.LINESIZE,

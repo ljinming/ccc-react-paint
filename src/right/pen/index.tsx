@@ -4,6 +4,7 @@ import { LineWidthContext } from "@/context";
 import IntegerStep from "../components/slider";
 import ColorPanel from "../components/colorPanel";
 import "./index.less";
+import { Tool } from "../../util/tool";
 
 interface PenType {
   lineSize: number;
@@ -27,7 +28,7 @@ const ShowPen = (props: PenType) => {
           }}
         />
       </div>
-      <ColorPanel type="pen" className="toolbar-item" title="Color Panel" />
+      <ColorPanel type="pen" className="toolbar-item" />
     </div>
   );
 };

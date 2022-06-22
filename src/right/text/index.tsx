@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { Select } from "antd";
 import IntegerStep from "../components/slider";
+import ColorPanel from "../components/colorPanel";
 import { useMemo } from "react";
 
 const { Option } = Select;
@@ -46,11 +47,11 @@ const FormatColor: React.FC<FormatColor> = (props) => {
   return (
     <div
       className={
-        className ? ` ccc-text formatColor ${className}` : "ccc-text colorpanel"
+        className ? `ccc-text formatColor ${className}` : "ccc-text colorpanel"
       }
     >
       <div className="content">
-        <div className="font">
+        <div>
           <h3>Font</h3>
           <Select
             className="ccc-text-family"
@@ -109,16 +110,13 @@ const FormatColor: React.FC<FormatColor> = (props) => {
             }}
           />
         </div>
-        <h3>Color</h3>
         <div className="material-color-box">
-          <ColorBox
-            value={pickerColor}
-            disableAlpha={false}
-            onChange={(color) => {
-              setPickerColor(color);
+          <ColorPanel
+            className="toolbar-item"
+            onChange={(color: string) => {
               TextToolContext.setFont({
                 ...fontStyle,
-                color: "#" + color.hex,
+                color: color,
               });
             }}
           />

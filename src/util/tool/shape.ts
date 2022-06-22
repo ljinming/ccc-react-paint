@@ -1,5 +1,5 @@
 import {ShapeToolType} from "../toolType";
-import Tool, {Point, getMousePos, getTouchPos, hexToRgb, updateImageData} from "./tool";
+import Tool, {Point, getMousePos, getTouchPos,setStraw, hexToRgb, updateImageData} from "./tool";
 
 /**
  * 根据形状类型，获取要绘制的形状的顶点(圆形，返回圆心)
@@ -124,11 +124,12 @@ class Shape extends Tool {
         this.type = type;
     }
 
-    private operateStart(pos: {x: number; y: number}) {
+    private operateStart(pos: { x: number; y: number }) {
+         
+        setStraw(pos)
         this.saveImageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
         this.isMouseDown = true;
         this.mouseDownPos = pos;
-
         Tool.ctx.strokeStyle = Tool.mainColor;
         Tool.ctx.lineWidth = Tool.lineWidthFactor * this.lineWidthBase;
         Tool.ctx.fillStyle = Tool.subColor;
@@ -162,7 +163,6 @@ class Shape extends Tool {
     }
     private operateEnd() {
         Tool.ctx.setLineDash([]);
-
         let imageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
 
         const colorRgb = hexToRgb(Tool.mainColor);

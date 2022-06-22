@@ -60,7 +60,6 @@ class Text extends Tool {
       this.isMouseDown = false;
       this.textBox.setAttribute("style", `z-index:-1;display:none`)
       this.canvasBox.setAttribute('style', `z-index:-2;display:none`);
-
       this.drawing(this.mousePos.x ,this.mousePos.y)
       this.textBox.value = null;
     } else if (!this.isMouseDown) {

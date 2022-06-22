@@ -4,6 +4,19 @@ export interface Point {
   y: number;
 }
 
+
+// 吸色功能
+export const setStraw = (pos?: Point) => {
+  if (Tool.strawFlag && pos && !Tool.strawColor ) {
+    // 吸色
+    const color = getPixelColorOnCanvas(Tool.ctx, pos.x, pos!.y);
+    Tool.strawColor = color;
+    Tool.strawFlag = false;
+  } 
+ 
+};
+
+
 export const getMousePos = (canvas: HTMLCanvasElement, event: MouseEvent, type?: string): Point => {
   const rect = canvas.getBoundingClientRect();
   const scale = Tool.currentScale || 1
@@ -91,11 +104,14 @@ export default class Tool {
   /**
    * 主色
    */
-  public static mainColor = "black";
+  public static fillColormainColor = "black";
   /**
    * 副色
    */
   public static subColor = "white";
+
+  // 吸色
+  public static strawColor ='';
 
   // 背景色
   public static fillColor = "#2d2d2d";
@@ -106,11 +122,14 @@ export default class Tool {
   }
   public currentScale = 1
 
+  public strawFlag = false
 
   public static ctx: CanvasRenderingContext2D;
 
   static currentScale: number;
   static show_offset: any;
+  static strawFlag: boolean;
+  static mainColor: string;
 
   public onMouseDown(event: MouseEvent): void {
     //
@@ -166,6 +185,5 @@ export default class Tool {
       //       this.move(-offsetX, -offsetY);
       //   };
 
-
-
+ 
 }

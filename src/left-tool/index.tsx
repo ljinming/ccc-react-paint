@@ -2,7 +2,13 @@ import React from "react";
 import { ToolType } from "../util/toolType";
 import { ToolTypeContext } from "@/context";
 import "./index.less";
-import { toolPen, toolShape, formatColor, textIcon, toolEraser } from "./util";
+import {
+  toolPen,
+  toolShape,
+  formatColor,
+  textIcon,
+  toolEraser,
+} from "../ToolTypeIcon";
 const selectedToolClass = "selected-tool";
 
 export interface ToolPanelProps {

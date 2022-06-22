@@ -5,7 +5,7 @@ import { ColorBox, createColor } from "material-ui-color";
 import "./index.less";
 import { useState } from "react";
 import { useEffect } from "react";
-
+import ColorPanel from "../components/colorPanel";
 interface FormatColor {
   className?: string;
 }
@@ -23,16 +23,12 @@ const FormatColor: React.FC<FormatColor> = (props) => {
   return (
     <div className={className ? `formatColor ${className}` : "colorpanel"}>
       <div className="content">
-        <h3>Color</h3>
-        <div className="material-color-box">
-          <ColorBox
-            value={pickerColor}
-            disableAlpha={false}
-            onChange={(color) => {
-              setPickerColor(color);
-            }}
-          />
-        </div>
+        <ColorPanel
+          className="toolbar-item"
+          onChange={(color: string) => {
+            FillColorContext.setFillColor(color);
+          }}
+        />
       </div>
     </div>
   );

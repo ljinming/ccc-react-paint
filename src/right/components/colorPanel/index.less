@@ -76,6 +76,7 @@
         }
         .material-color-box {
             width: 100%;
+            position: relative;
             .MuiBox-root{
                 width: 100% !important;
                 overflow:unset !important
@@ -90,7 +91,8 @@
 
             }
             .muicc-colorbox-sliders{
-                width: 100% !important;
+                width: 230px!important;
+                margin-left:30px !important;
                 padding: 10px 0px !important;
             }
             .muicc-colorbox-inputs{
@@ -109,7 +111,21 @@
                         }
                 }
             }
-        
+        .straw-color {
+            position: absolute;
+            top: 258px;
+            width: 25px;
+            display: inline-block;
+            text-align: center;
+            &:hover {
+                background-color:#cbe0f7;
+            }
+        }
+        .select-item{
+            svg {
+                fill: #4338ca;
+            }
+        }
             
         }
     }

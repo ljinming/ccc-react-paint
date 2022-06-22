@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { DispatcherContext } from "@/context";
 import { CLEAR_EVENT, REDO_EVENT, UNDO_EVENT } from "../util/dispatcher/event";
 //import Resize from "./Resize";
-import { undoIcon, clearIcon } from "../left-tool/util";
+import { undoIcon, clearIcon } from "../ToolTypeIcon";
 
 // interface propsEdit {
 //   // CanvasSize: {

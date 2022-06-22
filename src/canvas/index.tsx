@@ -17,7 +17,15 @@ import { DispatcherContext } from "../context";
 import { CLEAR_EVENT, REDO_EVENT, UNDO_EVENT } from "../util/dispatcher/event";
 import SnapShot from "../util/snapshot";
 import { Input } from "antd";
-
+import cursorPen from "@/assets/icon/cursorPen.jpg";
+import cursorErase from "@/assets/icon/cursorErase.jpg";
+import {
+  toolPen,
+  toolShape,
+  formatColor,
+  textIcon,
+  toolEraser,
+} from "../ToolTypeIcon";
 const { TextArea } = Input;
 
 interface CanvasProps {
@@ -70,10 +78,9 @@ const Canvas: FC<CanvasProps> = (props) => {
   const canvasTextRef = useRef<HTMLDivElement>(null);
   const dispatcherContext = useContext(DispatcherContext);
   const [snapshot] = useState<SnapShot>(new SnapShot());
-  const [scale, setScale] = useState<number>(1);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
+    showCanvasCursor();
     switch (toolType) {
       case ToolType.PEN:
         setTool(new Pen());
@@ -81,9 +88,9 @@ const Canvas: FC<CanvasProps> = (props) => {
       case ToolType.ERASER:
         setTool(new Eraser(lineSize));
         break;
-      case ToolType.COLOR_EXTRACT:
-        setTool(new ColorExtract(setColor));
-        break;
+      // case ToolType.COLOR_EXTRACT:
+      //   setTool(new ColorExtract(setColor));
+      //   break;
       case ToolType.COLOR_FILL:
         setTool(new ColorFill());
         break;
@@ -144,6 +151,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     const canvas = canvasRef.current;
     if (canvas) {
       drawCanvas();
+      showCanvasCursor();
       Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       // 注册清空画布事件
       const dispatcher = dispatcherContext.dispatcher;
@@ -209,24 +217,27 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
   }, [canvasRef]);
 
+  //鼠标icon
+  const showCanvasCursor = () => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      if (toolType === 0) {
+        canvas.style.cursor = `url(${cursorPen}),auto`;
+      } else if (toolType === 4) {
+        canvas.style.cursor = `url(${cursorErase}),auto`;
+      }
+    }
+  };
+
   const defaultCanvas = (showScale: number) => {
     const container = allCanvasRef!.current;
     const canvas = canvasRef.current;
     const textRef = canvasTextRef.current;
     if (container && canvas && textRef) {
-      // const width = imgSize.width * showScale;
-      // const height = imgSize.height * showScale;
-      const styleCanvas = canvas.getBoundingClientRect();
       canvas.setAttribute(
         "style",
-        `transform:scale(${showScale},${showScale})`
+        `transform:scale(${showScale},${showScale});cursor:url(${cursorPen}),auto`
       );
-      //  container.setAttribute("style", `height:${height}px;width:${width}px`);
-      // textRef.setAttribute(
-      //   "style",
-      //   `transform:scale(${showScale},${showScale})`
-      // );
-      //textBox.setAttribute("width", `${width}px`);
     }
   };
 
@@ -324,28 +335,16 @@ const Canvas: FC<CanvasProps> = (props) => {
   const onMousewheel = (event: any) => {
     event.preventDefault();
     const canvas = canvasRef.current;
-    const offset = {
-      x: 0,
-      y: 0,
-    };
 
     if (canvas) {
       const { wheelDelta } = event;
       if (wheelDelta > 0) {
         show_scale += 0.1;
         defaultCanvas(show_scale);
-        // canvas.setAttribute(
-        //   "style",
-        //   `transform:scale(${show_scale},${show_scale})`
-        // );
       } else {
         if (show_scale > 0.5) {
           show_scale = show_scale - 0.1;
           defaultCanvas(show_scale);
-          // canvas.setAttribute(
-          //   "style",
-          //   `transform:scale(${show_scale},${show_scale})`
-          // );
         }
       }
       Tool.currentScale = show_scale;
@@ -433,7 +432,6 @@ const Canvas: FC<CanvasProps> = (props) => {
         style={{
           background: background || "#fff",
           ...style,
-          // transform: `translateX:${offset.x}; translateY:${offset.y},scaleX:${scale};scaleY:${scale} `,
         }}
       ></canvas>
       <div className="canvas-text" id="text-container" ref={canvasTextRef}>
