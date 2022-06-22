@@ -10,9 +10,6 @@ import {
   ColorFill,
   Text,
 } from "../../../util/tool";
-
-import { ToolType } from "../../../util/toolType";
-
 import "./index.less";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -34,6 +31,7 @@ const ColorPanel: React.FC<ColorPanelProps> = (props) => {
     createColor(type && type === "pen" ? getRandomColor() : "#000000FF")
   );
   const colorContext = useContext(ColorContext);
+  const ToolContext = useContext(ToolTypeContext);
 
   useEffect(() => {
     colorContext.setColor(`#${pickerColor.hex}`);
@@ -45,9 +43,11 @@ const ColorPanel: React.FC<ColorPanelProps> = (props) => {
       const endTime = new Date().getTime();
       if (Math.abs(endTime - startTime) >= 10 * 60 * 1000) {
         clearInterval(intervalId); //清除定时器 ,超过10分钟没有吸色功能 清楚定时器
+        ToolContext.setStrawType(false);
       }
       if (Tool.strawColor) {
         setPickerColor(createColor(Tool.strawColor));
+        ToolContext.setStrawType(false);
         clearInterval(intervalId); //清除定时器
       }
     }, 200);
@@ -75,6 +75,7 @@ const ColorPanel: React.FC<ColorPanelProps> = (props) => {
               onClick={() => {
                 Tool.strawFlag = true;
                 Tool.strawColor = "";
+                ToolContext.setStrawType(true);
                 getStrawColor();
               }}
             >

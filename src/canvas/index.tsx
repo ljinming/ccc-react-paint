@@ -19,6 +19,7 @@ import SnapShot from "../util/snapshot";
 import { Input } from "antd";
 import cursorPen from "@/assets/icon/cursorPen.jpg";
 import cursorErase from "@/assets/icon/cursorErase.jpg";
+import straw from "@/assets/icon/straw.jpg";
 
 const { TextArea } = Input;
 
@@ -27,6 +28,7 @@ interface CanvasProps {
   shapeType: ShapeToolType;
   shapeOutlineType: ShapeOutlineType;
   lineWidthType: LineWidthType;
+  strawType: boolean;
   mainColor: string;
   subColor: string;
   lineSize?: number;
@@ -60,6 +62,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     fontStyle,
     imgSrc,
     background,
+    strawType,
     lineSize = 1,
   } = props;
   const [tool, setTool] = useState<Tool>();
@@ -207,12 +210,21 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
   }, [canvasRef]);
 
+  useEffect(() => {
+    showCanvasCursor();
+  }, [strawType]);
+
   //鼠标icon
   const showCanvasCursor = () => {
+    console.log("===45", strawType);
     const canvas = canvasRef.current;
     if (canvas) {
+      if (strawType) {
+        //吸色
+        return (canvas.style.cursor = `url(${straw}),auto`);
+      }
       if (toolType === 0) {
-        canvas.style.cursor = `url(${cursorPen}),auto`;
+        canvas.style.cursor = `url(${cursorPen}) 12 16,auto`;
       } else if (toolType === 4) {
         canvas.style.cursor = `url(${cursorErase}),auto`;
       } else {
@@ -221,14 +233,18 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
   };
 
-  const defaultCanvas = (showScale: number) => {
+  const defaultCanvas = (
+    showScale: number,
+    OffsetX: number,
+    OffsetY: number
+  ) => {
     const container = allCanvasRef!.current;
     const canvas = canvasRef.current;
     const textRef = canvasTextRef.current;
     if (container && canvas && textRef) {
       canvas.setAttribute(
         "style",
-        `transform:scale(${showScale},${showScale});cursor:url(${cursorPen}),auto`
+        `transform:scale(${showScale},${showScale});cursor:url(${cursorPen})12 16,auto`
       );
     }
   };
@@ -267,7 +283,6 @@ const Canvas: FC<CanvasProps> = (props) => {
 
   useEffect(() => {
     const container = allCanvasRef!.current;
-    console.log("===45", CanvasSize);
     if (CanvasSize) {
       drawCanvas();
       let showScale = 1;
@@ -276,9 +291,8 @@ const Canvas: FC<CanvasProps> = (props) => {
       showScale =
         Math.min(width, height) / Math.max(CanvasSize.height, CanvasSize.width);
       show_scale = showScale;
-      console.log("===435", width, height, show_scale);
       Tool.currentScale = showScale;
-      defaultCanvas(showScale);
+      defaultCanvas(showScale, 0, 0);
     }
   }, [CanvasSize]);
 
@@ -338,13 +352,19 @@ const Canvas: FC<CanvasProps> = (props) => {
 
     if (canvas) {
       const { wheelDelta } = event;
+      const x = event.offsetX; // 鼠标位置换算到相对原点的坐标
+      const y = event.offsetX;
       if (wheelDelta > 0) {
         show_scale += 0.1;
-        defaultCanvas(show_scale);
+        const OffsetX = -(x * show_scale - x); // x * 绝对缩放率 得到位移
+        const OffsetY = -(y * show_scale - y); // y * 绝对缩放率 得到位移
+        defaultCanvas(show_scale, OffsetX, OffsetY);
       } else {
         if (show_scale > 0.5) {
+          const OffsetX = x * show_scale - x; // x * 绝对缩放率 得到位移
+          const OffsetY = y * show_scale - y; // y * 绝对缩放率 得到位移
           show_scale = show_scale - 0.1;
-          defaultCanvas(show_scale);
+          defaultCanvas(show_scale, OffsetX, OffsetY);
         }
       }
       Tool.currentScale = show_scale;

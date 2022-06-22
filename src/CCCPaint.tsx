@@ -39,7 +39,7 @@ interface PaintProps {
 function Paint(props: PaintProps): JSX.Element {
   const {
     id = "test",
-    imgSrc,
+    imgSrc = "https://bafybeiauevqh55vn44gxddqtjcn2doxoc6gxebibqt3t2pdafuftmtnqkm.ipfs.dweb.link/orign.png",
     width = 500,
     height = 500,
     background,
@@ -47,6 +47,7 @@ function Paint(props: PaintProps): JSX.Element {
   } = props;
 
   const [toolType, setToolType] = useState<ToolType>(ToolType.PEN);
+  const [strawType, setStrawType] = useState<boolean>(false);
   const [shapeType, setShapeType] = useState<ShapeToolType>(ShapeToolType.LINE);
   const [size, setSize] = useState({ width, height });
   const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(
@@ -100,6 +101,10 @@ function Paint(props: PaintProps): JSX.Element {
     <ToolTypeContext.Provider
       value={{
         type: toolType,
+        strawType: strawType,
+        setStrawType: (value) => {
+          setStrawType(value);
+        },
         setType: (value) => {
           setToolType(value);
           setLineFontSize(5);
@@ -161,6 +166,7 @@ function Paint(props: PaintProps): JSX.Element {
                         <div className="show-Canvas">
                           <Canvas
                             id={id}
+                            strawType={strawType}
                             CanvasSize={size}
                             imgSrc={imgSrc}
                             background={background}

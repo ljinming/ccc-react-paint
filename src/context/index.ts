@@ -7,10 +7,11 @@ import { ColorType, LineWidthType, ShapeOutlineType, ShapeToolType, ToolType } f
 export const ToolTypeContext = createContext({
   type: ToolType.PEN,
   setType: (type: ToolType) => { },
-  // strawType: false,
-  // setStraw: (type: boolean, cb?: () => void) => { 
+  
+  strawType:false,
+  setStrawType: (type:boolean ) => { 
     
-  // }
+  }
 });
 
 export const ShapeTypeContext = createContext({
