@@ -9,17 +9,11 @@ import {
   FillContext,
   TextContext,
   SizeContext,
-  DispatcherContext,
+  DispatcherContext
 } from "./context";
 import "./style.less";
 import { useState } from "react";
-import {
-  ColorType,
-  LineWidthType,
-  ShapeOutlineType,
-  ShapeToolType,
-  ToolType,
-} from "./util/toolType";
+import { ColorType, LineWidthType, ShapeOutlineType, ShapeToolType, ToolType } from "./util/toolType";
 import ToolPanel from "./left-tool";
 import Dispatcher from "./util/dispatcher";
 import Right from "./right";
@@ -43,24 +37,18 @@ function Paint(props: PaintProps): JSX.Element {
     width = 500,
     height = 500,
     background,
-    cRef,
+    cRef
   } = props;
 
   const [toolType, setToolType] = useState<ToolType>(ToolType.PEN);
   const [strawType, setStrawType] = useState<boolean>(false);
   const [shapeType, setShapeType] = useState<ShapeToolType>(ShapeToolType.LINE);
   const [size, setSize] = useState({ width, height });
-  const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(
-    ShapeOutlineType.SOLID
-  );
-  const [lineWidthType, setLineWidthType] = useState<LineWidthType>(
-    LineWidthType.LINESIZE
-  );
+  const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(ShapeOutlineType.SOLID);
+  const [lineWidthType, setLineWidthType] = useState<LineWidthType>(LineWidthType.LINESIZE);
   const [lineSize, setLineFontSize] = useState<number>(5);
   const [fillColor, setFillColor] = useState<string>("");
-  const [activeColorType, setActiveColorType] = useState<ColorType>(
-    ColorType.MAIN
-  );
+  const [activeColorType, setActiveColorType] = useState<ColorType>(ColorType.MAIN);
   const [fontStyle, setFontStyle] = useState({});
   const [mainColor, setMainColor] = useState<string>("black");
   const [subColor, setSubColor] = useState<string>("white");
@@ -79,7 +67,7 @@ function Paint(props: PaintProps): JSX.Element {
       const canvasElem: any = document.getElementById(`ccc-paint-canvas ${id}`);
       const imageData = canvasElem.toDataURL("image/png");
       return imageData;
-    },
+    }
   }));
 
   const loadImage = async (imgSrc: string) => {
@@ -108,7 +96,7 @@ function Paint(props: PaintProps): JSX.Element {
         setType: (value) => {
           setToolType(value);
           setLineFontSize(5);
-        },
+        }
       }}
     >
       <ShapeTypeContext.Provider
@@ -116,18 +104,16 @@ function Paint(props: PaintProps): JSX.Element {
           type: shapeType,
           setType: (type: ShapeToolType) => {
             setShapeType(type);
-          },
+          }
         }}
       >
-        <ShapeOutlineContext.Provider
-          value={{ type: shapeOutlineType, setType: setShapeOutlineType }}
-        >
+        <ShapeOutlineContext.Provider value={{ type: shapeOutlineType, setType: setShapeOutlineType }}>
           <LineWidthContext.Provider
             value={{
               type: lineWidthType,
               lineSize: lineSize,
               setType: setLineWidthType,
-              setLineSize: setLineFontSize,
+              setLineSize: setLineFontSize
             }}
           >
             <DispatcherContext.Provider value={{ dispatcher }}>
@@ -137,19 +123,19 @@ function Paint(props: PaintProps): JSX.Element {
                   subColor,
                   activeColor: activeColorType,
                   setColor,
-                  setActiveColor: setActiveColorType,
+                  setActiveColor: setActiveColorType
                 }}
               >
                 <FillContext.Provider
                   value={{
                     fillColor,
-                    setFillColor,
+                    setFillColor
                   }}
                 >
                   <TextContext.Provider
                     value={{
                       fontStyle,
-                      setFont: setFontStyle,
+                      setFont: setFontStyle
                     }}
                   >
                     <div className="ccc">
@@ -158,10 +144,7 @@ function Paint(props: PaintProps): JSX.Element {
                       </div>
                       <div className="ccc-content">
                         <div className="ToolPanel">
-                          <ToolPanel
-                            className="toolbar-item"
-                            fillColor={fillColor}
-                          />
+                          <ToolPanel className="toolbar-item" fillColor={fillColor} />
                         </div>
                         <div className="show-Canvas">
                           <Canvas

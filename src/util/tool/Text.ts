@@ -1,4 +1,4 @@
-import Tool, { Point, getMousePos, } from "./tool";
+import Tool, { Point, getMousePos } from "./tool";
 
 // interface propsInput = {
 //             x?: number,
@@ -16,7 +16,7 @@ class Text extends Tool {
   private fontStyle: any;
   private canvas: any;
   private canvasBox: any;
-  mousePos:Point;
+  mousePos: Point;
   public constructor(fontType: any) {
     super();
     this._x = NaN;
@@ -25,8 +25,8 @@ class Text extends Tool {
     this.canvasBox = document.getElementById("text-container");
     this.mousePos = {
       x: 0,
-      y:0
-    }
+      y: 0
+    };
     this.textContent = "";
     this.fontStyle = fontType;
   }
@@ -58,16 +58,16 @@ class Text extends Tool {
     if (this.isMouseDown) {
       this.textContent = this.textBox.value;
       this.isMouseDown = false;
-      this.textBox.setAttribute("style", `z-index:-1;display:none`)
-      this.canvasBox.setAttribute('style', `z-index:-2;display:none`);
-      this.drawing(this.mousePos.x ,this.mousePos.y)
+      this.textBox.setAttribute("style", `z-index:-1;display:none`);
+      this.canvasBox.setAttribute("style", `z-index:-2;display:none`);
+      this.drawing(this.mousePos.x, this.mousePos.y);
       this.textBox.value = null;
     } else if (!this.isMouseDown) {
       const mousePos = getMousePos(Tool.ctx.canvas, event);
-      this.mousePos = mousePos
-      console.log('==text=456',event)
-      this._x = event.clientX - 80 // event.offsetX; // 鼠标按下时保存当前位置，为起始位置
-      this._y =  event.clientY - 80   //event.offsetY;
+      this.mousePos = mousePos;
+      console.log("==text=456", event);
+      this._x = event.clientX - 80; // event.offsetX; // 鼠标按下时保存当前位置，为起始位置
+      this._y = event.clientY - 80; //event.offsetY;
       this.isMouseDown = true;
       this.textBox.value = "";
       if (typeof this.fontStyle === "object") {
@@ -75,8 +75,11 @@ class Text extends Tool {
           this.textBox.style[va] = this.fontStyle[va];
         });
       }
-      this.canvasBox.setAttribute('style', `z-index:5;display:block,pointer-events:auto`);
-      this.textBox.setAttribute("style", `display:block;position:absolute;z-index:6;width:auto; left:${this._x}px;top:${this._y}px;`)
+      this.canvasBox.setAttribute("style", `z-index:5;display:block,pointer-events:auto`);
+      this.textBox.setAttribute(
+        "style",
+        `display:block;position:absolute;z-index:6;width:auto; left:${this._x}px;top:${this._y}px;`
+      );
     }
   }
 }

@@ -2,12 +2,7 @@ import React, { useMemo } from "react";
 import "./index.less";
 import { useEffect } from "react";
 import { useRef } from "react";
-import {
-  LineWidthType,
-  ShapeOutlineType,
-  ShapeToolType,
-  ToolType,
-} from "../util/toolType";
+import { LineWidthType, ShapeOutlineType, ShapeToolType, ToolType } from "../util/toolType";
 import { FC } from "react";
 import { useState } from "react";
 import { Pen, Tool, Eraser, ColorExtract, ColorFill, Text } from "../util/tool";
@@ -20,7 +15,7 @@ import { Input } from "antd";
 import cursorPen from "@/assets/icon/cursorPen.jpg";
 import cursorErase from "@/assets/icon/cursorErase.jpg";
 import straw from "@/assets/icon/straw.jpg";
-
+import * as glMatrix from "gl-matrix";
 const { TextArea } = Input;
 
 interface CanvasProps {
@@ -46,16 +41,20 @@ interface CanvasProps {
 }
 
 let show_scale = 1;
+const center = {
+  x: 0,
+  y: 0
+};
 
 const defaultTransition = {
   x: 0,
-  y: 0,
+  y: 0
 };
 // 记录 Translate 的坐标值
-let prevTranslateMap = {
-  x: 0,
-  y: 0,
-};
+// let prevTranslateMap = {
+//   x: 0,
+//   y: 0
+// };
 
 const Canvas: FC<CanvasProps> = (props) => {
   const {
@@ -73,7 +72,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     imgSrc,
     background,
     strawType,
-    lineSize = 1,
+    lineSize = 1
   } = props;
   const [tool, setTool] = useState<Tool>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -101,9 +100,7 @@ const Canvas: FC<CanvasProps> = (props) => {
         setTool(new Text(fontStyle));
         break;
       case ToolType.SHAPE:
-        setTool(
-          new Shape(shapeType, shapeOutlineType === ShapeOutlineType.DOTTED)
-        );
+        setTool(new Shape(shapeType, shapeOutlineType === ShapeOutlineType.DOTTED));
         break;
       default:
         break;
@@ -226,7 +223,6 @@ const Canvas: FC<CanvasProps> = (props) => {
 
   //鼠标icon
   const showCanvasCursor = () => {
-    console.log("===45", strawType);
     const canvas = canvasRef.current;
     if (canvas) {
       if (strawType) {
@@ -243,14 +239,11 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
   };
 
-  const defaultCanvas = (
-    showScale: number,
-    OffsetX: number,
-    OffsetY: number
-  ) => {
+  const defaultCanvas = (showScale: number, OffsetX: number, OffsetY: number) => {
     const container = allCanvasRef!.current;
     const canvas = canvasRef.current;
     const textRef = canvasTextRef.current;
+    console.log("----34", OffsetX, OffsetY);
     if (container && canvas && textRef) {
       canvas.setAttribute(
         "style",
@@ -274,10 +267,7 @@ const Canvas: FC<CanvasProps> = (props) => {
           canvas.width = img.width;
           /*1.在canvas 中绘制图像*/
           // ctx.scale(showScale, showScale);
-          textRef.setAttribute(
-            "style",
-            `width:${canvas.width};height:${canvas.height}`
-          );
+          textRef.setAttribute("style", `width:${canvas.width};height:${canvas.height}`);
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           snapshot.add(ctx.getImageData(0, 0, canvas.width, canvas.height));
         };
@@ -296,32 +286,23 @@ const Canvas: FC<CanvasProps> = (props) => {
     const canvas = canvasRef.current;
 
     if (CanvasSize && container && canvas) {
-      const containerType = container?.getBoundingClientRect();
       drawCanvas();
       let showScale = 1;
       const height = container!.clientHeight;
       const width = container!.clientWidth;
-      showScale =
-        Math.min(width, height) / Math.max(CanvasSize.height, CanvasSize.width);
+      showScale = Math.min(width, height) / Math.max(CanvasSize.height, CanvasSize.width);
       show_scale = showScale;
       Tool.currentScale = showScale;
-      const showWidth = CanvasSize.width * showScale;
-      const showHeight = CanvasSize.height * showScale;
-      const OffsetX = CanvasSize.width - showWidth;
-      const OffsetY = CanvasSize.height - showHeight;
-      const x = (containerType.width - showWidth) * 0.5 - OffsetX / 2;
-      const y = (containerType.height - showHeight) * 0.5 - OffsetY / 2;
-      prevTranslateMap = {
-        x,
-        y,
-      };
-      canvas.style.transform = `translate(${x}px, ${y}px) scale(${show_scale})`;
-      //  defaultCanvas(showScale, 0, 0);
-      //  clacTransition({}, show_scale);
+      center.x = (width - canvas.width * showScale) / 2;
+      center.y = (height - canvas.height * showScale) / 2;
+      console.log("===567", center.x);
+      defaultCanvas(showScale, center.x, center.y);
     }
   }, [CanvasSize]);
 
   const onMouseDown = (event: MouseEvent) => {
+    const { offsetX, offsetY } = event;
+    console.log("==", offsetX, offsetY);
     if (tool) {
       tool.onMouseDown(event);
     }
@@ -337,14 +318,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     if (tool) {
       tool.onMouseUp(event);
       // 存储canvas剪影
-      snapshot.add(
-        Tool.ctx.getImageData(
-          0,
-          0,
-          Tool.ctx.canvas.width,
-          Tool.ctx.canvas.height
-        )
-      );
+      snapshot.add(Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height));
     }
   };
 
@@ -366,75 +340,118 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
 
     // 存储canvas剪影
-    snapshot.add(
-      Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height)
-    );
-  };
-
-  const clacTransition = (event: any, show_scale: number) => {
-    const canvas = canvasRef.current;
-    if (canvas && CanvasSize) {
-      const {
-        top: pTop,
-        left: pLeft,
-        height,
-        width,
-      } = canvas.getBoundingClientRect();
-      const { clientX: mouseX = 0, clientY: mouseY = 0 } = event;
-      console.log("===456", event);
-      // 获取比例
-      const yScale = (mouseY - pTop - prevTranslateMap.y) / height;
-      const xScale = (mouseX - pLeft - prevTranslateMap.x) / width;
-      // 放大后的宽高
-      const ampWidth = CanvasSize?.width * show_scale;
-      const ampHeight = CanvasSize?.height * show_scale;
-      // 需要重新运算的 translate 坐标
-      const y = yScale * (ampHeight - height);
-      const x = xScale * (ampWidth - width);
-      // 更新
-      const translateY = prevTranslateMap.y - y;
-      const translateX = prevTranslateMap.x - x;
-
-      defaultCanvas(show_scale, translateX, translateY);
-      // 记录这次的值
-      prevTranslateMap = {
-        x: translateX,
-        y: translateY,
-      };
-    }
+    snapshot.add(Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height));
   };
 
   const onMousewheel = (event: any) => {
-    event.preventDefault();
+    // event.preventDefault();
     const canvas = canvasRef.current;
-    if (canvas && CanvasSize) {
-      const { wheelDelta, offsetX, offsetY } = event;
+    const container = allCanvasRef!.current;
+    const { wheelDelta, clientX, clientY, deltaY, offsetX, offsetY } = event;
+    const { width, height } = canvas!.getBoundingClientRect();
+    // const { width: boxWidth, height: boxHeight } = container!.getBoundingClientRect();
+    // let ratio = 1.1;
+    // // 缩小
+    // if (deltaY > 0) {
+    //   ratio = 1 / 1.1;
+    // }
+    // // 限制缩放倍数
+    // const _scale = show_scale * ratio;
+    // if (_scale > 5) {
+    //   ratio = 5 / show_scale;
+    //   show_scale = 5;
+    // } else if (_scale < 0.5) {
+    //   ratio = 0.5 / show_scale;
+    //   show_scale = 0.5;
+    // } else {
+    //   show_scale = _scale;
+    // }
+    // // 目标元素是img说明鼠标在img上，以鼠标位置为缩放中心，否则默认以图片中心点为缩放中心
+    // const origin = {
+    //   x: (ratio - 1) * CanvasSize!.width * 0.5,
+    //   y: (ratio - 1) * CanvasSize!.height * 0.5
+    // };
+    // 计算偏移量
+    // center.x -= (ratio - 1) * (clientX - center.x) - origin.x;
+    // center.y -= (ratio - 1) * (clientY - center.y) - origin.y;
+    // canvas!.style.transform = "translate3d(" + center.x + "px, " + center.y + "px, 0) scale(" + show_scale + ")";
+
+    if (canvas && CanvasSize && container) {
       let OffsetX = 0;
       let OffsetY = 0;
-      if (wheelDelta > 0) {
-        if (show_scale < 8) {
-          console.log("===56", show_scale);
-          show_scale += 0.1;
-          OffsetX = offsetX * 0.1 - offsetX;
-          OffsetY = offsetY * 0.1 - offsetX;
-          if (defaultTransition.x === 0) {
-            OffsetX = CanvasSize.width * 0.1;
-          }
-          clacTransition(event, show_scale);
+      // 当前鼠标点  clientX，clientX
+      //当前缩放倍数 show_scale
+      // 原始像素点 offsetX/show_scale,offsetY/show_scale
 
-          // defaultCanvas(show_scale, 0, 0);
+      // 此时放大的像素位置 offsetX/show_scale*（currentSacle）,offsetY/show_scale*（currentSacle）
+
+      // 像素点偏移了 // 放大后素位置 - 此时的像素位置 offsetX/show_scale*（currentSacle） - offsetX
+      console.log("===4", canvas.getBoundingClientRect());
+
+      if (wheelDelta > 0) {
+        const { width, height } = canvas!.getBoundingClientRect();
+        const leftX =
+          container!.getBoundingClientRect().width > width ? (container!.getBoundingClientRect().width - width) / 2 : 0;
+        const leftY =
+          container!.getBoundingClientRect().height > height
+            ? (container!.getBoundingClientRect().height - height) / 2
+            : 0;
+
+        if (show_scale < 0.9) {
+          show_scale += 0.01;
+          console.log("==46", show_scale);
+          canvas!.setAttribute("style", `transform-origin:${offsetX}px ${offsetY}px`);
+          // 当前放大的倍数 offsetX * 0.01;
+          // OffsetX = (offsetX / Tool.currentScale) * show_scale - offsetX + leftX;
+          // OffsetY = (offsetY / Tool.currentScale) * show_scale - offsetY + leftY;
+          //defaultCanvas(show_scale, 0, 0);
+          //calcTransform(show_scale);
         }
       } else {
         if (show_scale > 0.5) {
           show_scale = show_scale - 0.1;
-          // OffsetX = x - x * show_scale; // x * 绝对缩放率 得到位移
-          // OffsetY = y - y * show_scale; // y * 绝对缩放率 得到位移
-          //defaultCanvas(show_scale, OffsetX, OffsetY);
+          OffsetX = offsetX * show_scale; // x * 绝对缩放率 得到位移
+          OffsetY = offsetY * show_scale; // y * 绝对缩放率 得到位移
+          defaultCanvas(show_scale, OffsetX, OffsetY);
         }
       }
       Tool.currentScale = show_scale;
     }
   };
+
+  // document.addEventListener("DOMContentLoaded", () => {
+  //   const canvas = canvasRef.current;
+  //   if (canvas) {
+  //     canvas.addEventListener("wheel", (e: any) => {
+  //       const { clientX, clientY, deltaY } = e;
+  //       if (deltaY > 0) {
+  //         show_scale = show_scale + 0.01;
+  //       } else {
+  //         show_scale = show_scale + 0.01;
+  //       }
+  //       const { top, right, bottom, left } = canvas.getBoundingClientRect();
+  //       const o = new Float32Array([left, top, 1, 1, right, top, 1, 1, right, bottom, 1, 1, left, bottom, 1, 1]);
+  //       const x = clientX * (1 - show_scale);
+  //       const y = clientY * (1 - show_scale);
+  //       const t = new Float32Array([show_scale, 0, 0, 0, 0, show_scale, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+  //       const m = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, 0, 1]);
+  //       // 在XY轴上进行缩放
+  //       const res1 = glMatrix.mat4.multiply(new Float32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), t, o);
+  //       // 在XY轴上进行平移
+  //       const res2 = glMatrix.mat4.multiply(
+  //         new Float32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+  //         m,
+  //         res1
+  //       );
+  //       canvas.setAttribute(
+  //         "style",
+  //         `left: ${res2[0]}px; top: ${res2[1]}px;width: ${res2[4] - res2[0]}px;height: ${
+  //           res2[9] - res2[1]
+  //         }px;transform: none;`
+  //       );
+  //     });
+  //   }
+  // });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -443,7 +460,6 @@ const Canvas: FC<CanvasProps> = (props) => {
       canvas.addEventListener("mousemove", onMouseMove);
       canvas.addEventListener("mouseup", onMouseUp);
       canvas.addEventListener("wheel", onMousewheel, { passive: false });
-
       canvas.addEventListener("touchstart", onTouchStart);
       canvas.addEventListener("touchmove", onTouchMove);
       canvas.addEventListener("touchend", onTouchEnd);
@@ -462,13 +478,12 @@ const Canvas: FC<CanvasProps> = (props) => {
   }, [canvasRef, onMouseDown, onMouseMove, onMouseUp]);
 
   const style = {
-    margin: "auto",
+    margin: "auto"
   };
   if (allCanvasRef && CanvasSize) {
     const allCanvas = allCanvasRef.current;
     if (allCanvas) {
-      style.margin =
-        allCanvas.offsetWidth < (CanvasSize?.width || 0) ? "unset" : "auto";
+      style.margin = allCanvas.offsetWidth < (CanvasSize?.width || 0) ? "unset" : "auto";
     }
   }
   return (
@@ -479,7 +494,7 @@ const Canvas: FC<CanvasProps> = (props) => {
         ref={canvasRef}
         style={{
           background: background || "#fff",
-          ...style,
+          ...style
         }}
       ></canvas>
       <div className="canvas-text" id="text-container" ref={canvasTextRef}>
@@ -489,7 +504,7 @@ const Canvas: FC<CanvasProps> = (props) => {
           autoFocus={true}
           bordered={true}
           autoSize={{ minRows: 2, maxRows: 2 }}
-          className="text-box"
+          className={`text-box ${toolType !== 2 ? "text-show" : ""}`}
           // rows={1}
         />
       </div>
@@ -498,6 +513,3 @@ const Canvas: FC<CanvasProps> = (props) => {
 };
 
 export default Canvas;
-function trr(arg0: Float32Array, trr: any, o: any) {
-  throw new Error("Function not implemented.");
-}
