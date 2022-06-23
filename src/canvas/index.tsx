@@ -47,6 +47,16 @@ interface CanvasProps {
 
 let show_scale = 1;
 
+const defaultTransition = {
+  x: 0,
+  y: 0,
+};
+// 记录 Translate 的坐标值
+let prevTranslateMap = {
+  x: 0,
+  y: 0,
+};
+
 const Canvas: FC<CanvasProps> = (props) => {
   const {
     id,
@@ -244,7 +254,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     if (container && canvas && textRef) {
       canvas.setAttribute(
         "style",
-        `transform:scale(${showScale},${showScale});cursor:url(${cursorPen})12 16,auto`
+        `transform:scale(${showScale},${showScale}) translate(${OffsetX}px, ${OffsetY}px);cursor:url(${cursorPen})12 16,auto`
       );
     }
   };
@@ -283,7 +293,10 @@ const Canvas: FC<CanvasProps> = (props) => {
 
   useEffect(() => {
     const container = allCanvasRef!.current;
-    if (CanvasSize) {
+    const canvas = canvasRef.current;
+
+    if (CanvasSize && container && canvas) {
+      const containerType = container?.getBoundingClientRect();
       drawCanvas();
       let showScale = 1;
       const height = container!.clientHeight;
@@ -292,7 +305,19 @@ const Canvas: FC<CanvasProps> = (props) => {
         Math.min(width, height) / Math.max(CanvasSize.height, CanvasSize.width);
       show_scale = showScale;
       Tool.currentScale = showScale;
-      defaultCanvas(showScale, 0, 0);
+      const showWidth = CanvasSize.width * showScale;
+      const showHeight = CanvasSize.height * showScale;
+      const OffsetX = CanvasSize.width - showWidth;
+      const OffsetY = CanvasSize.height - showHeight;
+      const x = (containerType.width - showWidth) * 0.5 - OffsetX / 2;
+      const y = (containerType.height - showHeight) * 0.5 - OffsetY / 2;
+      prevTranslateMap = {
+        x,
+        y,
+      };
+      canvas.style.transform = `translate(${x}px, ${y}px) scale(${show_scale})`;
+      //  defaultCanvas(showScale, 0, 0);
+      //  clacTransition({}, show_scale);
     }
   }, [CanvasSize]);
 
@@ -346,66 +371,69 @@ const Canvas: FC<CanvasProps> = (props) => {
     );
   };
 
+  const clacTransition = (event: any, show_scale: number) => {
+    const canvas = canvasRef.current;
+    if (canvas && CanvasSize) {
+      const {
+        top: pTop,
+        left: pLeft,
+        height,
+        width,
+      } = canvas.getBoundingClientRect();
+      const { clientX: mouseX = 0, clientY: mouseY = 0 } = event;
+      console.log("===456", event);
+      // 获取比例
+      const yScale = (mouseY - pTop - prevTranslateMap.y) / height;
+      const xScale = (mouseX - pLeft - prevTranslateMap.x) / width;
+      // 放大后的宽高
+      const ampWidth = CanvasSize?.width * show_scale;
+      const ampHeight = CanvasSize?.height * show_scale;
+      // 需要重新运算的 translate 坐标
+      const y = yScale * (ampHeight - height);
+      const x = xScale * (ampWidth - width);
+      // 更新
+      const translateY = prevTranslateMap.y - y;
+      const translateX = prevTranslateMap.x - x;
+
+      defaultCanvas(show_scale, translateX, translateY);
+      // 记录这次的值
+      prevTranslateMap = {
+        x: translateX,
+        y: translateY,
+      };
+    }
+  };
+
   const onMousewheel = (event: any) => {
     event.preventDefault();
     const canvas = canvasRef.current;
-
-    if (canvas) {
-      const { wheelDelta } = event;
-      const x = event.offsetX; // 鼠标位置换算到相对原点的坐标
-      const y = event.offsetX;
+    if (canvas && CanvasSize) {
+      const { wheelDelta, offsetX, offsetY } = event;
+      let OffsetX = 0;
+      let OffsetY = 0;
       if (wheelDelta > 0) {
-        show_scale += 0.1;
-        const OffsetX = -(x * show_scale - x); // x * 绝对缩放率 得到位移
-        const OffsetY = -(y * show_scale - y); // y * 绝对缩放率 得到位移
-        defaultCanvas(show_scale, OffsetX, OffsetY);
+        if (show_scale < 8) {
+          console.log("===56", show_scale);
+          show_scale += 0.1;
+          OffsetX = offsetX * 0.1 - offsetX;
+          OffsetY = offsetY * 0.1 - offsetX;
+          if (defaultTransition.x === 0) {
+            OffsetX = CanvasSize.width * 0.1;
+          }
+          clacTransition(event, show_scale);
+
+          // defaultCanvas(show_scale, 0, 0);
+        }
       } else {
         if (show_scale > 0.5) {
-          const OffsetX = x * show_scale - x; // x * 绝对缩放率 得到位移
-          const OffsetY = y * show_scale - y; // y * 绝对缩放率 得到位移
           show_scale = show_scale - 0.1;
-          defaultCanvas(show_scale, OffsetX, OffsetY);
+          // OffsetX = x - x * show_scale; // x * 绝对缩放率 得到位移
+          // OffsetY = y - y * show_scale; // y * 绝对缩放率 得到位移
+          //defaultCanvas(show_scale, OffsetX, OffsetY);
         }
       }
       Tool.currentScale = show_scale;
     }
-    // if (canvas) {
-    //   const canvasData =
-    //     snapshot.getCurrent() ||
-    //     Tool.ctx.getImageData(
-    //       0,
-    //       0,
-    //       Tool.ctx.canvas.width,
-    //       Tool.ctx.canvas.height
-    //     );
-    //   const { wheelDelta } = event;
-    //   const x = event.offsetX; // 鼠标位置换算到相对原点的坐标
-    //   const y = event.offsetX;
-    //   let OffsetX = 0;
-    //   let OffsetY = 0;
-    //   if (wheelDelta > 0) {
-    //     if (Tool.currentScale < 5) {
-    //       Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
-    //       const show_scale = 1 + 0.01;
-    //       Tool.ctx.scale(show_scale, show_scale);
-    //       OffsetX = -(x * Tool.currentScale * show_scale - x); // x * 绝对缩放率 得到位移
-    //       OffsetY = -(y * Tool.currentScale * show_scale - y); // y * 绝对缩放率 得到位移
-    //       Tool.currentScale = Tool.currentScale * show_scale;
-    //       renderDraw(canvasData, OffsetX, OffsetY, canvas);
-    //     }
-    //   } else if (wheelDelta < 0) {
-    //     //缩小
-    //     if (Tool.currentScale > 0.5) {
-    //       Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
-    //       const show_scale = 1 - 0.01;
-    //       Tool.ctx.scale(show_scale, show_scale);
-    //       OffsetX = x - x * Tool.currentScale * show_scale; // x * 绝对缩放率 得到位移
-    //       OffsetY = x - y * Tool.currentScale * show_scale;
-    //       Tool.currentScale = Tool.currentScale * show_scale;
-    //       renderDraw(canvasData, OffsetX, OffsetY, canvas);
-    //     }
-    //   }
-    // }
   };
 
   useEffect(() => {
@@ -470,3 +498,6 @@ const Canvas: FC<CanvasProps> = (props) => {
 };
 
 export default Canvas;
+function trr(arg0: Float32Array, trr: any, o: any) {
+  throw new Error("Function not implemented.");
+}
