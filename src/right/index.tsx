@@ -15,11 +15,7 @@ interface ToolbarProps {
 }
 
 const ToolRightBar: FC<ToolbarProps> = (props) => {
-  const {
-    toolType,
-    lineSize,
-    ThumbSrc = "https://bafybeiauevqh55vn44gxddqtjcn2doxoc6gxebibqt3t2pdafuftmtnqkm.ipfs.dweb.link/orign.png",
-  } = props;
+  const { toolType, lineSize, ThumbSrc } = props;
 
   const renderChild = (): any => {
     let content = null;
