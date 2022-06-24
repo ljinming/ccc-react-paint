@@ -43,8 +43,8 @@ function Paint(props: PaintProps): JSX.Element {
   const {
     id = "test",
     imgSrc,
-    width = 500,
-    height = 500,
+    width = 1000,
+    height = 1000,
     background,
     cRef,
     showArea,
