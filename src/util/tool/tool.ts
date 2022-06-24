@@ -20,12 +20,6 @@ export const setStraw = (pos?: Point) => {
 export const getMousePos = (canvas: HTMLCanvasElement, event: MouseEvent, type?: string): Point => {
   const rect = canvas.getBoundingClientRect();
   const scale = Tool.currentScale || 1
-//  if (type) { 
-//       return {
-//           x: (event.clientX - rect.left),
-//           y: (event.clientY - rect.top)
-//         };
-//   }
   return {
     x: (event.clientX - rect.left)/scale,
     y: (event.clientY - rect.top)/scale
@@ -64,7 +58,6 @@ export const hexToRgb = (hex: string) => {
 
 export const getPixelColorOnCanvas = (ctx: CanvasRenderingContext2D, x: number, y: number): string => {
   const p = ctx.getImageData(x, y, 1, 1).data;
-
   return rgbToHex(p[0], p[1], p[2], p[3]);
 };
 
@@ -96,6 +89,14 @@ export const updateImageData = (origin: ImageData, data: ImageData, fillData: [n
   return data;
 };
 
+export const clacArea = (points: Point) => {
+  const x = Math.trunc(points.x)
+  const y = Math.trunc(points.y)
+    console.log('===45', points,x, y,Tool.showArea, Tool.showArea.find(item => item[0] === x && item[1] === y))
+
+  return Tool.showArea ? Tool.showArea.find(item => item[0] === x && item[1] === y):true
+}
+
 export default class Tool {
   /**
    * 线宽
@@ -116,6 +117,8 @@ export default class Tool {
   // 背景色
   public static fillColor = "#2d2d2d";
 
+
+
   public static zoom = {
     scaleX:1,
     scaleY:1
@@ -125,7 +128,8 @@ export default class Tool {
   public strawFlag = false
 
   public static ctx: CanvasRenderingContext2D;
-
+  //可画区域
+  public static showArea: Array<[number, number]>;
   static currentScale: number;
   static show_offset: any;
   static strawFlag: boolean;

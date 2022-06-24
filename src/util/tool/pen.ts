@@ -1,5 +1,5 @@
 import { ColorType } from "../toolType";
-import Tool, { Point, getMousePos, setStraw, getTouchPos, hexToRgb, updateImageData } from "./tool";
+import Tool, { Point, getMousePos, setStraw, getTouchPos, hexToRgb,clacArea, updateImageData } from "./tool";
 
 class Pen extends Tool {
   protected lineWidthBase = 1;
@@ -55,7 +55,12 @@ class Pen extends Tool {
   public onMouseDown(event: MouseEvent): void {
     event.preventDefault();
     const mousePos = getMousePos(Tool.ctx.canvas, event);
-    this.operateStart(mousePos);
+    
+    // if (clacArea(mousePos)) { 
+    // this.operateStart(mousePos);
+    // }
+       this.operateStart(mousePos);
+
   }
 
   public onMouseUp(event: MouseEvent): void {
