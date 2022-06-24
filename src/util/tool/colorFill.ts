@@ -1,4 +1,4 @@
-import Tool, { getMousePos, getTouchPos,setStraw, Point } from "./tool";
+import Tool, { getMousePos, getTouchPos,setStraw, Point, clacArea } from "./tool";
 import Color from "color";
 
 /**
@@ -103,8 +103,10 @@ class ColorFill extends Tool {
   }
   public onMouseDown(event: MouseEvent): void {
     event.preventDefault();
-    const mousepos = getMousePos(Tool.ctx.canvas, event,'colorFill');
-    this.operateStart(mousepos);
+    const mousepos = getMousePos(Tool.ctx.canvas, event, 'colorFill');
+    if (clacArea(mousepos)) { 
+      this.operateStart(mousepos);
+    }
   }
 
 

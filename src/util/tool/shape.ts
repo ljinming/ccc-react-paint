@@ -1,5 +1,5 @@
 import {ShapeToolType} from "../toolType";
-import Tool, {Point, getMousePos, getTouchPos,setStraw, hexToRgb, updateImageData} from "./tool";
+import Tool, {Point, getMousePos, getTouchPos,setStraw, hexToRgb,clacArea, updateImageData} from "./tool";
 
 /**
  * 根据形状类型，获取要绘制的形状的顶点(圆形，返回圆心)
@@ -179,7 +179,9 @@ class Shape extends Tool {
     public onMouseDown(event: MouseEvent): void {
         event.preventDefault();
         const mousePos = getMousePos(Tool.ctx.canvas, event);
-        this.operateStart(mousePos);
+          if (clacArea(mousePos)) { 
+            this.operateStart(mousePos);
+          }
     }
 
     public onMouseMove(event: MouseEvent): void {

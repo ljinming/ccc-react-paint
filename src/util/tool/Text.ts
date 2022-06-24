@@ -58,19 +58,18 @@ class Text extends Tool {
     if (this.isMouseDown) {
       this.textContent = this.textBox.value;
       this.isMouseDown = false;
+      this.textBox.value = '';
       this.textBox.setAttribute("style", `z-index:-1;display:none`);
       this.canvasBox.setAttribute("style", `z-index:-2;display:none`);
       this.drawing(this.mousePos.x, this.mousePos.y);
-      this.textBox.value = null;
     } else if (!this.isMouseDown) {
       const mousePos = getMousePos(Tool.ctx.canvas, event);
       this.mousePos = mousePos;
-      console.log("==text=456", event);
       this._x = event.clientX - 80; // event.offsetX; // 鼠标按下时保存当前位置，为起始位置
       this._y = event.clientY - 80; //event.offsetY;
       this.isMouseDown = true;
-      this.textBox.value = "";
-      if (typeof this.fontStyle === "object") {
+      this.textBox.innerText = "";
+        if (typeof this.fontStyle === "object") {
         Object.keys(this.fontStyle).forEach((va) => {
           this.textBox.style[va] = this.fontStyle[va];
         });

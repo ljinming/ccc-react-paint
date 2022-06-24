@@ -1,5 +1,5 @@
 import { ColorType } from "../toolType";
-import Tool, { Point, getMousePos, getPixelColorOnCanvas, getTouchPos, hexToRgb, updateImageData } from "./tool";
+import Tool, { Point, getMousePos, getPixelColorOnCanvas, getTouchPos, hexToRgb, updateImageData, clacArea } from "./tool";
 class Eraser extends Tool {
   protected lineWidthBase = 1;
   private mouseDown = false;
@@ -54,7 +54,9 @@ class Eraser extends Tool {
 
     const mousePos = getMousePos(Tool.ctx.canvas, event,'eraser');
 
+      if (clacArea(mousePos)) { 
     this.operateStart(mousePos);
+    }
   }
 
   public onMouseUp(event: MouseEvent): void {

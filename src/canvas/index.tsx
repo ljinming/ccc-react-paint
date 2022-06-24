@@ -10,7 +10,7 @@ import {
 } from "../util/toolType";
 import { FC } from "react";
 import { useState } from "react";
-import { Pen, Tool, Eraser, ColorExtract, ColorFill, Text } from "../util/tool";
+import { Pen, Tool, Eraser, ColorFill, Text } from "../util/tool";
 import Shape from "../util/tool/shape";
 import { useContext } from "react";
 import { DispatcherContext } from "../context";
@@ -20,11 +20,7 @@ import { Input } from "antd";
 import cursorPen from "@/assets/icon/cursorPen.jpg";
 import cursorErase from "@/assets/icon/cursorErase.jpg";
 import straw from "@/assets/icon/straw.jpg";
-import * as glMatrix from "gl-matrix";
 import { getScale } from "./utils";
-import { off } from "process";
-import { throws } from "assert";
-const { TextArea } = Input;
 
 interface CanvasProps {
   toolType: ToolType;
@@ -54,7 +50,6 @@ let show_scale = 1;
 let translatex = 0;
 let translatey = 0;
 
-const translate = 5; //每次左右滑动的距离
 const maxScale = 6;
 const minScale = 0.1;
 const scaleStep = 0.1;
@@ -82,6 +77,7 @@ const Canvas: FC<CanvasProps> = (props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const allCanvasRef = useRef<HTMLDivElement>(null);
   const canvasTextRef = useRef<HTMLDivElement>(null);
+  const textBoxRef = useRef<HTMLTextAreaElement>(null);
   const dispatcherContext = useContext(DispatcherContext);
   const [snapshot] = useState<SnapShot>(new SnapShot());
 
@@ -230,6 +226,7 @@ const Canvas: FC<CanvasProps> = (props) => {
   //鼠标icon
   const showCanvasCursor = () => {
     const canvas = canvasRef.current;
+    const textBox = textBoxRef.current;
     if (canvas) {
       if (strawType) {
         //吸色
@@ -241,6 +238,9 @@ const Canvas: FC<CanvasProps> = (props) => {
         canvas.style.cursor = `url(${cursorErase}),auto`;
       } else {
         canvas.style.cursor = `auto`;
+      }
+      if (toolType !== 2) {
+        textBox!.setAttribute("style", `z-index:-1;display:none`);
       }
     }
   };
@@ -286,16 +286,18 @@ const Canvas: FC<CanvasProps> = (props) => {
         Tool.ctx.clearRect(0, 0, canvas.width, canvas?.height);
         if (showArea) {
           Tool.showArea = showArea;
+        } else {
+          Tool.showArea = null;
         }
       }
       drawCanvas();
-      let showScale = 1;
       const height = container!.clientHeight;
       const width = container!.clientWidth;
-      showScale = getScale({ width, height }, CanvasSize);
-      show_scale = showScale;
-      Tool.currentScale = showScale;
-      canvas.style.transform = `scale(${show_scale})`;
+      show_scale = getScale({ width, height }, CanvasSize);
+      Tool.currentScale = show_scale;
+      translatex = (width - CanvasSize.width * show_scale) / 2;
+      translatey = (height - CanvasSize.height * show_scale) / 2;
+      canvas.style.transform = `scale(${show_scale}) translate(${translatex}px,${translatey}px)`;
     }
   }, [CanvasSize]);
 
@@ -377,11 +379,6 @@ const Canvas: FC<CanvasProps> = (props) => {
   };
 
   const onMousewheel = (event: any) => {
-    console.log(
-      "----onMousewheel----------------------------------===56",
-      event
-    );
-
     event.preventDefault();
     const canvas = canvasRef.current;
     const container = allCanvasRef!.current;
@@ -486,13 +483,15 @@ const Canvas: FC<CanvasProps> = (props) => {
         }}
       ></canvas>
       <div className="canvas-text" id="text-container" ref={canvasTextRef}>
-        <TextArea
+        <textarea
+          ref={textBoxRef}
           id="textBox"
           name="story"
           autoFocus={true}
-          bordered={true}
-          autoSize={{ minRows: 2, maxRows: 2 }}
-          className={`text-box ${toolType !== 2 ? "text-show" : ""}`}
+          //autocomplete={fales}
+          //bordered={true}
+          // autoSize={{ minRows: 2, maxRows: 2 }}
+          className={`text-box`}
           // rows={1}
         />
       </div>

@@ -33,6 +33,7 @@ interface PaintProps {
   background?: string;
   id?: string;
   cRef?: any;
+  ThumbSrc?: string;
   showArea?: Array<[number, number]>;
 }
 //= "https://bafybeiauevqh55vn44gxddqtjcn2doxoc6gxebibqt3t2pdafuftmtnqkm.ipfs.dweb.link/orign.png"
@@ -45,16 +46,15 @@ function Paint(props: PaintProps): JSX.Element {
     height = 500,
     background,
     cRef,
-    showArea = [
-      [300, 210],
-      [300, 220],
-    ],
+    showArea,
+    ThumbSrc,
   } = props;
 
   const [toolType, setToolType] = useState<ToolType>(ToolType.PEN);
   const [strawType, setStrawType] = useState<boolean>(false);
   const [shapeType, setShapeType] = useState<ShapeToolType>(ShapeToolType.LINE);
   const [size, setSize] = useState({ width, height });
+  const [Thumbnail, setThumbnail] = useState(ThumbSrc);
   const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(
     ShapeOutlineType.SOLID
   );
@@ -97,6 +97,9 @@ function Paint(props: PaintProps): JSX.Element {
       loadImage(imgSrc);
     } else if (width && height) {
       setSize({ width, height });
+    }
+    if (showArea) {
+      setThumbnail(ThumbSrc || "");
     }
   }, [width, height, imgSrc]);
 
@@ -187,7 +190,11 @@ function Paint(props: PaintProps): JSX.Element {
                           />
                         </div>
                         <div className="show-type">
-                          <Right toolType={toolType} lineSize={lineSize} />
+                          <Right
+                            toolType={toolType}
+                            ThumbSrc={Thumbnail}
+                            lineSize={lineSize}
+                          />
                         </div>
                       </div>
                     </div>

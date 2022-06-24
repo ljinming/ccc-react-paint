@@ -56,10 +56,9 @@ class Pen extends Tool {
     event.preventDefault();
     const mousePos = getMousePos(Tool.ctx.canvas, event);
     
-    // if (clacArea(mousePos)) { 
-    // this.operateStart(mousePos);
-    // }
-       this.operateStart(mousePos);
+    if (clacArea(mousePos)) { 
+    this.operateStart(mousePos);
+    }
 
   }
 

@@ -7,13 +7,19 @@ import ShowShape from "./showShape";
 import FormatColor from "./formatColor";
 import Text from "./text";
 import Eraser from "./earser";
+import { isGetAccessor } from "typescript";
 interface ToolbarProps {
   toolType: ToolType;
   lineSize: number;
+  ThumbSrc?: string | undefined;
 }
 
 const ToolRightBar: FC<ToolbarProps> = (props) => {
-  const { toolType, lineSize } = props;
+  const {
+    toolType,
+    lineSize,
+    ThumbSrc = "https://bafybeiauevqh55vn44gxddqtjcn2doxoc6gxebibqt3t2pdafuftmtnqkm.ipfs.dweb.link/orign.png",
+  } = props;
 
   const renderChild = (): any => {
     let content = null;
@@ -39,7 +45,12 @@ const ToolRightBar: FC<ToolbarProps> = (props) => {
     return content;
   };
 
-  return <div className="ccc-showTool">{renderChild()}</div>;
+  return (
+    <div className="ccc-showTool">
+      {ThumbSrc && <img src={ThumbSrc} className="ThumbSrc" />}
+      {renderChild()}
+    </div>
+  );
 };
 
 export default React.memo(ToolRightBar);

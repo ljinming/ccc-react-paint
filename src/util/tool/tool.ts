@@ -92,8 +92,8 @@ export const updateImageData = (origin: ImageData, data: ImageData, fillData: [n
 export const clacArea = (points: Point) => {
   const x = Math.trunc(points.x)
   const y = Math.trunc(points.y)
-    console.log('===45', points,x, y,Tool.showArea, Tool.showArea.find(item => item[0] === x && item[1] === y))
-
+  console.log('points:', points, x, y, Tool.showArea?.find(item => item[0] === x && item[1] === y))
+  console.log('Tool.showArea:',Tool.showArea,)
   return Tool.showArea ? Tool.showArea.find(item => item[0] === x && item[1] === y):true
 }
 
@@ -129,7 +129,7 @@ export default class Tool {
 
   public static ctx: CanvasRenderingContext2D;
   //可画区域
-  public static showArea: Array<[number, number]>;
+  public static showArea: Array<[number, number]> | null;
   static currentScale: number;
   static show_offset: any;
   static strawFlag: boolean;
