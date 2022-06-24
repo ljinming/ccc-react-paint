@@ -1,5 +1,6 @@
 import React, { Ref, useEffect, useImperativeHandle } from "react";
 import Canvas from "./canvas";
+import { Tool } from "./util/tool";
 import {
   ToolTypeContext,
   ShapeTypeContext,
@@ -93,16 +94,24 @@ function Paint(props: PaintProps): JSX.Element {
   };
 
   useEffect(() => {
+    // 再一次进入
     if (imgSrc) {
       loadImage(imgSrc);
     } else if (width && height) {
       setSize({ width, height });
     }
-    if (showArea) {
-      setThumbnail(ThumbSrc || "");
+    if (!ThumbSrc) {
+      // 没有area
+      setThumbnail("");
+      Tool.showArea = null;
     }
-  }, [width, height, imgSrc]);
+  }, [width, imgSrc, height]);
 
+  if (showArea) {
+    Tool.showArea = showArea;
+  }
+
+  console.log("===546", showArea);
   return (
     <ToolTypeContext.Provider
       value={{
@@ -172,7 +181,6 @@ function Paint(props: PaintProps): JSX.Element {
                         <div className="show-Canvas">
                           <Canvas
                             id={id}
-                            showArea={showArea}
                             strawType={strawType}
                             CanvasSize={size}
                             imgSrc={imgSrc}

@@ -90,11 +90,9 @@ export const updateImageData = (origin: ImageData, data: ImageData, fillData: [n
 };
 
 export const clacArea = (points: Point) => {
-  const x = Math.trunc(points.x)
-  const y = Math.trunc(points.y)
-  console.log('points:', points, x, y, Tool.showArea?.find(item => item[0] === x && item[1] === y))
-  console.log('Tool.showArea:',Tool.showArea,)
-  return Tool.showArea ? Tool.showArea.find(item => item[0] === x && item[1] === y):true
+  console.log('points:', points, Tool.showArea?.find(item => item[0] === points.x && item[1] === points.y))
+  console.log('Tool.showArea:')
+  return Tool.showArea ? Tool.showArea.find(item => item[0] === points.x && item[1] === points.y):true
 }
 
 export default class Tool {

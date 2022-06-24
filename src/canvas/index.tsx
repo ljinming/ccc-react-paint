@@ -42,7 +42,6 @@ interface CanvasProps {
   background?: string;
   onSize?: (value: any) => void;
   setColor: (value: string) => void;
-  showArea?: Array<[number, number]>;
 }
 
 let show_scale = 1;
@@ -60,7 +59,6 @@ const Canvas: FC<CanvasProps> = (props) => {
     toolType,
     lineWidthType,
     mainColor,
-    showArea,
     subColor,
     setColor,
     CanvasSize,
@@ -270,7 +268,7 @@ const Canvas: FC<CanvasProps> = (props) => {
       } else if (CanvasSize) {
         canvas.height = CanvasSize.height;
         canvas.width = CanvasSize.width;
-        ctx.fillStyle = background || "#fff";
+        ctx.fillStyle = background || "#2d2d2d";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         snapshot.add(ctx.getImageData(0, 0, canvas.width, canvas.height));
       }
@@ -284,11 +282,6 @@ const Canvas: FC<CanvasProps> = (props) => {
     if (CanvasSize && container && canvas) {
       if (Tool.ctx) {
         Tool.ctx.clearRect(0, 0, canvas.width, canvas?.height);
-        if (showArea) {
-          Tool.showArea = showArea;
-        } else {
-          Tool.showArea = null;
-        }
       }
       drawCanvas();
       const height = container!.clientHeight;

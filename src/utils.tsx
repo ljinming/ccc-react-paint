@@ -33,7 +33,7 @@ export function getImageSize(url: string): Promise<{
     image.onload = function () {
       resolve({
         width: image.width,
-        height: image.height
+        height: image.height,
       });
     };
     image.onerror = function () {
@@ -44,5 +44,7 @@ export function getImageSize(url: string): Promise<{
 }
 
 export const getRandomColor = () => {
-  return "#" + ("00000" + ((Math.random() * 0x1000000) << 0).toString(16)).substr(-6);
+  return (
+    "#" + ("00000" + ((Math.random() * 0x1000000) << 0).toString(16)).substr(-6)
+  );
 };

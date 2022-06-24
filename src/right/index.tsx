@@ -7,7 +7,6 @@ import ShowShape from "./showShape";
 import FormatColor from "./formatColor";
 import Text from "./text";
 import Eraser from "./earser";
-import { isGetAccessor } from "typescript";
 interface ToolbarProps {
   toolType: ToolType;
   lineSize: number;
