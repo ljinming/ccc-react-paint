@@ -290,6 +290,7 @@ const Canvas: FC<CanvasProps> = (props) => {
       Tool.currentScale = show_scale;
       translatex = (width - CanvasSize.width * show_scale) / 2;
       translatey = (height - CanvasSize.height * show_scale) / 2;
+      console.log("===345", translatex, CanvasSize, show_scale);
       canvas.style.transform = `scale(${show_scale}) translate(${translatex}px,${translatey}px)`;
     }
   }, [CanvasSize]);
@@ -471,7 +472,7 @@ const Canvas: FC<CanvasProps> = (props) => {
         className="ccc-paint-canvas"
         ref={canvasRef}
         style={{
-          background: background || "#fff",
+          background: background || "#2d2d2d",
           ...style,
         }}
       ></canvas>

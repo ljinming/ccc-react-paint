@@ -13,7 +13,6 @@ class ColorExtract extends Tool {
 
     private operateStart(pos: {x: number; y: number}) {
         const color = getPixelColorOnCanvas(Tool.ctx, pos.x, pos.y);
-       // console.log('====5',color)
         this.setColor(color);
     }
     public onMouseDown(event: MouseEvent): void {

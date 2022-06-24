@@ -37,7 +37,7 @@ interface PaintProps {
   ThumbSrc?: string;
   showArea?: Array<[number, number]>;
 }
-//= "https://bafybeiauevqh55vn44gxddqtjcn2doxoc6gxebibqt3t2pdafuftmtnqkm.ipfs.dweb.link/orign.png"
+//= "https://bafybeiel2sxa4vbw2m43ya247ibvt7xtnzvxvb73i4gixydfhgup3f4zte.ipfs.dweb.link/orign.png"
 
 function Paint(props: PaintProps): JSX.Element {
   const {

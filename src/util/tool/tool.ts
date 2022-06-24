@@ -90,9 +90,10 @@ export const updateImageData = (origin: ImageData, data: ImageData, fillData: [n
 };
 
 export const clacArea = (points: Point) => {
-  console.log('points:', points, Tool.showArea?.find(item => item[0] === points.x && item[1] === points.y))
-  console.log('Tool.showArea:')
-  return Tool.showArea ? Tool.showArea.find(item => item[0] === points.x && item[1] === points.y):true
+  const x = Math.trunc(points.x)
+  const y = Math.trunc(points.y)
+  console.log('points:', points, x, y, Tool.showArea?.find(item => item[0] === x && item[1] === y))
+  return Tool.showArea ? Tool.showArea.find(item => item[0] === x && item[1] === y):true
 }
 
 export default class Tool {
@@ -156,36 +157,7 @@ export default class Tool {
   public onTouchEnd(event: TouchEvent): void {
     //
   }
-  // public onMouseWheel(event: any): void {
-  //   const { wheelDelta } = event
-  //   console.log('event--deltaMode-4', event, event.wheelDelta)
-  //   if (wheelDelta > 0) {  // 放大
-  //     if (Tool.currentScale < 20) {  // 缩放值小于设定的最大值，则可以继续放大
-  //       Tool.currentScale += 1;  // 累加后 this.scale 为放大后的缩放值
-  //       if (Tool.currentScale > 20) {  // 越界处理
-  //         Tool.currentScale = 20;
-  //       }
-  //       Tool.ctx.scale(Tool.currentScale,Tool.currentScale);  // 进行缩放
-  //       // 要根据鼠标位置缩放，则要在缩放后再次移动，将缩放点的位置移动到鼠标位置
-  //       const x = event.offsetX;
-  //       const y = event.offsetY;
-  //       Tool.show_offset.x = (x -Tool.show_offset.x) * Tool.currentScale / (Tool.currentScale - 1) - (x - Tool.show_offset.x);
-  //       Tool.show_offset.y = (y - Tool.show_offset.y) * Tool.currentScale / (Tool.currentScale - 1) - (y - Tool.show_offset.y);
-  //       console.log('==4', Tool.show_offset.x)
-  //       console.log('==4', Tool.show_offset.y)
-
-  //       // move(-Tool.show_offset.x, -Tool.show_offset.y);
-  //     }
-
-  //   }
-  // }
-      //  public move = (e) => {
-      //       const x = e.offsetX - Tool.show_offset.x;  // 鼠标位置换算到相对原点的坐标
-      //       const y = e.offsetY - Tool.show_offset.y;
-      //       const offsetX = x * (this.scale - preScale) / preScale;  // x * 绝对缩放率 得到位移
-      //       const offsetY = y * (this.scale - preScale) / preScale;
-      //       this.move(-offsetX, -offsetY);
-      //   };
+ 
 
  
 }
