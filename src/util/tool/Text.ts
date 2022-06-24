@@ -1,4 +1,4 @@
-import Tool, { Point, getMousePos } from "./tool";
+import Tool, { Point, getMousePos,clacArea } from "./tool";
 
 // interface propsInput = {
 //             x?: number,
@@ -65,6 +65,7 @@ class Text extends Tool {
     } else if (!this.isMouseDown) {
       const mousePos = getMousePos(Tool.ctx.canvas, event);
       this.mousePos = mousePos;
+       if (clacArea(mousePos)) { 
       this._x = event.clientX - 80; // event.offsetX; // 鼠标按下时保存当前位置，为起始位置
       this._y = event.clientY - 80; //event.offsetY;
       this.isMouseDown = true;
@@ -79,6 +80,7 @@ class Text extends Tool {
         "style",
         `display:block;position:absolute;z-index:6;width:auto; left:${this._x}px;top:${this._y}px;`
       );
+          }
     }
   }
 }

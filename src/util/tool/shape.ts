@@ -179,7 +179,7 @@ class Shape extends Tool {
     public onMouseDown(event: MouseEvent): void {
         event.preventDefault();
         const mousePos = getMousePos(Tool.ctx.canvas, event);
-          if (clacArea(mousePos)) { 
+        if (clacArea(mousePos)) { 
             this.operateStart(mousePos);
           }
     }
@@ -187,7 +187,9 @@ class Shape extends Tool {
     public onMouseMove(event: MouseEvent): void {
         event.preventDefault();
         const mousePos = getMousePos(Tool.ctx.canvas, event);
-        this.operateMove(mousePos);
+         if (clacArea(mousePos)) { 
+            this.operateMove(mousePos);
+          }
     }
 
     public onMouseUp(event: MouseEvent): void {
@@ -201,8 +203,10 @@ class Shape extends Tool {
         }
         const canvas = event.target as HTMLCanvasElement;
         const touchPos = getTouchPos(canvas, event);
-
-        this.operateStart(touchPos);
+        if (clacArea(touchPos)) { 
+            this.operateStart(touchPos);
+          }
+        //this.operateStart(touchPos);
     }
 
     public onTouchMove(event: TouchEvent): void {
@@ -211,8 +215,9 @@ class Shape extends Tool {
         }
         const canvas = event.target as HTMLCanvasElement;
         const touchPos = getTouchPos(canvas, event);
-
-        this.operateMove(touchPos);
+        if (clacArea(touchPos)) { 
+            this.operateMove(touchPos);
+        }
     }
 
     public onTouchEnd(event: TouchEvent): void {

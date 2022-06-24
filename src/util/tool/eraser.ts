@@ -67,7 +67,10 @@ class Eraser extends Tool {
   public onMouseMove(event: MouseEvent): void {
     event.preventDefault();
     const mousePos = getMousePos(Tool.ctx.canvas, event);
+      if (clacArea(mousePos)) { 
     this.operateMove(mousePos);
+    }
+    //this.operateMove(mousePos);
   }
 
   public onTouchStart(event: TouchEvent): void {
@@ -75,7 +78,10 @@ class Eraser extends Tool {
       event.preventDefault();
     }
     const touchPos = getTouchPos(event.target as HTMLCanvasElement, event);
+     if (clacArea(touchPos)) { 
     this.operateStart(touchPos);
+    }
+   // this.operateStart(touchPos);
   }
 
   public onTouchMove(event: TouchEvent): void {
@@ -83,7 +89,10 @@ class Eraser extends Tool {
       event.preventDefault();
     }
     const touchPos = getTouchPos(event.target as HTMLCanvasElement, event);
+     if (clacArea(touchPos)) { 
     this.operateMove(touchPos);
+    }
+   // this.operateMove(touchPos);
   }
 
   public onTouchEnd(event: TouchEvent): void {

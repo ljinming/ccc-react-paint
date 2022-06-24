@@ -1,6 +1,7 @@
 import React, { Ref, useEffect, useImperativeHandle } from "react";
 import Canvas from "./canvas";
 import { Tool } from "./util/tool";
+import { LoadingOutlined } from "@ant-design/icons";
 import {
   ToolTypeContext,
   ShapeTypeContext,
@@ -43,8 +44,8 @@ function Paint(props: PaintProps): JSX.Element {
   const {
     id = "test",
     imgSrc,
-    width = 1000,
-    height = 1000,
+    width = 0,
+    height = 0,
     background,
     cRef,
     showArea,
@@ -71,6 +72,7 @@ function Paint(props: PaintProps): JSX.Element {
   const [mainColor, setMainColor] = useState<string>("black");
   const [subColor, setSubColor] = useState<string>("white");
   const [dispatcher] = useState(new Dispatcher());
+  const [loading, setLoading] = useState(!width);
 
   const setColor = (value: string) => {
     if (activeColorType === ColorType.MAIN) {
@@ -91,6 +93,7 @@ function Paint(props: PaintProps): JSX.Element {
   const loadImage = async (imgSrc: string) => {
     const size = await getImageSize(imgSrc);
     setSize(size);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -99,6 +102,7 @@ function Paint(props: PaintProps): JSX.Element {
       loadImage(imgSrc);
     } else if (width && height) {
       setSize({ width, height });
+      setLoading(false);
     }
     if (!ThumbSrc) {
       // 没有area
@@ -111,7 +115,6 @@ function Paint(props: PaintProps): JSX.Element {
     Tool.showArea = showArea;
   }
 
-  console.log("===546", showArea);
   return (
     <ToolTypeContext.Provider
       value={{
@@ -179,23 +182,29 @@ function Paint(props: PaintProps): JSX.Element {
                           />
                         </div>
                         <div className="show-Canvas">
-                          <Canvas
-                            id={id}
-                            strawType={strawType}
-                            CanvasSize={size}
-                            imgSrc={imgSrc}
-                            background={background}
-                            fillColor={fillColor}
-                            toolType={toolType}
-                            fontStyle={fontStyle}
-                            shapeType={shapeType}
-                            shapeOutlineType={shapeOutlineType}
-                            mainColor={mainColor}
-                            subColor={subColor}
-                            lineSize={lineSize}
-                            lineWidthType={lineWidthType}
-                            setColor={setColor}
-                          />
+                          {loading ? (
+                            <span>
+                              <LoadingOutlined className="show-loading" />
+                            </span>
+                          ) : (
+                            <Canvas
+                              id={id}
+                              strawType={strawType}
+                              CanvasSize={size}
+                              imgSrc={imgSrc}
+                              background={background}
+                              fillColor={fillColor}
+                              toolType={toolType}
+                              fontStyle={fontStyle}
+                              shapeType={shapeType}
+                              shapeOutlineType={shapeOutlineType}
+                              mainColor={mainColor}
+                              subColor={subColor}
+                              lineSize={lineSize}
+                              lineWidthType={lineWidthType}
+                              setColor={setColor}
+                            />
+                          )}
                         </div>
                         <div className="show-type">
                           <Right

@@ -34,7 +34,7 @@ interface CanvasProps {
   fillColor: string;
   fontStyle: any;
   imgSrc?: string;
-  CanvasSize?: {
+  CanvasSize: {
     width: number;
     height: number;
   };
