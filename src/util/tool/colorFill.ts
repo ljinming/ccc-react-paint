@@ -1,5 +1,6 @@
-import Tool, { getMousePos, getTouchPos,setStraw, Point, clacArea } from "./tool";
-import Color from "color";
+import Tool, { getMousePos, getTouchPos, setStraw, Point, clacArea } from "./tool";
+import {parseColorString } from './colorChange'
+//import Color from "color";
 
 /**
  * 高效率的填充算法
@@ -21,9 +22,10 @@ const efficentFloodFill = (
   const startPos = (startY * canvasWidth + startX) * 4;
   const colorLayer = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
   const startColor: [number, number, number] = [
-    colorLayer.data[startPos],
-    colorLayer.data[startPos + 1],
-    colorLayer.data[startPos + 2]
+    colorLayer.data[startPos], //r
+    colorLayer.data[startPos + 1],//g
+    colorLayer.data[startPos + 2], //b
+   // colorLayer.data[startPos + 3], //a
   ];
 
   if (startColor[0] === fillColor[0] && startColor[1] === fillColor[1] && startColor[2] === fillColor[2]) return;
@@ -80,8 +82,14 @@ const matchColor = (colorLayer: ImageData, pixelPos: number, color: [number, num
   const r = colorLayer.data[pixelPos];
   const g = colorLayer.data[pixelPos + 1];
   const b = colorLayer.data[pixelPos + 2];
+  //const a = colorLayer.data[pixelPos + 3];
+  const showR = Math.abs(r - color[0]) < 30
+    const showG =  Math.abs(g - color[1])<30
+    const showB =  Math.abs(b - color[2])<30
 
-  return r === color[0] && g === color[1] && b === color[2];
+    return showR && showG && showB
+
+  //return r === color[0] && g === color[1] && b === color[2] && a  === color[3];
 };
 
 /**
@@ -98,8 +106,9 @@ const fillPixel = (colorLayer: ImageData, pixelPos: number, color: [number, numb
 class ColorFill extends Tool {
   private operateStart(pos: Point) {
     setStraw(pos)
-    const color = new Color(Tool.strawColor ||Tool.fillColor);
-    efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.red(), color.green(), color.blue()]);
+    const color = parseColorString(Tool.strawColor ||Tool.fillColor) //new Color(Tool.strawColor ||Tool.fillColor);
+   // efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.red(), color.green(), color.blue()]);
+     efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.r, color.g, color.b]);
   }
   public onMouseDown(event: MouseEvent): void {
     event.preventDefault();

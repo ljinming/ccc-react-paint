@@ -52,16 +52,30 @@ class Text extends Tool {
     }
   }
 
-  public onMouseDown(event: any): void {
-    // 鼠标按下位置保存
-    event.preventDefault();
-    if (this.isMouseDown) {
-      this.textContent = this.textBox.value;
+
+  private startText() { 
+     this.textContent = this.textBox.value;
       this.isMouseDown = false;
       this.textBox.value = '';
       this.textBox.setAttribute("style", `z-index:-1;display:none`);
       this.canvasBox.setAttribute("style", `z-index:-2;display:none`);
       this.drawing(this.mousePos.x, this.mousePos.y);
+  }
+
+
+  public onKeyDown(event:any):void { 
+     if (event.keyCode == 13){
+        //鼠标
+       this.startText()
+      event.preventDefault();
+   }
+  }
+
+  public onMouseDown(event: any): void {
+    // 鼠标按下位置保存
+    event.preventDefault();
+    if (this.isMouseDown) {
+      this.startText()
     } else if (!this.isMouseDown) {
       const mousePos = getMousePos(Tool.ctx.canvas, event);
       this.mousePos = mousePos;
@@ -77,10 +91,11 @@ class Text extends Tool {
       this.canvasBox.setAttribute("style", `z-index:5;display:block,pointer-events:auto`);
       this.textBox.setAttribute(
         "style",
-        `display:block;position:absolute;z-index:6;width:auto; left:${this._x}px;top:${this._y}px;`
+        `display:block;position:absolute;z-index:6;width:auto; left:${this._x}px;top:${this._y -10}px;`
       );
     }
   }
+
 }
 
 export default Text;

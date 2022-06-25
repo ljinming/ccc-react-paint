@@ -15,7 +15,8 @@
     "react/prop-types": 0,
     "react/display-name": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/prefer-as-const": "off"
+    "@typescript-eslint/prefer-as-const": "off",
+    "@typescript-eslint/no-empty-function":"off"
   },
   "settings": {
     "react": {

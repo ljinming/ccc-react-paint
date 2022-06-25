@@ -20,7 +20,9 @@ import { Input } from "antd";
 import cursorPen from "@/assets/icon/cursorPen.jpg";
 import cursorErase from "@/assets/icon/cursorErase.jpg";
 import straw from "@/assets/icon/straw.jpg";
+import bucket from "@/assets/icon/bucket.jpg";
 import { getScale } from "./utils";
+import { keys } from "@material-ui/core/styles/createBreakpoints";
 
 interface CanvasProps {
   toolType: ToolType;
@@ -234,6 +236,8 @@ const Canvas: FC<CanvasProps> = (props) => {
         canvas.style.cursor = `url(${cursorPen}) 12 16,auto`;
       } else if (toolType === 4) {
         canvas.style.cursor = `url(${cursorErase}),auto`;
+      } else if (toolType === 1) {
+        canvas.style.cursor = `url(${bucket}),auto`;
       } else {
         canvas.style.cursor = `auto`;
       }
@@ -286,7 +290,10 @@ const Canvas: FC<CanvasProps> = (props) => {
       drawCanvas();
       const height = container!.clientHeight;
       const width = container!.clientWidth;
-      show_scale = getScale({ width, height }, CanvasSize);
+      const showScale =
+        Math.min(width, height) /
+          Math.max(CanvasSize.height, CanvasSize.width) || 1;
+      show_scale = showScale; //getScale({ width, height }, CanvasSize);
       Tool.currentScale = show_scale;
       translatex = (width - CanvasSize.width * show_scale) / 2;
       translatey = (height - CanvasSize.height * show_scale) / 2;
@@ -377,6 +384,8 @@ const Canvas: FC<CanvasProps> = (props) => {
     const container = allCanvasRef!.current;
     const { clientX, clientY, deltaX, deltaY, ctrlKey } = event;
     const { width, height, x, y } = container!.getBoundingClientRect();
+    const { width: canvasWidth, height: canvasHeight } =
+      container!.getBoundingClientRect();
     let newScale;
     if (ctrlKey) {
       //双指放大缩小
@@ -420,19 +429,31 @@ const Canvas: FC<CanvasProps> = (props) => {
       canvas!.style.transform = `translate3d(${translatex}px, ${translatey}px, 0px) scale(${show_scale})`;
     } else {
       if (!!deltaX && !deltaY) {
+        // if (translatex > 0 && translatex < width) {
         // 左右移动 向右 -deltaX < 0  向左   >0
-        translatex = translatex - deltaX;
+        translatex = Number((translatex - deltaX).toFixed(3));
+        // }
       } else if (!!deltaY && !deltaX) {
-        translatey = translatey - deltaY;
+        // if (translatey > 0 && translatex < height) {
+        // 左右移动 向右 -deltaX < 0  向左   >0
+        translatey = Number((translatey - deltaY).toFixed(3));
+        // }
       }
 
-      canvas!.style.transform = `translate3d(${translatex}px, ${translatey}px, 0px) scale(${show_scale})`;
+      canvas!.style.transform = `translate(${translatex}px, ${translatey}px) scale(${show_scale})`;
+    }
+  };
+
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (tool) {
+      tool.onKeyDown(e);
     }
   };
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (canvas) {
+    const textBox = textBoxRef.current;
+    if (canvas && textBox) {
       canvas.addEventListener("mousedown", onMouseDown);
       canvas.addEventListener("mousemove", onMouseMove);
       canvas.addEventListener("mouseup", onMouseUp);
@@ -440,6 +461,7 @@ const Canvas: FC<CanvasProps> = (props) => {
       canvas.addEventListener("touchstart", onTouchStart);
       canvas.addEventListener("touchmove", onTouchMove);
       canvas.addEventListener("touchend", onTouchEnd);
+      textBox.addEventListener("keydown", onKeyDown);
 
       return () => {
         canvas.removeEventListener("mousedown", onMouseDown);

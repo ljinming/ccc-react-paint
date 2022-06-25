@@ -1,5 +1,6 @@
 import React, { Ref, useEffect, useImperativeHandle } from "react";
 import Canvas from "./canvas";
+import { LoadingOutlined } from "@ant-design/icons";
 import { Tool } from "./util/tool";
 import {
   ToolTypeContext,
@@ -9,7 +10,6 @@ import {
   ColorContext,
   FillContext,
   TextContext,
-  SizeContext,
   DispatcherContext,
 } from "./context";
 import "./style.less";
@@ -37,12 +37,12 @@ interface PaintProps {
   ThumbSrc?: string;
   showArea?: Array<[number, number]>;
 }
-//= "https://bafybeiauevqh55vn44gxddqtjcn2doxoc6gxebibqt3t2pdafuftmtnqkm.ipfs.dweb.link/orign.png"
+//= https://bafybeiel2sxa4vbw2m43ya247ibvt7xtnzvxvb73i4gixydfhgup3f4zte.ipfs.dweb.link/orign.png"
 
 function Paint(props: PaintProps): JSX.Element {
   const {
     id = "test",
-    imgSrc,
+    imgSrc = "https://bafybeiel2sxa4vbw2m43ya247ibvt7xtnzvxvb73i4gixydfhgup3f4zte.ipfs.dweb.link/orign.png",
     width = 500,
     height = 500,
     background,
@@ -56,6 +56,7 @@ function Paint(props: PaintProps): JSX.Element {
   const [shapeType, setShapeType] = useState<ShapeToolType>(ShapeToolType.LINE);
   const [size, setSize] = useState({ width, height });
   const [Thumbnail, setThumbnail] = useState(ThumbSrc);
+  const [loadings, setLoadings] = useState(true);
   const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(
     ShapeOutlineType.SOLID
   );
@@ -91,6 +92,7 @@ function Paint(props: PaintProps): JSX.Element {
   const loadImage = async (imgSrc: string) => {
     const size = await getImageSize(imgSrc);
     setSize(size);
+    setLoadings(false);
   };
 
   useEffect(() => {
@@ -99,6 +101,7 @@ function Paint(props: PaintProps): JSX.Element {
       loadImage(imgSrc);
     } else if (width && height) {
       setSize({ width, height });
+      setLoadings(false);
     }
     if (!ThumbSrc) {
       // 没有area
@@ -111,7 +114,6 @@ function Paint(props: PaintProps): JSX.Element {
     Tool.showArea = showArea;
   }
 
-  console.log("===546", showArea);
   return (
     <ToolTypeContext.Provider
       value={{
@@ -178,25 +180,31 @@ function Paint(props: PaintProps): JSX.Element {
                             fillColor={fillColor}
                           />
                         </div>
-                        <div className="show-Canvas">
-                          <Canvas
-                            id={id}
-                            strawType={strawType}
-                            CanvasSize={size}
-                            imgSrc={imgSrc}
-                            background={background}
-                            fillColor={fillColor}
-                            toolType={toolType}
-                            fontStyle={fontStyle}
-                            shapeType={shapeType}
-                            shapeOutlineType={shapeOutlineType}
-                            mainColor={mainColor}
-                            subColor={subColor}
-                            lineSize={lineSize}
-                            lineWidthType={lineWidthType}
-                            setColor={setColor}
-                          />
-                        </div>
+                        {loadings ? (
+                          <div className="show-loading">
+                            <LoadingOutlined className="loading-size" />
+                          </div>
+                        ) : (
+                          <div className="show-Canvas">
+                            <Canvas
+                              id={id}
+                              strawType={strawType}
+                              CanvasSize={size}
+                              imgSrc={imgSrc}
+                              background={background}
+                              fillColor={fillColor}
+                              toolType={toolType}
+                              fontStyle={fontStyle}
+                              shapeType={shapeType}
+                              shapeOutlineType={shapeOutlineType}
+                              mainColor={mainColor}
+                              subColor={subColor}
+                              lineSize={lineSize}
+                              lineWidthType={lineWidthType}
+                              setColor={setColor}
+                            />
+                          </div>
+                        )}
                         <div className="show-type">
                           <Right
                             toolType={toolType}

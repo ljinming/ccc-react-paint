@@ -19,7 +19,7 @@ class Eraser extends Tool {
     this.saveImageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
     this.mouseDown = true;
     this.color = getPixelColorOnCanvas(Tool.ctx, pos.x - 2, pos.y - 2);
-    Tool.ctx.lineWidth = 3 * this.lineWidthBase;
+    Tool.ctx.lineWidth = this.lineWidthBase;
     Tool.ctx.strokeStyle = this.color;
     Tool.ctx.lineJoin = "round";
     Tool.ctx.lineCap = "round";
@@ -52,7 +52,7 @@ class Eraser extends Tool {
   public onMouseDown(event: MouseEvent): void {
     event.preventDefault();
 
-    const mousePos = getMousePos(Tool.ctx.canvas, event,'eraser');
+    const mousePos = getMousePos(Tool.ctx.canvas, event);
 
       if (clacArea(mousePos)) { 
     this.operateStart(mousePos);
