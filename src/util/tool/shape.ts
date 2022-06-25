@@ -131,7 +131,7 @@ class Shape extends Tool {
         this.isMouseDown = true;
         this.mouseDownPos = pos;
         Tool.ctx.strokeStyle = Tool.mainColor;
-        Tool.ctx.lineWidth = Tool.lineWidthFactor * this.lineWidthBase;
+        Tool.ctx.lineWidth = 5// Tool.lineWidthFactor * this.lineWidthBase;
         Tool.ctx.fillStyle = Tool.subColor;
         if (this.isDashed) {
             Tool.ctx.setLineDash(this.dashLineStyle);

@@ -157,7 +157,6 @@ export default class Tool {
 
   public onKeyDown(event: KeyboardEvent): void { 
     //
-    console.log("onKeyDown:",event)
   }
  
 }

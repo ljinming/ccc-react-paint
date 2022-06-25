@@ -38,11 +38,12 @@ interface PaintProps {
   showArea?: Array<[number, number]>;
 }
 //= https://bafybeiel2sxa4vbw2m43ya247ibvt7xtnzvxvb73i4gixydfhgup3f4zte.ipfs.dweb.link/orign.png"
+//"https://bafybeicgvg3vwtv5c633cjexbykjp75yjt755qhma4o7vgusa4ldvocz44.ipfs.dweb.link/orign.png"
 
 function Paint(props: PaintProps): JSX.Element {
   const {
     id = "test",
-    imgSrc,
+    imgSrc = "https://bafybeicgvg3vwtv5c633cjexbykjp75yjt755qhma4o7vgusa4ldvocz44.ipfs.dweb.link/orign.png",
     width = 0,
     height = 0,
     background,
@@ -63,7 +64,7 @@ function Paint(props: PaintProps): JSX.Element {
   const [lineWidthType, setLineWidthType] = useState<LineWidthType>(
     LineWidthType.LINESIZE
   );
-  const [lineSize, setLineFontSize] = useState<number>(5);
+  const [lineSize, setLineFontSize] = useState<number>(20);
   const [fillColor, setFillColor] = useState<string>("");
   const [activeColorType, setActiveColorType] = useState<ColorType>(
     ColorType.MAIN
@@ -124,7 +125,7 @@ function Paint(props: PaintProps): JSX.Element {
         },
         setType: (value) => {
           setToolType(value);
-          setLineFontSize(5);
+          setLineFontSize(20);
         },
       }}
     >
