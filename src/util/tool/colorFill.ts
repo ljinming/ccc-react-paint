@@ -1,5 +1,6 @@
 import Tool, { getMousePos, getTouchPos, setStraw, Point, clacArea } from "./tool";
-import {parseColorString } from './colorChange'
+import { parseColorString } from './colorChange'
+import { throttle,debounce} from '../../utils'
 //import Color from "color";
 
 /**
@@ -28,10 +29,11 @@ const efficentFloodFill = (
    // colorLayer.data[startPos + 3], //a
   ];
 
-  const showR =Math.abs(startColor[0]- fillColor[0])>20
-  const showG =Math.abs(startColor[1]- fillColor[1]) > 20
-  const showB = Math.abs(startColor[2] - fillColor[2]) > 20
-  if (showB && showG && showR) { 
+  const showR =Math.abs(startColor[0]- fillColor[0])>0
+  const showG =Math.abs(startColor[1]- fillColor[1]) > 0
+  const showB = Math.abs(startColor[2] - fillColor[2]) > 0
+  console.log("color:",fillColor,startColor)
+  if (showB || showG || showR) { 
    while (pixelStack.length > 0) {
     const newPos = pixelStack.pop() as [number, number];
     const x = newPos[0];
@@ -105,18 +107,48 @@ const fillPixel = (colorLayer: ImageData, pixelPos: number, color: [number, numb
 };
 
 class ColorFill extends Tool {
+  currentColor: any;
+  points:any
+  constructor() {
+    super();
+    this.currentColor = {}
+    this.points = {}
+  }
   private operateStart(pos: Point) {
     setStraw(pos)
-    const color = parseColorString(Tool.strawColor ||Tool.fillColor) //new Color(Tool.strawColor ||Tool.fillColor);
-   // efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.red(), color.green(), color.blue()]);
+    const color = parseColorString(Tool.strawColor || Tool.fillColor) //new Color(Tool.strawColor ||Tool.fillColor);
+   if ((this.currentColor.r !== color.r && this.currentColor.g !== color.g && this.currentColor.b !== color.b) ||(this.points.x !== pos.x || this.points.y !== pos.y)) { 
+     this.currentColor = color
+       this.points = pos;
      efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.r, color.g, color.b]);
+    }
+    
+ 
+   // efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.red(), color.green(), color.blue()]);
   }
+
+  
+
+
   public onMouseDown(event: MouseEvent): void {
     event.preventDefault();
     const mousepos = getMousePos(Tool.ctx.canvas, event, 'colorFill');
-    if (clacArea(mousepos)) { 
-      this.operateStart(mousepos);
-    }
+    this.operateStart(mousepos)
+    //debounce(this.operateStart(mousepos),3000)
+  //  let timer: any = null;
+  //   if (timer) { 
+  //     clearTimeout(timer);
+  //     timer = null;
+  //   }
+  //   timer= setTimeout(() => {
+  //     if (timer) { 
+  //       this.operateStart(mousepos)
+  //         timer = null;
+
+  //     }
+  //   }, 3000)
+   
+    
   }
 
 

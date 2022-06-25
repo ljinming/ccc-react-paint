@@ -43,7 +43,11 @@ class Text extends Tool {
       if (context && this.fontStyle) {
         const { fontSize = "12px", fontFamily, color, letterSpacing } = this.fontStyle;
         context.fillStyle = color || "#000";
-        context.font = `${fontSize} ${fontFamily}`;
+        if (fontFamily === 'System Font') {
+          context.font = `${fontSize}`;
+        } else { 
+         context.font = `${fontSize} ${fontFamily}`;
+        }
         if (context.canvas && letterSpacing) {
           context.canvas.style.letterSpacing = letterSpacing;
         }

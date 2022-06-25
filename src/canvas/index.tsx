@@ -16,12 +16,10 @@ import { useContext } from "react";
 import { DispatcherContext } from "../context";
 import { CLEAR_EVENT, REDO_EVENT, UNDO_EVENT } from "../util/dispatcher/event";
 import SnapShot from "../util/snapshot";
-import { Input } from "antd";
 import cursorPen from "@/assets/icon/cursorPen.jpg";
 import cursorErase from "@/assets/icon/cursorErase.jpg";
 import straw from "@/assets/icon/straw.jpg";
 import bucket from "@/assets/icon/bucket.jpg";
-
 interface CanvasProps {
   toolType: ToolType;
   shapeType: ShapeToolType;
@@ -305,12 +303,6 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
   };
 
-  const onMouseMove = (event: MouseEvent) => {
-    if (tool) {
-      tool.onMouseMove(event);
-    }
-  };
-
   const onMouseUp = (event: MouseEvent) => {
     if (tool) {
       tool.onMouseUp(event);
@@ -445,6 +437,12 @@ const Canvas: FC<CanvasProps> = (props) => {
   const onKeyDown = (e: KeyboardEvent) => {
     if (tool) {
       tool.onKeyDown(e);
+    }
+  };
+
+  const onMouseMove = (event: MouseEvent) => {
+    if (tool) {
+      tool.onMouseMove(event);
     }
   };
 

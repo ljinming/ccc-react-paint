@@ -1,4 +1,4 @@
-const MAX_DATA_LENGTH = 50;
+const MAX_DATA_LENGTH = 10;
 
 /**
  * 使用两个栈实现canvas前进后退动作

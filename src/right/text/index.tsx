@@ -26,6 +26,7 @@ const textFamily = [
   "Poppins-Medium",
   "Poppins-Regular",
   "Poppins-SemiBold",
+  "System Font",
 ];
 
 const FormatColor: React.FC<FormatColor> = (props) => {
@@ -54,6 +55,7 @@ const FormatColor: React.FC<FormatColor> = (props) => {
         <div>
           <h3>Font</h3>
           <Select
+            defaultValue="System Font"
             className="ccc-text-family"
             onChange={(value: string) => {
               TextToolContext.setFont({
