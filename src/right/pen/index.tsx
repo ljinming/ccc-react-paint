@@ -21,7 +21,7 @@ const ShowPen = (props: PenType) => {
         <h3>Brush Thickness</h3>
         <IntegerStep
           min={1}
-          max={20}
+          max={200}
           value={lineSize}
           onPropsChange={(value) => {
             lineWidthContext.setLineSize(value);

@@ -17,7 +17,7 @@ const Eraser = (props: earserType) => {
         <h3>Eraser Thickness</h3>
         <IntegerStep
           min={1}
-          max={20}
+          max={200}
           value={lineSize}
           onPropsChange={(value) => {
             lineWidthContext.setLineSize(value);

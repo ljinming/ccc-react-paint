@@ -63,7 +63,7 @@ function Paint(props: PaintProps): JSX.Element {
   const [lineWidthType, setLineWidthType] = useState<LineWidthType>(
     LineWidthType.LINESIZE
   );
-  const [lineSize, setLineFontSize] = useState<number>(5);
+  const [lineSize, setLineFontSize] = useState<number>(20);
   const [fillColor, setFillColor] = useState<string>("");
   const [activeColorType, setActiveColorType] = useState<ColorType>(
     ColorType.MAIN
@@ -124,7 +124,7 @@ function Paint(props: PaintProps): JSX.Element {
         },
         setType: (value) => {
           setToolType(value);
-          setLineFontSize(5);
+          setLineFontSize(20);
         },
       }}
     >
