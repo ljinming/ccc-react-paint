@@ -493,7 +493,7 @@ const Canvas: FC<CanvasProps> = (props) => {
         className="ccc-paint-canvas"
         ref={canvasRef}
         style={{
-          background: background || "#fff",
+          background: background || "#2d2d2d",
           ...style,
         }}
       ></canvas>

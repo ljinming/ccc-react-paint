@@ -38,13 +38,14 @@ interface PaintProps {
   showArea?: Array<[number, number]>;
 }
 //= https://bafybeiel2sxa4vbw2m43ya247ibvt7xtnzvxvb73i4gixydfhgup3f4zte.ipfs.dweb.link/orign.png"
+// "https://bafybeifdpnpibqxffc4ubmftoozjs4xavwpyyblk7kww3mbrlmdxfv3jyi.ipfs.dweb.link/orign.png"
 
 function Paint(props: PaintProps): JSX.Element {
   const {
     id = "test",
-    imgSrc = "https://bafybeiel2sxa4vbw2m43ya247ibvt7xtnzvxvb73i4gixydfhgup3f4zte.ipfs.dweb.link/orign.png",
-    width = 500,
-    height = 500,
+    imgSrc = "https://bafybeifdpnpibqxffc4ubmftoozjs4xavwpyyblk7kww3mbrlmdxfv3jyi.ipfs.dweb.link/orign.png",
+    height = 0,
+    width = 0,
     background,
     cRef,
     showArea,
