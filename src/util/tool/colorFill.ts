@@ -28,16 +28,14 @@ const efficentFloodFill = (
    // colorLayer.data[startPos + 3], //a
   ];
 
-  const showR =Math.abs(startColor[0]- fillColor[0]) > 5
-  const showG =Math.abs(startColor[1]- fillColor[1]) > 5
-  const showB = Math.abs(startColor[1] - fillColor[1]) > 5
+  const showR =Math.abs(startColor[0]- fillColor[0])>20
+  const showG =Math.abs(startColor[1]- fillColor[1]) > 20
+  const showB = Math.abs(startColor[2] - fillColor[2]) > 20
   if (showB && showG && showR) { 
- while (pixelStack.length > 0) {
+   while (pixelStack.length > 0) {
     const newPos = pixelStack.pop() as [number, number];
-
     const x = newPos[0];
     let y = newPos[1];
-
     let pixelPos = (y * canvasWidth + x) * 4;
     while (y-- >= 0 && matchColor(colorLayer, pixelPos, startColor)) {
       pixelPos -= canvasWidth * 4;
@@ -76,8 +74,6 @@ const efficentFloodFill = (
   }
   ctx.putImageData(colorLayer, 0, 0);
   }
-
- 
 };
 
 /**

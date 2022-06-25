@@ -21,8 +21,6 @@ import cursorPen from "@/assets/icon/cursorPen.jpg";
 import cursorErase from "@/assets/icon/cursorErase.jpg";
 import straw from "@/assets/icon/straw.jpg";
 import bucket from "@/assets/icon/bucket.jpg";
-import { getScale } from "./utils";
-import { keys } from "@material-ui/core/styles/createBreakpoints";
 
 interface CanvasProps {
   toolType: ToolType;
@@ -230,14 +228,14 @@ const Canvas: FC<CanvasProps> = (props) => {
     if (canvas) {
       if (strawType) {
         //吸色
-        return (canvas.style.cursor = `url(${straw}),auto`);
+        return (canvas.style.cursor = `url(${straw}) 12 16,auto`);
       }
       if (toolType === 0) {
         canvas.style.cursor = `url(${cursorPen}) 12 16,auto`;
       } else if (toolType === 4) {
-        canvas.style.cursor = `url(${cursorErase}),auto`;
+        canvas.style.cursor = `url(${cursorErase}) 12 16,auto`;
       } else if (toolType === 1) {
-        canvas.style.cursor = `url(${bucket}),auto`;
+        canvas.style.cursor = `url(${bucket}) 12 16,auto`;
       } else {
         canvas.style.cursor = `auto`;
       }
