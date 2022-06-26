@@ -33,7 +33,7 @@ export function getImageSize(url: string): Promise<{
     image.onload = function () {
       resolve({
         width: image.width,
-        height: image.height,
+        height: image.height
       });
     };
     image.onerror = function () {
@@ -44,15 +44,13 @@ export function getImageSize(url: string): Promise<{
 }
 
 export const getRandomColor = () => {
-  return (
-    "#" + ("00000" + ((Math.random() * 0x1000000) << 0).toString(16)).substr(-6)
-  );
+  return "#" + ("00000" + ((Math.random() * 0x1000000) << 0).toString(16)).substr(-6);
 };
 
 export function throttle(fn: any, delay: number) {
   //let prev = Date.now();
   let timer: any;
-  console.log("prev==46----3", timer);
+  //console.log("prev==46----3", timer);
 
   return function () {
     if (timer) {
@@ -75,7 +73,7 @@ export function throttle(fn: any, delay: number) {
 
 export function debounce(fn: any, wait: number) {
   let timer: any = null;
-  console.log("=46");
+  //console.log("=46");
   return function () {
     // 如果此时存在定时器的话，则取消之前的定时器重新记时
     if (timer) {
