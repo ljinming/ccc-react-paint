@@ -1,6 +1,7 @@
 import Tool, { getMousePos, getTouchPos, setStraw, Point, clacArea } from "./tool";
 import { parseColorString } from "./colorChange";
 import { throttle, debounce } from "../../utils";
+import { message } from "antd";
 //import Color from "color";
 
 /**
@@ -161,7 +162,8 @@ class ColorFill extends Tool {
   public onMouseDown(event: MouseEvent): void {
     event.preventDefault();
 
-    if (this.mouseDownTimer || this.rendering) {
+    if (this.rendering) {
+      message.warn('wating...')
       return;
     }
     const mousepos = getMousePos(Tool.ctx.canvas, event, "colorFill");
@@ -170,10 +172,10 @@ class ColorFill extends Tool {
     // this.operateStart(mousepos);
     // debounce(this.operateStart(mousepos), 3000);
 
-    this.mouseDownTimer = setTimeout(() => {
-      clearTimeout(this.mouseDownTimer);
-      this.mouseDownTimer = undefined;
-    }, 300);
+    // this.mouseDownTimer = setTimeout(() => {
+    //   clearTimeout(this.mouseDownTimer);
+    //   this.mouseDownTimer = undefined;
+    // }, 300);
   }
 
   public onTouchStart(event: TouchEvent): void {

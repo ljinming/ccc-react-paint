@@ -10,11 +10,17 @@ import {
   ColorContext,
   FillContext,
   TextContext,
-  DispatcherContext
+  DispatcherContext,
 } from "./context";
 import "./style.less";
 import { useState } from "react";
-import { ColorType, LineWidthType, ShapeOutlineType, ShapeToolType, ToolType } from "./util/toolType";
+import {
+  ColorType,
+  LineWidthType,
+  ShapeOutlineType,
+  ShapeToolType,
+  ToolType,
+} from "./util/toolType";
 import ToolPanel from "./left-tool";
 import Dispatcher from "./util/dispatcher";
 import Right from "./right";
@@ -37,13 +43,13 @@ interface PaintProps {
 function Paint(props: PaintProps): JSX.Element {
   const {
     id = "test",
-    imgSrc = "https://bafybeicgvg3vwtv5c633cjexbykjp75yjt755qhma4o7vgusa4ldvocz44.ipfs.dweb.link/orign.png",
+    imgSrc = "https://bafybeiel2sxa4vbw2m43ya247ibvt7xtnzvxvb73i4gixydfhgup3f4zte.ipfs.dweb.link/orign.png",
     width = 0,
     height = 0,
     background,
     cRef,
     showArea,
-    ThumbSrc
+    ThumbSrc,
   } = props;
 
   const [toolType, setToolType] = useState<ToolType>(ToolType.PEN);
@@ -52,14 +58,20 @@ function Paint(props: PaintProps): JSX.Element {
   const [size, setSize] = useState({ width, height });
   const [Thumbnail, setThumbnail] = useState(ThumbSrc);
   const [loadings, setLoadings] = useState(true);
-  const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(ShapeOutlineType.SOLID);
-  const [lineWidthType, setLineWidthType] = useState<LineWidthType>(LineWidthType.LINESIZE);
+  const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(
+    ShapeOutlineType.SOLID
+  );
+  const [lineWidthType, setLineWidthType] = useState<LineWidthType>(
+    LineWidthType.LINESIZE
+  );
   const [lineSize, setLineFontSize] = useState<number>(20);
   const [fillColor, setFillColor] = useState<string>("");
-  const [activeColorType, setActiveColorType] = useState<ColorType>(ColorType.MAIN);
+  const [activeColorType, setActiveColorType] = useState<ColorType>(
+    ColorType.MAIN
+  );
   const [fontStyle, setFontStyle] = useState({
     fontSize: 72,
-    fontFamily: "System Font"
+    fontFamily: "System Font",
   });
   const [mainColor, setMainColor] = useState<string>("black");
   const [subColor, setSubColor] = useState<string>("white");
@@ -78,7 +90,7 @@ function Paint(props: PaintProps): JSX.Element {
       const canvasElem: any = document.getElementById(`ccc-paint-canvas ${id}`);
       const imageData = canvasElem.toDataURL("image/png");
       return imageData;
-    }
+    },
   }));
 
   const loadImage = async (imgSrc: string) => {
@@ -117,7 +129,7 @@ function Paint(props: PaintProps): JSX.Element {
         setType: (value) => {
           setToolType(value);
           setLineFontSize(20);
-        }
+        },
       }}
     >
       <ShapeTypeContext.Provider
@@ -125,16 +137,18 @@ function Paint(props: PaintProps): JSX.Element {
           type: shapeType,
           setType: (type: ShapeToolType) => {
             setShapeType(type);
-          }
+          },
         }}
       >
-        <ShapeOutlineContext.Provider value={{ type: shapeOutlineType, setType: setShapeOutlineType }}>
+        <ShapeOutlineContext.Provider
+          value={{ type: shapeOutlineType, setType: setShapeOutlineType }}
+        >
           <LineWidthContext.Provider
             value={{
               type: lineWidthType,
               lineSize: lineSize,
               setType: setLineWidthType,
-              setLineSize: setLineFontSize
+              setLineSize: setLineFontSize,
             }}
           >
             <DispatcherContext.Provider value={{ dispatcher }}>
@@ -144,19 +158,19 @@ function Paint(props: PaintProps): JSX.Element {
                   subColor,
                   activeColor: activeColorType,
                   setColor,
-                  setActiveColor: setActiveColorType
+                  setActiveColor: setActiveColorType,
                 }}
               >
                 <FillContext.Provider
                   value={{
                     fillColor,
-                    setFillColor
+                    setFillColor,
                   }}
                 >
                   <TextContext.Provider
                     value={{
                       fontStyle,
-                      setFont: setFontStyle
+                      setFont: setFontStyle,
                     }}
                   >
                     <div className="ccc">
@@ -165,7 +179,10 @@ function Paint(props: PaintProps): JSX.Element {
                       </div>
                       <div className="ccc-content">
                         <div className="ToolPanel">
-                          <ToolPanel className="toolbar-item" fillColor={fillColor} />
+                          <ToolPanel
+                            className="toolbar-item"
+                            fillColor={fillColor}
+                          />
                         </div>
                         {loadings ? (
                           <div className="show-loading">
@@ -193,7 +210,11 @@ function Paint(props: PaintProps): JSX.Element {
                           </div>
                         )}
                         <div className="show-type">
-                          <Right toolType={toolType} ThumbSrc={Thumbnail} lineSize={lineSize} />
+                          <Right
+                            toolType={toolType}
+                            ThumbSrc={Thumbnail}
+                            lineSize={lineSize}
+                          />
                         </div>
                       </div>
                     </div>

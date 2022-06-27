@@ -368,7 +368,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     return trans;
   };
 
-  const onMousewheel = (event: any) => {
+  const onMousewheel = (event: WheelEvent) => {
     event.preventDefault();
     const canvas = canvasRef.current;
     const container = allCanvasRef!.current;
@@ -417,7 +417,27 @@ const Canvas: FC<CanvasProps> = (props) => {
       show_scale = newScale;
       Tool.currentScale = newScale;
       canvas!.style.transform = `translate3d(${translatex}px, ${translatey}px, 0px) scale(${show_scale})`;
-    } else {
+    }
+    // else {
+    //   if (!!deltaX && !deltaY) {
+    //     // if (translatex > 0 && translatex < width) {
+    //     // 左右移动 向右 -deltaX < 0  向左   >0
+    //     translatex = Number((translatex - deltaX).toFixed(3));
+    //     // }
+    //   } else if (!!deltaY && !deltaX) {
+    //     // if (translatey > 0 && translatex < height) {
+    //     // 左右移动 向右 -deltaX < 0  向左   >0
+    //     translatey = Number((translatey - deltaY).toFixed(3));
+    //     // }
+    //   }
+    // }
+  };
+
+  const onCanvasBoxWheel = (event: WheelEvent) => {
+    const { clientX, clientY, deltaX, deltaY, ctrlKey } = event;
+    event.preventDefault();
+    const canvas = canvasRef.current;
+    if (!ctrlKey) {
       if (!!deltaX && !deltaY) {
         // if (translatex > 0 && translatex < width) {
         // 左右移动 向右 -deltaX < 0  向左   >0
@@ -429,7 +449,6 @@ const Canvas: FC<CanvasProps> = (props) => {
         translatey = Number((translatey - deltaY).toFixed(3));
         // }
       }
-
       canvas!.style.transform = `translate(${translatex}px, ${translatey}px) scale(${show_scale})`;
     }
   };
@@ -449,7 +468,8 @@ const Canvas: FC<CanvasProps> = (props) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const textBox = textBoxRef.current;
-    if (canvas && textBox) {
+    const canvasBox = allCanvasRef.current;
+    if (canvas && textBox && canvasBox) {
       canvas.addEventListener("mousedown", onMouseDown);
       canvas.addEventListener("mousemove", onMouseMove);
       canvas.addEventListener("mouseup", onMouseUp);
@@ -458,6 +478,7 @@ const Canvas: FC<CanvasProps> = (props) => {
       canvas.addEventListener("touchmove", onTouchMove);
       canvas.addEventListener("touchend", onTouchEnd);
       textBox.addEventListener("keydown", onKeyDown);
+      canvasBox.addEventListener("wheel", onCanvasBoxWheel, { passive: false });
 
       return () => {
         canvas.removeEventListener("mousedown", onMouseDown);
@@ -468,6 +489,9 @@ const Canvas: FC<CanvasProps> = (props) => {
         canvas.removeEventListener("touchstart", onTouchStart);
         canvas.removeEventListener("touchmove", onTouchMove);
         canvas.removeEventListener("touchend", onTouchEnd);
+        textBox.removeEventListener("keydown", onKeyDown);
+
+        canvasBox.removeEventListener("wheel", onCanvasBoxWheel);
       };
     }
   }, [canvasRef, onMouseDown, onMouseMove, onMouseUp]);
