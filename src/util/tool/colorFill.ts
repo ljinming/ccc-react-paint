@@ -138,8 +138,7 @@ class ColorFill extends Tool {
     this.points = {};
     this.mouseDownTimer = undefined;
   }
-  private async operateStart(pos: Point) {
-    console.log("--进来了");
+  private  operateStart(pos: Point) {
     setStraw(pos);
     const color = parseColorString(Tool.strawColor || Tool.fillColor); //new Color(Tool.strawColor ||Tool.fillColor);
     if (
@@ -151,11 +150,18 @@ class ColorFill extends Tool {
       this.points = pos;
 
       this.rendering = true;
-      Promise.resolve().then(() => {
-        const colorLayer = efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.r, color.g, color.b]);
-        updateImageData(Tool.ctx, colorLayer);
+       message.loading({ content: 'loading', key: 'fill-color' }).then(() => { 
+         const colorLayer = efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.r, color.g, color.b]);
+         updateImageData(Tool.ctx, colorLayer);
+         message.destroy('fill-color')
+       //message.success('success',0.5)
+    //    // message.success('success',0.5)
         this.rendering = false;
-      });
+    })
+    //  Promise.resolve().then(() => {
+       
+    //     //message.destroy('fill-color')
+    //   });
     }
   }
 
@@ -163,11 +169,14 @@ class ColorFill extends Tool {
     event.preventDefault();
 
     if (this.rendering) {
-      message.warn('wating...')
+      //message.warn('wating...')
       return;
     }
     const mousepos = getMousePos(Tool.ctx.canvas, event, "colorFill");
     this.operateStart(mousepos);
+
+
+   
 
     // this.operateStart(mousepos);
     // debounce(this.operateStart(mousepos), 3000);

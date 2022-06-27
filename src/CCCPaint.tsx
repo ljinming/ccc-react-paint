@@ -26,6 +26,7 @@ import Dispatcher from "./util/dispatcher";
 import Right from "./right";
 import Edit from "./edit";
 import { getImageSize } from "./utils";
+import Loading from "./components/loading";
 
 interface PaintProps {
   imgSrc?: string;
@@ -37,13 +38,13 @@ interface PaintProps {
   ThumbSrc?: string;
   showArea?: Array<[number, number]>;
 }
-//= https://bafybeiel2sxa4vbw2m43ya247ibvt7xtnzvxvb73i4gixydfhgup3f4zte.ipfs.dweb.link/orign.png"
+//= https://bafybeih7buvkqebcu3olxinxsjh7iqqtlw2xoapp63dwqw5bj43ytxtcia.ipfs.dweb.link/orign.png"
 //"https://bafybeicgvg3vwtv5c633cjexbykjp75yjt755qhma4o7vgusa4ldvocz44.ipfs.dweb.link/orign.png"
 
 function Paint(props: PaintProps): JSX.Element {
   const {
     id = "test",
-    imgSrc = "https://bafybeiel2sxa4vbw2m43ya247ibvt7xtnzvxvb73i4gixydfhgup3f4zte.ipfs.dweb.link/orign.png",
+    imgSrc = "https://bafybeih7buvkqebcu3olxinxsjh7iqqtlw2xoapp63dwqw5bj43ytxtcia.ipfs.dweb.link/orign.png",
     width = 0,
     height = 0,
     background,
@@ -58,6 +59,7 @@ function Paint(props: PaintProps): JSX.Element {
   const [size, setSize] = useState({ width, height });
   const [Thumbnail, setThumbnail] = useState(ThumbSrc);
   const [loadings, setLoadings] = useState(true);
+
   const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(
     ShapeOutlineType.SOLID
   );
@@ -177,6 +179,7 @@ function Paint(props: PaintProps): JSX.Element {
                       <div className="ccc-edit">
                         <Edit />
                       </div>
+                      <Loading />
                       <div className="ccc-content">
                         <div className="ToolPanel">
                           <ToolPanel

@@ -1,0 +1,27 @@
+.ccc-message{
+    position: absolute;
+        top: 55px;
+        color: #000;
+        display: inline-flex;
+        width: calc(100% - 380px);
+        margin-left: 80px;
+        justify-content: center;
+        visibility: hidden;
+        z-index: 2;
+        &-loading{
+                    border-bottom: 1px solid rgba(0, 0, 0, .06);
+                    display: inline-block;
+                    padding: 10px 16px;
+                    background: #fff;
+                    border-radius: 2px;
+                    box-shadow: 0 3px 6px -4px #0000001f,
+                    0 6px 16px #00000014,
+                    0 9px 28px 8px #0000000d;
+                    pointer-events: all;
+
+            span {
+                margin-left: 10px;
+            }
+        }
+        
+}
