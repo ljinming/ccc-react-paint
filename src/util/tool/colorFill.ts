@@ -54,6 +54,7 @@ export const efficentFloodFill = (
     }
     pixelPos += canvasWidth * 4;
     ++y;
+      updateList.push(pixelPos)
 
     let reachLeft = false,
       reachRight = false;
@@ -62,7 +63,6 @@ export const efficentFloodFill = (
       matchColor(colorLayer, pixelPos, startColor)
     ) {
       fillPixel(colorLayer, pixelPos, fillColor);
-      updateList.push(pixelPos)
       if (x > 0) {
         if (matchColor(colorLayer, pixelPos - 4, startColor)) {
           if (!reachLeft) {
