@@ -147,28 +147,25 @@ class ColorFill extends Tool {
     ) {
       this.currentColor = color;
       this.points = pos;
-      const colorLayer = efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.r, color.g, color.b]);
-      updateImageData(Tool.ctx, colorLayer);
-      this.rendering = true;
-      // Promise.resolve().then(() => {
-      //   const colorLayer = efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.r, color.g, color.b]);
-      //   updateImageData(Tool.ctx, colorLayer);
-      //   this.rendering = false;
-      // });
+      Promise.resolve().then(() => {
+        const colorLayer = efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.r, color.g, color.b]);
+        updateImageData(Tool.ctx, colorLayer);
+        this.rendering = false;
+      });
     }
   }
 
   public onMouseDown(event: MouseEvent): void {
     event.preventDefault();
-    // if (this.mouseDownTimer) {
-    //   return;
-    // }
+    if (this.mouseDownTimer && this.rendering) {
+      return;
+    }
     const mousepos = getMousePos(Tool.ctx.canvas, event, "colorFill");
     this.operateStart(mousepos);
-    // this.mouseDownTimer = setTimeout(() => {
-    //   clearTimeout(this.mouseDownTimer);
-    //   this.mouseDownTimer = undefined;
-    // }, 300);
+    this.mouseDownTimer = setTimeout(() => {
+      clearTimeout(this.mouseDownTimer);
+      this.mouseDownTimer = undefined;
+    }, 300);
   }
 
   public onTouchStart(event: TouchEvent): void {
