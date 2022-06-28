@@ -1,7 +1,6 @@
 import Tool, { getMousePos, getTouchPos, setStraw, Point, clacArea } from "./tool";
 import { parseColorString } from "./colorChange";
 import { throttle, debounce } from "../../utils";
-import { message } from "antd";
 //import Color from "color";
 
 /**
@@ -35,9 +34,14 @@ const efficentFloodFill = (
   const showR = Math.abs(startColor[0] - fillColor[0]) === 0;
   const showG = Math.abs(startColor[1] - fillColor[1]) === 0;
   const showB = Math.abs(startColor[2] - fillColor[2]) === 0;
-  console.log("color:", fillColor, startColor);
+  console.log("color:", fillColor, startColor,pixelStack);
   if (!showB && !showG && !showR) {
     // 颜色不同
+     let y_top = 0;
+      let y_bottom = 0;
+      let x_left = 0;
+    let x_right = 0;
+    const calcR = 1500;
     while (pixelStack.length > 0) {
       //当前点存在
       const newPos = pixelStack.pop() as [number, number];
@@ -48,22 +52,26 @@ const efficentFloodFill = (
       if (updatedPoint[pixelPos]) {
         continue;
       }
-      while (y >= 0 && matchColor(colorLayer, pixelPos, startColor)) {
+
+      while (y >= 0 && matchColor(colorLayer, pixelPos, startColor) && y_bottom< calcR) {
         //当前点的颜色相同
         pixelPos -= canvasWidth * 4;
         //fillPixel(colorLayer, pixelPos, fillColor); //替换当前点的颜色
         y--;
+        y_bottom++
+        console.log('==45',y_bottom,pixelPos)
       }
       pixelPos += canvasWidth * 4;
       ++y; //->找到y边界，pixelPos
 
       // 更新当前x坐标下的y
-
-      while (y < canvasHeight - 1 && matchColor(colorLayer, pixelPos, startColor)) {
+      while (y < canvasHeight - 1 && matchColor(colorLayer, pixelPos, startColor) &&x_left < calcR && x_right < calcR && y_top < calcR) {
         fillPixel(colorLayer, pixelPos, fillColor);
         updatedPoint[pixelPos] = true;
         if (x > 0) {
-          if (matchColor(colorLayer, pixelPos - 4, startColor)) {
+          // 向x轴左找
+          x_left++
+          if (matchColor(colorLayer, pixelPos - 4, startColor) && x_left < calcR) {
             // if (!reachLeft) {
             pixelStack.push([x - 1, y]);
             // reachLeft = true;
@@ -72,20 +80,17 @@ const efficentFloodFill = (
           //   reachLeft = false;
           // }
         }
-
-        if (x < canvasWidth - 1) {
+        if (x < canvasWidth - 1&& x_right < calcR) {
+          // 向x轴右找
+         x_right++ 
           if (matchColor(colorLayer, pixelPos + 4, startColor)) {
-            // if (!reachRight) {
             pixelStack.push([x + 1, y]);
-            // reachRight = true;
           }
-          //   else if (reachRight) {
-          //   reachRight = false;
-          // }
+        
         }
-
         pixelPos += canvasWidth * 4;
         y++;
+        y_top++
       }
     }
     return colorLayer;
@@ -138,7 +143,8 @@ class ColorFill extends Tool {
     this.points = {};
     this.mouseDownTimer = undefined;
   }
-  private  operateStart(pos: Point) {
+  private async operateStart(pos: Point) {
+    console.log("--进来了");
     setStraw(pos);
     const color = parseColorString(Tool.strawColor || Tool.fillColor); //new Color(Tool.strawColor ||Tool.fillColor);
     if (
@@ -148,43 +154,28 @@ class ColorFill extends Tool {
     ) {
       this.currentColor = color;
       this.points = pos;
-
+        const colorLayer = efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.r, color.g, color.b]);
+        updateImageData(Tool.ctx, colorLayer);
       this.rendering = true;
-       message.loading({ content: 'loading', key: 'fill-color' }).then(() => { 
-         const colorLayer = efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.r, color.g, color.b]);
-         updateImageData(Tool.ctx, colorLayer);
-         message.destroy('fill-color')
-       //message.success('success',0.5)
-    //    // message.success('success',0.5)
-        this.rendering = false;
-    })
-    //  Promise.resolve().then(() => {
-       
-    //     //message.destroy('fill-color')
-    //   });
+      // Promise.resolve().then(() => {
+      //   const colorLayer = efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.r, color.g, color.b]);
+      //   updateImageData(Tool.ctx, colorLayer);
+      //   this.rendering = false;
+      // });
     }
   }
 
   public onMouseDown(event: MouseEvent): void {
     event.preventDefault();
-
-    if (this.rendering) {
-      //message.warn('wating...')
+    if (this.mouseDownTimer || this.rendering) {
       return;
     }
     const mousepos = getMousePos(Tool.ctx.canvas, event, "colorFill");
     this.operateStart(mousepos);
-
-
-   
-
-    // this.operateStart(mousepos);
-    // debounce(this.operateStart(mousepos), 3000);
-
-    // this.mouseDownTimer = setTimeout(() => {
-    //   clearTimeout(this.mouseDownTimer);
-    //   this.mouseDownTimer = undefined;
-    // }, 300);
+    this.mouseDownTimer = setTimeout(() => {
+      clearTimeout(this.mouseDownTimer);
+      this.mouseDownTimer = undefined;
+    }, 300);
   }
 
   public onTouchStart(event: TouchEvent): void {
