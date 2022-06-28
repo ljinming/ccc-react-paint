@@ -41,7 +41,7 @@ const efficentFloodFill = (
       let y_bottom = 0;
       let x_left = 0;
     let x_right = 0;
-    const calcR = 1500;
+    //const calcR = 1500;
     while (pixelStack.length > 0) {
       //当前点存在
       const newPos = pixelStack.pop() as [number, number];
@@ -53,36 +53,29 @@ const efficentFloodFill = (
         continue;
       }
 
-      while (y >= 0 && matchColor(colorLayer, pixelPos, startColor) && y_bottom< calcR) {
+      while (y >= 0 && matchColor(colorLayer, pixelPos, startColor)) {
         //当前点的颜色相同
         pixelPos -= canvasWidth * 4;
         //fillPixel(colorLayer, pixelPos, fillColor); //替换当前点的颜色
         y--;
         y_bottom++
-        console.log('==45',y_bottom,pixelPos)
       }
       pixelPos += canvasWidth * 4;
       ++y; //->找到y边界，pixelPos
-
       // 更新当前x坐标下的y
-      while (y < canvasHeight - 1 && matchColor(colorLayer, pixelPos, startColor) &&x_left < calcR && x_right < calcR && y_top < calcR) {
+      while (y < canvasHeight - 1 && matchColor(colorLayer, pixelPos, startColor)) {
         fillPixel(colorLayer, pixelPos, fillColor);
         updatedPoint[pixelPos] = true;
         if (x > 0) {
           // 向x轴左找
           x_left++
-          if (matchColor(colorLayer, pixelPos - 4, startColor) && x_left < calcR) {
-            // if (!reachLeft) {
+          if (matchColor(colorLayer, pixelPos - 4, startColor)) {
             pixelStack.push([x - 1, y]);
-            // reachLeft = true;
           }
-          // else if (reachLeft) {
-          //   reachLeft = false;
-          // }
         }
-        if (x < canvasWidth - 1&& x_right < calcR) {
+        if (x < canvasWidth - 1) {
           // 向x轴右找
-         x_right++ 
+           x_right++ 
           if (matchColor(colorLayer, pixelPos + 4, startColor)) {
             pixelStack.push([x + 1, y]);
           }
@@ -154,8 +147,8 @@ class ColorFill extends Tool {
     ) {
       this.currentColor = color;
       this.points = pos;
-        const colorLayer = efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.r, color.g, color.b]);
-        updateImageData(Tool.ctx, colorLayer);
+      const colorLayer = efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.r, color.g, color.b]);
+      updateImageData(Tool.ctx, colorLayer);
       this.rendering = true;
       // Promise.resolve().then(() => {
       //   const colorLayer = efficentFloodFill(Tool.ctx, pos.x, pos.y, [color.r, color.g, color.b]);
@@ -167,15 +160,15 @@ class ColorFill extends Tool {
 
   public onMouseDown(event: MouseEvent): void {
     event.preventDefault();
-    if (this.mouseDownTimer || this.rendering) {
-      return;
-    }
+    // if (this.mouseDownTimer) {
+    //   return;
+    // }
     const mousepos = getMousePos(Tool.ctx.canvas, event, "colorFill");
     this.operateStart(mousepos);
-    this.mouseDownTimer = setTimeout(() => {
-      clearTimeout(this.mouseDownTimer);
-      this.mouseDownTimer = undefined;
-    }, 300);
+    // this.mouseDownTimer = setTimeout(() => {
+    //   clearTimeout(this.mouseDownTimer);
+    //   this.mouseDownTimer = undefined;
+    // }, 300);
   }
 
   public onTouchStart(event: TouchEvent): void {
