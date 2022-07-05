@@ -52,6 +52,7 @@ class Pen extends Tool {
       }
     }
   }
+  
   public onMouseDown(event: MouseEvent): void {
     event.preventDefault();
     const mousePos = getMousePos(Tool.ctx.canvas, event);

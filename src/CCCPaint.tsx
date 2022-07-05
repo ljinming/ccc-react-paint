@@ -44,7 +44,7 @@ interface PaintProps {
 function Paint(props: PaintProps): JSX.Element {
   const {
     id = "test",
-    imgSrc = "https://bafybeih7buvkqebcu3olxinxsjh7iqqtlw2xoapp63dwqw5bj43ytxtcia.ipfs.dweb.link/orign.png",
+    imgSrc = "https://bafybeicgvg3vwtv5c633cjexbykjp75yjt755qhma4o7vgusa4ldvocz44.ipfs.dweb.link/orign.png",
     width = 0,
     height = 0,
     background,

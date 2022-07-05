@@ -125,7 +125,6 @@ class Shape extends Tool {
     }
 
     private operateStart(pos: { x: number; y: number }) {
-         
         setStraw(pos)
         this.saveImageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
         this.isMouseDown = true;
@@ -161,10 +160,10 @@ class Shape extends Tool {
             }
         }
     }
+    
     private operateEnd() {
         Tool.ctx.setLineDash([]);
         let imageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
-
         const colorRgb = hexToRgb(Tool.mainColor);
         if (colorRgb && this.saveImageData) {
             imageData = updateImageData(this.saveImageData, imageData, [colorRgb.r, colorRgb.g, colorRgb.b, colorRgb.a]);

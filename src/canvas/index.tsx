@@ -516,7 +516,11 @@ const Canvas: FC<CanvasProps> = (props) => {
           background: background || "#2d2d2d",
           ...style,
         }}
-      ></canvas>
+      >
+        <textarea name="" id="">
+          222
+        </textarea>
+      </canvas>
       <div className="canvas-text" id="text-container" ref={canvasTextRef}>
         <textarea
           ref={textBoxRef}
