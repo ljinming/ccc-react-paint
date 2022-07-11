@@ -1,5 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import CCCPaint from "./CCCPaint";
+import CCCPaint from "./pages";
 
-ReactDOM.render(<CCCPaint />, document.getElementById("root"));
+ReactDOM.render(<CCCPaint id={"test"} />, document.getElementById("root"));

@@ -1,0 +1,70 @@
+.core-paint-content {
+  display: flex;
+
+  &-tool {
+    width: 80px;
+    height: 100%;
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    .tool-item {
+      position: relative;
+      padding-top: 40px;
+      svg {
+        fill: #a6aeb7;
+      }
+      .bucket-icon {
+        display: block;
+        position: absolute;
+        top: 0px;
+        width: 18px;
+        height: 18px;
+        background-color: #a6aeb7;
+      }
+    }
+    .select {
+      svg {
+        fill: #4338ca;
+      }
+    }
+  }
+  &-canvas {
+    width: calc(~ "100%" - 380px);
+  }
+  &-right {
+    width: 300px;
+    height: 100%;
+    padding: 40px 20px;
+    .shape {
+      .shape-content {
+        display: inline-flex;
+        flex-wrap: wrap;
+        width: 100%;
+        margin-top: 20px;
+        .shape-item {
+          margin: 2px;
+          min-height: 24px;
+          min-width: 24px;
+          max-width: 55px;
+          max-height: 55px;
+          cursor: pointer;
+          border: 1px solid transparent;
+
+          &:hover {
+            border: 1px solid #64a5e7;
+          }
+        }
+
+        .selected-shape {
+          background-color: #c9e0f7;
+        }
+      }
+    }
+    .text{
+        .font{
+          margin-top:40px
+        }
+    }
+  }
+}

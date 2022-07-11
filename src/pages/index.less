@@ -1,0 +1,33 @@
+@import "~antd/dist/antd.css";
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+.core-paint {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  &-header {
+    height: 80px;
+    width: 100%;
+   // background-color: aqua;
+      display: flex;
+      grid-gap: 20px;
+      align-items: center;
+      justify-content: center;
+      width: calc(100% - 380px);
+      margin-left: 80px;
+           
+  }
+  &-content {
+    width: 100%;
+    height: calc(~"100%" - 80px);
+  }
+}

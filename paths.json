@@ -6,7 +6,9 @@
       "@/util": ["src/util"],
       "@/context": ["src/context"],
       "@/assets": ["src/assets"],
-      "@/icon": ["src/assets/icon"]
+      "@/icon": ["src/assets/icon"],
+      "@/tool":["src/tool"],
+      "@/pages":["src/pages"]
     }
   }
 }

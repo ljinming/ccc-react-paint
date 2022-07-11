@@ -18,6 +18,13 @@
     "@typescript-eslint/prefer-as-const": "off",
     "@typescript-eslint/no-empty-function":"off",
     "@typescript-eslint/no-inferrable-types":"off",
+    "react/react-in-jsx-scope": "off",
+      "prefer-const": [
+        0,
+        {
+          "ignoreReadBeforeAssign": false
+        }
+      ],
     "@typescript-eslint/no-this-alias": [
     "error",
     {

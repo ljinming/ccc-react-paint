@@ -7,10 +7,13 @@ module.exports = override(
     ["@/src"]: path.resolve(__dirname, "src"),
     ["@/public"]: path.resolve(__dirname, "public"),
     ["@/components"]: path.resolve(__dirname, "src/components"),
-    ["@/util"]: path.resolve(__dirname, "src/util"),
+    ["@/util"]: path.resolve(__dirname, "src/pages/util"),
     ["@/context"]: path.resolve(__dirname, "src/context"),
     ["@/assets"]: path.resolve(__dirname, "src/assets"),
-    ["@/icon"]: path.resolve(__dirname, "src/assets/icon")
+    ["@/icon"]: path.resolve(__dirname, "src/assets/icon"),
+    ["@/tool"]: path.resolve(__dirname, "src/tool"),
+    ["@/pages"]: path.resolve(__dirname, "src/pages"),
+
   }),
   addLessLoader({
     lessOptions: {

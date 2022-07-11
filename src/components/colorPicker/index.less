@@ -1,0 +1,36 @@
+.colorBox {
+  width: 100%;
+  position: relative;
+  &-picker {
+    width: 100%;
+    box-shadow: none !important;
+    .flexbox-fix{
+       padding-left: 12% !important;
+    }
+    &:first-child{
+       padding-left: 12% !important;
+    }
+    .flexbox-fix {
+      &:first-child {
+        padding-left: 12% !important;
+      }
+      &:last-child {
+        display: none !important;
+      }
+    }
+  }
+  .straw-color{
+    position: absolute;
+    bottom: 59px;
+    left: 14px;
+     display: flex;
+    justify-content: center;
+        align-items: center;
+        width: 24px;
+        height: 24px;
+  }
+  .selected-straw{
+    background-color: aquamarine;
+    border-radius:2px
+  }
+}
