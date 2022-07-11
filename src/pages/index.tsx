@@ -4,6 +4,7 @@ import "./index.less";
 import "./font.css";
 import { useState, useEffect, useImperativeHandle } from "react";
 import { Tool } from "../tool";
+import { StrawContext, ToolTypeContext } from "../context";
 interface HomeProps {
   backgroundColor?: string;
   width?: number;
@@ -44,7 +45,8 @@ export default (props: HomeProps) => {
     id,
   } = props;
   const [size, setSize] = useState({ width, height });
-
+  const [tool, setToolType] = useState("PEN");
+  const [strawColor, setStrawColor] = useState("");
   const loadImgSize = async (src: string) => {
     const size = await getImageSize(src);
     setSize(size);
@@ -70,13 +72,29 @@ export default (props: HomeProps) => {
 
   return (
     <div className={pre}>
-      <Header pre={pre} />
-      <Content
-        pre={pre}
-        canvasSize={size}
-        imgSrc={imgSrc}
-        backgroundColor={"#fff"}
-      />
+      <ToolTypeContext.Provider
+        value={{
+          select: tool,
+          setSelect: (value: string) => setToolType(value),
+        }}
+      >
+        <StrawContext.Provider
+          value={{
+            strawFlag: false,
+            strawColor: "",
+            setStrawColor: (type: string) => {},
+          }}
+        >
+          <Header pre={pre} />
+          <Content
+            select={tool}
+            pre={pre}
+            canvasSize={size}
+            imgSrc={imgSrc}
+            backgroundColor={"#fff"}
+          />
+        </StrawContext.Provider>
+      </ToolTypeContext.Provider>
     </div>
   );
 };

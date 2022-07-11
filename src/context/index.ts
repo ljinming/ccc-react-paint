@@ -9,13 +9,14 @@ import { createContext } from "react";
 
 
 export const ToolTypeContext = createContextt({
-  select:"PEN"
-  setSelect: (type: string) => {}
+  select:"PEN",
+  setSelect: (type: string) => { }
 });
 
 
-export const FillContext = createContext({
-  fillColor: "black",
-  setFillColor: (type: string) => {}
+export const StrawContext = createContext({
+  strawFlag: false,
+   strawColor: '',
+  setStrawColor: (type: string) => {}
 });
 

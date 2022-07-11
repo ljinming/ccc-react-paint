@@ -14,6 +14,7 @@ interface ContentProps {
   //tool: string;
   backgroundColor: string;
   imgSrc?: string;
+  select: string;
   canvasSize: {
     width: number;
     height: number;
@@ -25,19 +26,19 @@ interface ContentProps {
 }
 
 const Content = (props: ContentProps) => {
-  const { pre, imgSrc, backgroundColor, canvasSize } = props;
+  const { pre, imgSrc, select, backgroundColor, canvasSize } = props;
   //const [fillColor, setFillColor] = useState(board.fillColor);
 
-  const { tool, straw } = useSelector((state: RootState) => {
-    return {
-      tool: state["paint.tool"].select,
-      straw: state["paint.straw"],
-    };
-  }, shallowEqual);
+  // const { tool, straw } = useSelector((state: RootState) => {
+  //   return {
+  //     tool: state["paint.tool"].select,
+  //     straw: state["paint.straw"],
+  //   };
+  // }, shallowEqual);
 
   const renderRight = () => {
     let right = <>test</>;
-    switch (tool) {
+    switch (select) {
       case "PEN":
         return <Pencil />;
       // case "SHAPE":
@@ -56,11 +57,11 @@ const Content = (props: ContentProps) => {
 
   return (
     <div className={`${pre}-content`}>
-      <ToolType prefix={`${pre}-content`} select={tool} />
+      <ToolType prefix={`${pre}-content`} select={select} />
       <div className={`${pre}-content-canvas`}>
         <FabricJSCanvas
           canvasSize={canvasSize}
-          tool={tool}
+          tool={select}
           imgSrc={imgSrc}
           id="test"
           straw={straw}
