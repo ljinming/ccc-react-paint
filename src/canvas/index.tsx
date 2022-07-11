@@ -2,6 +2,8 @@ import React, { useMemo } from "react";
 import "./index.less";
 import { useEffect } from "react";
 import { useRef } from "react";
+import { Input } from "antd";
+
 import {
   LineWidthType,
   ShapeOutlineType,
@@ -20,6 +22,8 @@ import cursorPen from "@/assets/icon/cursorPen.jpg";
 import cursorErase from "@/assets/icon/cursorErase.jpg";
 import straw from "@/assets/icon/straw.jpg";
 import bucket from "@/assets/icon/bucket.jpg";
+const { TextArea } = Input;
+
 interface CanvasProps {
   toolType: ToolType;
   shapeType: ShapeToolType;
@@ -237,8 +241,8 @@ const Canvas: FC<CanvasProps> = (props) => {
       } else {
         canvas.style.cursor = `auto`;
       }
-      if (toolType !== 2) {
-        textBox!.setAttribute("style", `z-index:-1;display:none`);
+      if (toolType !== 2 && textBox) {
+        // textBox!.setAttribute("style", `z-index:-1;display:none`);
       }
     }
   };
@@ -477,7 +481,7 @@ const Canvas: FC<CanvasProps> = (props) => {
       canvas.addEventListener("touchstart", onTouchStart);
       canvas.addEventListener("touchmove", onTouchMove);
       canvas.addEventListener("touchend", onTouchEnd);
-      textBox.addEventListener("keydown", onKeyDown);
+      //textBox.addEventListener("keydown", onKeyDown);
       canvasBox.addEventListener("wheel", onCanvasBoxWheel, { passive: false });
 
       return () => {
@@ -489,7 +493,7 @@ const Canvas: FC<CanvasProps> = (props) => {
         canvas.removeEventListener("touchstart", onTouchStart);
         canvas.removeEventListener("touchmove", onTouchMove);
         canvas.removeEventListener("touchend", onTouchEnd);
-        textBox.removeEventListener("keydown", onKeyDown);
+        // textBox.removeEventListener("keydown", onKeyDown);
 
         canvasBox.removeEventListener("wheel", onCanvasBoxWheel);
       };
@@ -522,13 +526,15 @@ const Canvas: FC<CanvasProps> = (props) => {
         </textarea>
       </canvas>
       <div className="canvas-text" id="text-container" ref={canvasTextRef}>
-        <textarea
-          ref={textBoxRef}
+        <TextArea
+          rows={1}
           id="textBox"
+          ref={textBoxRef}
           name="story"
           autoFocus={true}
           //autocomplete={fales}
           //bordered={true}
+          defaultValue=""
           // autoSize={{ minRows: 2, maxRows: 2 }}
           className={`text-box`}
           // rows={1}

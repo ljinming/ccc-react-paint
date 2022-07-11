@@ -44,7 +44,6 @@ class Eraser extends Tool {
       const colorRgb = hexToRgb(this.color);
       if (colorRgb && this.saveImageData) {
         imageData = updateImageData(this.saveImageData, imageData, [colorRgb.r, colorRgb.g, colorRgb.b, colorRgb.a]);
-
         Tool.ctx.putImageData(imageData, 0, 0);
       }
     }
