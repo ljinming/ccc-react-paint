@@ -27,20 +27,13 @@ interface ContentProps {
 const Content = (props: ContentProps) => {
   const { pre, imgSrc, backgroundColor, canvasSize } = props;
   //const [fillColor, setFillColor] = useState(board.fillColor);
-  const tool = "PEN";
-  const straw: {
-    strawFlag: boolean;
-    strawColor: string;
-  } = {
-    strawFlag: false,
-    strawColor: "",
-  };
-  // const { tool, straw } = useSelector((state: RootState) => {
-  //   return {
-  //     tool: state.paint.tool.select,
-  //     straw: state.paint.straw,
-  //   };
-  // }, shallowEqual);
+
+  const { tool, straw } = useSelector((state: RootState) => {
+    return {
+      tool: state.paint.tool.select,
+      straw: state.paint.straw,
+    };
+  }, shallowEqual);
 
   const renderRight = () => {
     let right = <>test</>;

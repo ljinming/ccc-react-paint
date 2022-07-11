@@ -12,6 +12,7 @@
   "dependencies": {
     "@babel/preset-typescript": "^7.17.12",
     "@rollup/plugin-alias": "^3.1.9",
+    "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "customize-cra": "^1.0.0",
     "less": "^3.12.2",
@@ -104,6 +105,7 @@
     "postcss-simple-vars": "^6.0.3",
     "react-color": "^2.19.3",
     "react-redux": "^8.0.2",
+    "redux": "3",
     "rollup": "^2.75.6",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",

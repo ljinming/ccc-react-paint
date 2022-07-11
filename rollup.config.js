@@ -28,10 +28,10 @@ import postcssPresetEnv from "postcss-preset-env";
 // css代码压缩
 import cssnano from "cssnano";
 import alias from "@rollup/plugin-alias";
-
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import ts from "rollup-plugin-typescript2";
 import path from "path";
+import json from "@rollup/plugin-json";
 
 const env = process.env.NODE_ENV;
 
@@ -61,7 +61,7 @@ export default {
     }
   },
   // 将模块视为外部模块，不会打包在库中
-  external: ["react", "react-is", "antd", "@ant-design/icons", "prop-types", "react/jsx-runtime", "material-ui-color"], // 插件
+  external: ["react", "react-is", "antd", "@ant-design/icons", "prop-types", "react/jsx-runtime","fabric"], // 插件
   // 插件
   plugins: [
     image(),
@@ -84,6 +84,7 @@ export default {
       plugins: ["@babel/plugin-external-helpers"]
     }),
     commonjs(),
+    json(),
     nodeResolve({
       extensions: [".js", ".jsx", ".ts", ".tsx"]
     }),
@@ -100,6 +101,7 @@ export default {
         "@/icon": ["src/assets/icon"]
       }
     }),
+     
     // 全局替换NODE_ENV，exclude表示不包含某些文件夹下的文件
     replace({
       // exclude: 'node_modules/**',

@@ -1,3 +1,4 @@
+import { store } from "../../Action";
 import { ToolTypeList } from "../utils";
 import { getToolIcon } from "../utils/tool";
 import { toolItem } from "../utils/tsType";
@@ -23,6 +24,7 @@ const ToolType = (props: ToolProps) => {
             }`}
             key={va.key}
             onClick={() => {
+              store.dispatch("paint.tool", { select: va.key });
               // Action.emit("paint.tool", {
               //   select: va.key,
               // });

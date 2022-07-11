@@ -17,16 +17,13 @@ interface ColorProps {
 const ColorPicker = (props: ColorProps) => {
   const { color, onChange } = props;
   const [showColor, setColor] = useState(color);
-  const straw: StrawState = {
-    strawFlag: false,
-    strawColor: "",
-  };
-  // const { straw } = useSelector((state: RootState) => {
-  //   console.log("select---", state);
-  //   return {
-  //     straw: state.paint.straw,
-  //   };
-  // }, shallowEqual);
+
+  const { straw } = useSelector((state: RootState) => {
+    console.log("select---", state);
+    return {
+      straw: state.paint.straw,
+    };
+  }, shallowEqual);
 
   const handleChange = (color: any, event: any) => {
     if (Tool.strawColor !== "") {
@@ -59,6 +56,7 @@ const ColorPicker = (props: ColorProps) => {
         className={`straw-color ${straw.strawFlag ? "selected-straw" : ""}`}
         onClick={() => {
           Tool.strawFlag = true;
+
           // Action.emit("paint.straw", {
           //   strawFlag: true,
           // });
