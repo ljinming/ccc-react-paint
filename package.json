@@ -1,12 +1,12 @@
 {
   "name": "ccc-react-paint",
-  "version": "1.0.9",
+  "version": "3.0.0",
   "keywords": [
     "ccc",
     "paint",
     "react"
   ],
-  "description": "a simple paint tool for ccc",
+  "description": "a simple paint tool for ccc fabric",
   "private": false,
   "main": "dist/ccc-paint-umd.min.js",
   "dependencies": {

@@ -30,8 +30,8 @@ const Content = (props: ContentProps) => {
 
   const { tool, straw } = useSelector((state: RootState) => {
     return {
-      tool: state.paint.tool.select,
-      straw: state.paint.straw,
+      tool: state["paint.tool"].select,
+      straw: state["paint.straw"],
     };
   }, shallowEqual);
 

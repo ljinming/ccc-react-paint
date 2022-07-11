@@ -7,6 +7,7 @@ import { getToolIcon } from "../../pages/utils/tool";
 import { connect, useSelector, shallowEqual } from "react-redux";
 import { RootState, StrawState } from "../../type";
 import { Tool } from "@/tool";
+import { store } from "../../Action";
 
 interface ColorProps {
   color: string;
@@ -19,9 +20,8 @@ const ColorPicker = (props: ColorProps) => {
   const [showColor, setColor] = useState(color);
 
   const { straw } = useSelector((state: RootState) => {
-    console.log("select---", state);
     return {
-      straw: state.paint.straw,
+      straw: state["paint.straw"],
     };
   }, shallowEqual);
 
@@ -56,7 +56,10 @@ const ColorPicker = (props: ColorProps) => {
         className={`straw-color ${straw.strawFlag ? "selected-straw" : ""}`}
         onClick={() => {
           Tool.strawFlag = true;
-
+          store.dispatch({
+            type: "paint.straw",
+            payload: { strawColor: color, strawFlag: true },
+          });
           // Action.emit("paint.straw", {
           //   strawFlag: true,
           // });

@@ -24,7 +24,7 @@ const ToolType = (props: ToolProps) => {
             }`}
             key={va.key}
             onClick={() => {
-              store.dispatch("paint.tool", { select: va.key });
+              store.dispatch({ type: "paint.tool", select: va.key });
               // Action.emit("paint.tool", {
               //   select: va.key,
               // });

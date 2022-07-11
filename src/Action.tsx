@@ -1,12 +1,24 @@
 import { createStore } from "redux";
 
-function todos(state = [], action: any) {
-  console.log("===45", action);
+let initialState = {
+  "paint.tool": {
+    select: "PEN",
+  },
+  "paint.straw": {
+    strawFlag: false,
+    strawColor: "",
+  },
+};
+
+function todos(state = initialState, action: any) {
   switch (action.type) {
     case "paint.tool":
-      return action.select;
+      state[action.type].select = action.select;
+      return { ...state };
     default:
-      return state;
+      state[action.type] = action.payload;
+      return { ...state };
   }
 }
+
 export const store = createStore(todos);

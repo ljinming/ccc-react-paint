@@ -1,3 +1,4 @@
+import { store } from "../Action";
 import { fabric } from "fabric";
 //import Action from "@/action";
 import { rgbToHex } from "./colorChange";
@@ -26,6 +27,11 @@ export const setStrawColor = (pos: Point) => {
   const color = getPixelColorOnCanvas(pos, ctx);
   Tool.strawColor = color;
   Tool.strawFlag = false;
+  store.dispatch({
+    type: "paint.straw",
+    payload: { strawColor: color, strawFlag: false },
+  });
+
   // Action.emit("paint.straw", { strawColor: color, strawFlag: false });
 };
 //鼠标点颜色
