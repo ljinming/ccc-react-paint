@@ -4,6 +4,8 @@ import "./index.less";
 import "./font.css";
 import { useState, useEffect, useImperativeHandle } from "react";
 import { Tool } from "../tool";
+import { Provider } from "react-redux";
+import { store } from "../Action";
 interface HomeProps {
   backgroundColor?: string;
   width?: number;
@@ -32,8 +34,6 @@ function getImageSize(url: string): Promise<{
   });
 }
 
-//https://bafybeie3y4v25vj3owiqc5jxdhpcqld5klixy32fhcfytyfyve7k5ssyv4.ipfs.dweb.link/orign.png
-//"https://bafybeicgvg3vwtv5c633cjexbykjp75yjt755qhma4o7vgusa4ldvocz44.ipfs.dweb.link/orign.png",
 export default (props: HomeProps) => {
   const pre = `core-paint`;
   const {
@@ -69,14 +69,17 @@ export default (props: HomeProps) => {
   }, [width, height, imgSrc]);
 
   return (
-    <div className={pre}>
-      <Header pre={pre} />
-      <Content
-        pre={pre}
-        canvasSize={size}
-        imgSrc={imgSrc}
-        backgroundColor={"#fff"}
-      />
-    </div>
+    <Provider store={store}>
+      <div className={pre}>
+        <Header pre={pre} />
+        <Content
+          id={id}
+          pre={pre}
+          canvasSize={size}
+          imgSrc={imgSrc}
+          backgroundColor={"#fff"}
+        />
+      </div>
+    </Provider>
   );
 };

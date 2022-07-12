@@ -63,9 +63,39 @@ export default class Tool {
   static ToolStoreList: any[] = [];
   static imgSrc: string;
   static nextCanvas: any = [];
+  static currentSelected: any;
+
+  static afterRender() {
+    if (this.recordTimer) {
+      clearTimeout(this.recordTimer);
+      this.recordTimer = null;
+    }
+    this.recordTimer = setTimeout(() => {
+      this.stateArr.push(JSON.stringify(Tool.canvas));
+      this.stateIdx++;
+    }, 1000);
+  }
 
   // 撤销 或 还原
   static tapHistoryBtn(flag: number) {
+    // let stateIdx = this.stateIdx + flag;
+    // // 判断是否已经到了第一步操作
+    // if (stateIdx < 0) return;
+    // // 判断是否已经到了最后一步操作
+    // if (stateIdx >= this.stateArr.length) return;
+    // if (this.stateArr[stateIdx]) {
+    //   this.canvas.loadFromJSON(
+    //     this.stateArr[stateIdx],
+    //     this.canvas.renderAll.bind(this.canvas)
+    //   );
+    //   if (this.canvas.getObjects().length > 0) {
+    //     this.canvas.getObjects().forEach((item) => {
+    //       item.set("selectable", false);
+    //     });
+    //   }
+    //   this.stateIdx = stateIdx;
+    // }
+
     let current;
     if (this.canvas) {
       if (flag < 0 && this.ToolStoreList.length < 10) {
@@ -99,24 +129,9 @@ export default class Tool {
           { crossOrigin: "anonymous", scaleX: 0.5, scaleY: 0.5 }
         );
         canvasTool = undefined;
+        //this.canvas.requestRenderAll();
       }
     }
-
-    // if (this.canvas) {
-    //   if (flag < 0 && this.canvasObj.length < 10) {
-    //     const removeList =
-    //       this.canvas.getObjects().filter((c) => c.width) || [];
-    //     const tagCanvas = removeList[removeList.length - 1];
-    //     this.canvasObj.push(tagCanvas);
-    //     this.canvas.remove(tagCanvas);
-    //   } else if (flag > 0 && this.canvasObj.length > 0) {
-    //     //回到撤回前一步
-    //     const current = this.canvasObj.pop();
-    //     if (current) {
-    //       this.canvas.add(current);
-    //     }
-    //   }
-    // }
   }
 
   //清空画布

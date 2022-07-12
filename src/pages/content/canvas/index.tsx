@@ -5,10 +5,8 @@ import cursorPen from "@/assets/icon/cursorPen.jpg";
 import cursorErase from "@/assets/icon/cursorErase.jpg";
 import straw_jpg from "@/assets/icon/straw.jpg";
 import bucket from "@/assets/icon/bucket.jpg";
-
 import { efficentFloodFill, getTrans } from "./utils";
 import "./index.less";
-import ToolType from "../ToolType";
 
 let translatex = 0;
 let translatey = 0;
@@ -18,40 +16,40 @@ const maxScale = 6;
 const minScale = 0.1;
 
 /*设置为2d模块 如不设置 默认webgl 为true*/
-const canvas2dBackend = new fabric.Canvas2dFilterBackend();
-fabric.filterBackend = canvas2dBackend;
+// const canvas2dBackend = new fabric.Canvas2dFilterBackend();
+// fabric.filterBackend = canvas2dBackend;
 
 /*filter*/
-fabric.Image.filters["ChangeColorFilter"] = fabric.util.createClass(
-  fabric.Image.filters.BaseFilter,
-  {
-    type: "ChangeColorFilter",
-    applyTo: function (options: any) {
-      let imageData = options.imageData;
-      // const context = options.canvasEl.getContext("2d");
-      // const newimageData = context.getImageData(
-      //   0,
-      //   0,
-      //   options.canvasEl.width,
-      //   options.canvasEl.height
-      // );
-      // const ctx = options.ctx;
-      if (this.fillColor && this.pos) {
-        imageData = efficentFloodFill(
-          imageData,
-          this.pos.x,
-          this.pos.y,
-          this.fillColor
-        );
-      }
-      options.ctx.putImageData(this.ctx || imageData, 0, 0);
-    },
-  }
-);
+// fabric.Image.filters["ChangeColorFilter"] = fabric.util.createClass(
+//   fabric.Image.filters.BaseFilter,
+//   {
+//     type: "ChangeColorFilter",
+//     applyTo: function (options: any) {
+//       let imageData = options.imageData;
+//       // const context = options.canvasEl.getContext("2d");
+//       // const newimageData = context.getImageData(
+//       //   0,
+//       //   0,
+//       //   options.canvasEl.width,
+//       //   options.canvasEl.height
+//       // );
+//       // const ctx = options.ctx;
+//       if (this.fillColor && this.pos) {
+//         imageData = efficentFloodFill(
+//           imageData,
+//           this.pos.x,
+//           this.pos.y,
+//           this.fillColor
+//         );
+//       }
+//       options.ctx.putImageData(this.ctx || imageData, 0, 0);
+//     },
+//   }
+// );
 
-fabric.Image.filters["ChangeColorFilter"].fromObject = function (object: any) {
-  return new fabric.Image.filters["ChangeColorFilter"](object);
-};
+// fabric.Image.filters["ChangeColorFilter"].fromObject = function (object: any) {
+//   return new fabric.Image.filters["ChangeColorFilter"](object);
+// };
 
 interface CanvasProps {
   backgroundColor?: string;
@@ -105,11 +103,11 @@ export default (props: CanvasProps) => {
             (img) => {
               img.selectable = false;
               img.evented = false;
-              img.width = canvasSize.width;
-              img.filters?.push(
-                new fabric.Image.filters["ChangeColorFilter"]()
-              );
-              img.applyFilters();
+              //img.width = canvasSize.width;
+              // img.filters?.push(
+              //   new fabric.Image.filters["ChangeColorFilter"]()
+              // );
+              // img.applyFilters();
               Tool.img = img;
               canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
             },
@@ -227,6 +225,7 @@ export default (props: CanvasProps) => {
   };
 
   const onSelected = (options: any) => {
+    Tool.currentSelected = options.selected;
     if (manager && tool === "SHAPE") {
       manager.onSelected(options);
     }
@@ -322,9 +321,21 @@ export default (props: CanvasProps) => {
     }
   };
 
+  const onkeydown = (e: KeyboardEvent) => {
+    const { keyCode } = e;
+    if (keyCode === 8 && Tool.currentSelected.length > 0) {
+      //删除选中的图层
+      Tool.canvas.remove(...Tool.currentSelected);
+    }
+  };
+
   useEffect(() => {
     const canvasBox = canvasBoxRef.current;
-    if (fabricCanvas && canvasBox) {
+    const canvas = canvasRef.current;
+    if (fabricCanvas && canvasBox && canvas) {
+      //键盘事件
+      window.addEventListener("keydown", onkeydown);
+
       fabricCanvas.on("mouse:down", onMouseDown);
       fabricCanvas.on("mouse:move", onMouseMove);
       fabricCanvas.on("mouse:up", onMouseUp);
@@ -340,7 +351,14 @@ export default (props: CanvasProps) => {
       // 监听绘画选中/取消⌚️
       fabricCanvas.on("selection:created", onSelected);
       fabricCanvas.on("selection:cleared", onCancelSelected);
+
+      // fabricCanvas.on("after:render", () => {
+      //   Tool.afterRender();
+      // });
     }
+    return () => {
+      window.removeEventListener("keydown", onkeydown);
+    };
   }, [
     fabricCanvas,
     onMouseDown,

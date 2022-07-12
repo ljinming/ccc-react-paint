@@ -14,6 +14,7 @@ interface ContentProps {
   //tool: string;
   backgroundColor: string;
   imgSrc?: string;
+  id: string;
   canvasSize: {
     width: number;
     height: number;
@@ -25,7 +26,7 @@ interface ContentProps {
 }
 
 const Content = (props: ContentProps) => {
-  const { pre, imgSrc, backgroundColor, canvasSize } = props;
+  const { pre, imgSrc, id, backgroundColor, canvasSize } = props;
   //const [fillColor, setFillColor] = useState(board.fillColor);
 
   const { tool, straw } = useSelector((state: RootState) => {
@@ -40,14 +41,14 @@ const Content = (props: ContentProps) => {
     switch (tool) {
       case "PEN":
         return <Pencil />;
-      // case "SHAPE":
-      //   return <Shape />;
-      // case "ERASER":
-      //   return <Eraser />;
-      // case "TEXT":
-      //   return <Text />;
-      // case "BUCKET":
-      //   return <FillColor />;
+      case "SHAPE":
+        return <Shape />;
+      case "ERASER":
+        return <Eraser />;
+      case "TEXT":
+        return <Text />;
+      case "BUCKET":
+        return <FillColor />;
       default:
         break;
     }
@@ -62,7 +63,7 @@ const Content = (props: ContentProps) => {
           canvasSize={canvasSize}
           tool={tool}
           imgSrc={imgSrc}
-          id="test"
+          id={id}
           straw={straw}
           backgroundColor={backgroundColor}
         />
@@ -71,14 +72,5 @@ const Content = (props: ContentProps) => {
     </div>
   );
 };
-
-// function mapStateToProps(state: RootState) {
-//   return {
-//     tool: state.paint.tool.select,
-//     straw: state.paint.straw,
-//   };
-// }
-
-// export default connect(mapStateToProps)(Content);
 
 export default Content;

@@ -1,2 +1,2 @@
-import CCCPaint from "./test";
+import CCCPaint from "./pages";
 export { CCCPaint };
