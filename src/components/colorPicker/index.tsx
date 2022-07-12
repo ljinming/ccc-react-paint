@@ -60,9 +60,6 @@ const ColorPicker = (props: ColorProps) => {
             type: "paint.straw",
             payload: { strawColor: color, strawFlag: true },
           });
-          // Action.emit("paint.straw", {
-          //   strawFlag: true,
-          // });
         }}
       >
         {getToolIcon("strawIcon")}
@@ -70,12 +67,5 @@ const ColorPicker = (props: ColorProps) => {
     </div>
   );
 };
-function mapStateToProps(state: RootState) {
-  return {
-    straw: state.paint.straw,
-  };
-}
-
-//export default connect(mapStateToProps)(ColorPicker);
 
 export default ColorPicker;

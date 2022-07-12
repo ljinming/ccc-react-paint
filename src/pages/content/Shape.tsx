@@ -93,7 +93,7 @@ const ShapeRight = () => {
       <h3>Shape</h3>
       <Select
         style={{ width: "100%" }}
-        defaultValue={"SOLID"}
+        defaultValue={"FILL"}
         onChange={(value) => handleChange("border", value)}
         // onChange={(value) => (board.shapeLine = value)}
       >

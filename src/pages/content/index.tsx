@@ -126,7 +126,10 @@ const Content = (props: ContentProps) => {
         </div>
       )}
 
-      <div className={`${pre}-content-right`}>{renderRight()}</div>
+      <div className={`${pre}-content-right`}>
+        {ThumbSrc && <img src={ThumbSrc} className="ThumbSrc" />}
+        {renderRight()}
+      </div>
     </div>
   );
 };

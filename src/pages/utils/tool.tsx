@@ -164,7 +164,6 @@ const clearIcon = (
     ></path>
   </svg>
 );
-
 export const strawIcon = (
   <svg
     width="20px"

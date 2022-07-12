@@ -1,4 +1,4 @@
-import Tool, { clacArea, Point, setStrawColor } from "./tool";
+import Tool, { addContext, clacArea, Point, setStrawColor } from "./tool";
 import { parseColorString } from "./colorChange";
 import { fabric } from "fabric";
 
@@ -90,6 +90,91 @@ export const efficentFloodFill = (
 /**
  * 判断两个位置的像素颜色是否相同
  */
+
+/*
+  多边形计算
+*/
+export const efficentFloodFillPonits = (
+  imageData: ImageData,
+  startX: number,
+  startY: number,
+  fillColor: [number, number, number]
+) => {
+  // 保证 startX 和 startY 是正整数
+  // 经测试，在触屏设备中 startX 和 startY 可能是小数，造成填充功能无法正确填充
+  startX = Math.round(startX);
+  startY = Math.round(startY);
+  const pixelStack: [number, number][] = [
+    [Math.round(startX), Math.round(startY)],
+  ];
+  const canvasWidth = imageData.width,
+    canvasHeight = imageData.height;
+  const startPos = (startY * canvasWidth + startX) * 4;
+  const colorLayer = imageData;
+  const startColor: [number, number, number] = [
+    colorLayer.data[startPos],
+    colorLayer.data[startPos + 1],
+    colorLayer.data[startPos + 2],
+  ];
+  const updatedPoint: Record<string | number, boolean> = {};
+  if (
+    startColor[0] === fillColor[0] &&
+    startColor[1] === fillColor[1] &&
+    startColor[2] === fillColor[2]
+  ) {
+    return undefined;
+  }
+  while (pixelStack.length > 0) {
+    const newPos = pixelStack.pop() as [number, number];
+    const x = newPos[0];
+    let y = newPos[1];
+    let pixelPos = (y * canvasWidth + x) * 4;
+    while (y-- >= 0 && matchColor(colorLayer, pixelPos, startColor)) {
+      pixelPos -= canvasWidth * 4;
+    }
+    pixelPos += canvasWidth * 4;
+    ++y;
+    let reachLeft = false,
+      reachRight = false;
+
+    if (updatedPoint[pixelPos]) {
+      continue;
+    }
+    updatedPoint[pixelPos] = true;
+    // newData.push(pixelPos);
+    while (
+      y++ < canvasHeight - 1 &&
+      matchColor(colorLayer, pixelPos, startColor)
+    ) {
+      fillPixel(colorLayer, pixelPos, fillColor);
+      if (x > 0) {
+        if (matchColor(colorLayer, pixelPos - 4, startColor)) {
+          if (!reachLeft) {
+            pixelStack.push([x - 1, y]);
+            reachLeft = true;
+          }
+        } else if (reachLeft) {
+          reachLeft = false;
+        }
+      }
+
+      if (x < canvasWidth - 1) {
+        if (matchColor(colorLayer, pixelPos + 4, startColor)) {
+          if (!reachRight) {
+            pixelStack.push([x + 1, y]);
+            reachRight = true;
+          }
+        } else if (reachRight) {
+          reachRight = false;
+        }
+      }
+
+      pixelPos += canvasWidth * 4;
+    }
+  }
+  return colorLayer;
+};
+
 const matchColor = (
   colorLayer: ImageData,
   pixelPos: number,
@@ -140,13 +225,19 @@ class Bucket extends Tool {
   filterChange = async (pos: Point) => {
     const color = parseColorString(Tool.strawColor || Bucket.color);
     const showCtx = Tool.canvas.getContext();
-    const colorLayer = efficentFloodFill(
-      showCtx.getImageData(0, 0, showCtx.canvas.width, showCtx.canvas.height),
-      pos.x * 2,
-      pos.y * 2,
-      [color.r, color.g, color.b]
+    const showImageData = showCtx.getImageData(
+      0,
+      0,
+      showCtx.canvas.width,
+      showCtx.canvas.height
     );
+    const colorLayer = efficentFloodFill(showImageData, pos.x * 2, pos.y * 2, [
+      color.r,
+      color.g,
+      color.b,
+    ]);
     if (colorLayer) {
+      Tool.BucketList.push(JSON.stringify(Tool.canvas));
       showCtx.putImageData(colorLayer, 0, 0);
       let canvasBucket: HTMLCanvasElement | undefined =
         document.createElement("canvas");
@@ -181,10 +272,11 @@ class Bucket extends Tool {
       return;
     }
     const { e, pointer, absolutePointer } = options;
+
+    e.preventDefault();
     if (!clacArea(absolutePointer)) {
       return;
     }
-    e.preventDefault();
     if (Tool.strawFlag) {
       const show = {
         x: absolutePointer.x * 2,
@@ -195,18 +287,14 @@ class Bucket extends Tool {
     }
     this.filterChange(absolutePointer);
   }
-  // public onMouseUp(event: MouseEvent): void {
-  //   if (Tool.toolType !== "BUCKET") {
-  //     return;
-  //   }
-  //   if (Tool.ToolStoreList.length >= 10) {
-  //     Tool.ToolStoreList.shift();
-  //     Tool.ToolStoreList.push(Tool.canvas.toDataURL());
-  //   } else {
-  //     console.log("==4", Tool.canvas.toDataURL());
-  //     Tool.ToolStoreList.push(Tool.canvas.toDataURL());
-  //   }
-  // }
+  public onMouseUp(options: any): void {
+    if (Tool.toolType !== "BUCKET") {
+      return;
+    }
+    const { e, pointer, absolutePointer } = options;
+    e.preventDefault();
+    addContext();
+  }
 }
 
 export default Bucket;

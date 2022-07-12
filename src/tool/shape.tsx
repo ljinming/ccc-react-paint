@@ -1,4 +1,4 @@
-import Tool, { clacArea, setStrawColor } from "./tool";
+import Tool, { addContext, clacArea, setStrawColor } from "./tool";
 import { fabric } from "fabric";
 import { Point } from "./tool";
 
@@ -8,7 +8,7 @@ class Shape extends Tool {
   upPoints: Point | undefined;
   static shapeObject: Record<string, string> = {
     shapeType: "LINE",
-    border: "SOLID",
+    border: "FILL",
     color: "#000",
   };
   static selected: boolean = false;
@@ -47,6 +47,9 @@ class Shape extends Tool {
           }
         } else if (type === "border") {
           va.set("strokeDashArray", value === "DOTTED" ? [3, 3] : [0, 0]);
+          if (value !== "FILL") {
+            va.set("fill", "transparent");
+          }
         }
       });
       Tool.canvas.requestRenderAll();
@@ -294,6 +297,8 @@ class Shape extends Tool {
       this.upPoints = absolutePointer;
       if (JSON.stringify(this.downPoints) === JSON.stringify(this.upPoints)) {
         Tool.canvas.remove(this.shapeCurrent);
+      } else {
+        addContext();
       }
       this.shapeCurrent = undefined;
     }
@@ -308,6 +313,7 @@ class Shape extends Tool {
     e.preventDefault();
     if (shapeType === "RHOMBUS" && this.shapeCurrent) {
       this.finishPolygon(absolutePointer);
+      addContext();
     }
   }
 

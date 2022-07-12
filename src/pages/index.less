@@ -24,6 +24,20 @@ body,
       justify-content: center;
       width: calc(100% - 380px);
       margin-left: 80px;
+      .operator-item{
+        display: inline-block;
+        cursor: pointer;
+        border: 1px solid transparent;
+        min-width: 24px;
+        min-height: 24px;
+
+        svg {
+          fill: #a6aeb7;
+          &:hover {
+            fill: #4338ca;
+          }
+        }
+      }
            
   }
   &-content {

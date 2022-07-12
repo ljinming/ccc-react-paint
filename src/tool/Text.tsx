@@ -1,5 +1,5 @@
 import { fabric } from "fabric";
-import Tool, { clacArea, Point, setStrawColor } from "./tool";
+import Tool, { addContext, clacArea, Point, setStrawColor } from "./tool";
 
 class CanvasText extends Tool {
   textObject: any;
@@ -67,6 +67,7 @@ class CanvasText extends Tool {
       if (!this.textObject) {
         this.initText(absolutePointer);
       } else {
+        addContext();
         this.textObject.exitEditing();
         this.textObject = null;
       }

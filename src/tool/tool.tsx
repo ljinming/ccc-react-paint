@@ -50,6 +50,17 @@ export const getPixelColorOnCanvas = (
   return rgbToHex(p[0], p[1], p[2], p[3]);
 };
 
+export const addContext = () => {
+  const ctx = Tool.canvas.getContext();
+  const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+  if (Tool.ToolStoreList.length < 10) {
+    Tool.ToolStoreList.push(imageData);
+  } else {
+    Tool.ToolStoreList.shift();
+    Tool.ToolStoreList.push(imageData);
+  }
+};
+
 export default class Tool {
   //选择的工具
   public toolType: string = "PEN";
@@ -60,7 +71,7 @@ export default class Tool {
   static img: fabric.Image;
   static strawColor: string;
   static strawFlag: boolean;
-  static canvasObj = [];
+  static canvasObj: any[] = [];
 
   static recordTimer: any;
   static stateArr: any[] = [];
@@ -73,6 +84,7 @@ export default class Tool {
   static currentSelected: any;
   static showArea: Array<[number, number]> | undefined;
   static ThumbSrc: string | undefined;
+  static BucketList: any[] = [];
 
   static afterRender() {
     if (this.recordTimer) {
@@ -87,6 +99,36 @@ export default class Tool {
 
   // 撤销 或 还原
   static tapHistoryBtn(flag: number) {
+    const removeList = this.canvas.getObjects().filter((c) => c.width) || [];
+    if (flag < 0 && this.canvasObj.length < 10) {
+      const tagCanvas = removeList[removeList.length - 1];
+      if (tagCanvas) {
+        this.canvasObj.push(tagCanvas);
+        this.canvas.remove(tagCanvas);
+        const popCanvas = this.ToolStoreList.pop();
+        Tool.nextCanvas.push(popCanvas);
+      }
+    } else if (flag > 0 && this.canvasObj.length > 0) {
+      //回到撤回前一步
+      const current = this.canvasObj.pop();
+      if (current) {
+        const shiftCanvas = Tool.nextCanvas.pop();
+        this.ToolStoreList.push(shiftCanvas);
+        this.canvas.add(current);
+      }
+    }
+    if (flag < 0 && removeList.length === 0 && this.ToolStoreList.length > 0) {
+      //后退，但没有记录,imgdata有记录
+      Tool.calcPic(flag);
+    } else if (
+      flag > 0 &&
+      this.canvasObj.length === 0 &&
+      this.nextCanvas.length > 0
+    ) {
+      //前进 但没有记录,imgdata有记录
+      Tool.calcPic(flag);
+    }
+
     // let stateIdx = this.stateIdx + flag;
     // // 判断是否已经到了第一步操作
     // if (stateIdx < 0) return;
@@ -104,58 +146,79 @@ export default class Tool {
     //   }
     //   this.stateIdx = stateIdx;
     // }
+  }
 
+  //撤销图片
+
+  static calcPic = (flag: number) => {
     let current;
-    if (this.canvas) {
-      if (flag < 0 && this.ToolStoreList.length < 10) {
-        const tagCanvas = this.ToolStoreList.pop();
-        if (tagCanvas && this.canvas) {
-          this.nextCanvas.push(tagCanvas);
+    if (Tool.canvas) {
+      if (flag < 0 && Tool.ToolStoreList.length > 0) {
+        const tagCanvas = Tool.ToolStoreList.pop();
+        if (tagCanvas && Tool.canvas) {
+          Tool.nextCanvas.push(tagCanvas);
           current = tagCanvas;
         }
-      } else if (flag > 0 && this.nextCanvas.length > 0) {
+      } else if (flag > 0 && Tool.nextCanvas.length > 0) {
         //回到撤回前一步
-        const canvasData = this.nextCanvas.pop();
+        const canvasData = Tool.nextCanvas.pop();
         if (canvasData) {
           current = canvasData;
         }
       }
-      if (current && this.canvas) {
+      if (current && Tool.canvas) {
         let canvasTool: HTMLCanvasElement | undefined =
           document.createElement("canvas");
         canvasTool.width = current.width;
         canvasTool.height = current.height;
         canvasTool?.getContext("2d")?.putImageData(current, 0, 0);
         const url = canvasTool.toDataURL();
-        this.canvas.clear();
-        this.canvas.setBackgroundImage(
+        Tool.canvas.setBackgroundImage(
           url,
           (img: any) => {
             img.selectable = false;
             img.evented = false;
-            this.canvas.renderAll();
+            Tool.canvas.renderAll();
           },
           { crossOrigin: "anonymous", scaleX: 0.5, scaleY: 0.5 }
         );
         canvasTool = undefined;
-        //this.canvas.requestRenderAll();
+        Tool.canvas.requestRenderAll();
+      } else {
+        Tool.canvas.setBackgroundImage(
+          Tool.imgSrc,
+          (img: any) => {
+            img.selectable = false;
+            img.evented = false;
+            Tool.canvas.renderAll();
+          },
+          { crossOrigin: "anonymous" }
+        );
       }
     }
-  }
+  };
 
   //清空画布
   static clearAll() {
     // 获取画布中的所有对象
     if (this.canvas) {
-      if (this.ToolStoreList.length > 0) {
+      let children = this.canvas.getObjects();
+      if (children.length > 0) {
+        // 移除所有对象
+        this.canvas.remove(...children);
+      }
+      if (this.BucketList.length > 0) {
+        this.BucketList = [];
         this.ToolStoreList = [];
-        this.nextCanvas = [];
-        this.canvas.clear();
-        this.canvas.setBackgroundImage(Tool.imgSrc, (img: any) => {
-          img.selectable = false;
-          img.evented = false;
-          this.canvas.renderAll();
-        });
+        this.canvas.setBackgroundImage(
+          Tool.imgSrc,
+          (img: any) => {
+            img.selectable = false;
+            img.evented = false;
+            Tool.canvas.renderAll();
+          },
+          { crossOrigin: "anonymous" }
+        );
       }
     }
   }

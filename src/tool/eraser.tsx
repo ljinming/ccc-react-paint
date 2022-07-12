@@ -1,4 +1,9 @@
-import Tool, { clacArea, getPixelColorOnCanvas, Point } from "./tool";
+import Tool, {
+  addContext,
+  clacArea,
+  getPixelColorOnCanvas,
+  Point,
+} from "./tool";
 //import "libs/eraser_brush.mixin.js"; // 本地地址进行引用即可
 
 class Eraser extends Tool {
@@ -44,6 +49,14 @@ class Eraser extends Tool {
       y: absolutePointer.y * 2,
     };
     this.operateStart(show);
+  }
+  public onMouseUp(options: any) {
+    if (Tool.toolType !== "ERASER") {
+      return;
+    }
+    const { e, absolutePointer } = options;
+    e.preventDefault();
+    addContext();
   }
 }
 

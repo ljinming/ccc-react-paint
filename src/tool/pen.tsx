@@ -10,7 +10,6 @@ class Pen extends Tool {
   }
 
   init() {
-    console.log("pen init", Tool.strawColor);
     if (!Tool.canvas.isDrawingMode) {
       Tool.canvas.isDrawingMode = true;
     }

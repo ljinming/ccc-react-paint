@@ -1,5 +1,6 @@
 import { fabric } from "fabric";
 import { Tool, Pen, Shape, Eraser, Bucket, CanvasText } from "@/tool";
+import { addContext } from "../../../tool/tool";
 import { useEffect, useRef, useState } from "react";
 import cursorPen from "@/assets/icon/cursorPen.jpg";
 import cursorErase from "@/assets/icon/cursorErase.jpg";
@@ -135,6 +136,8 @@ export default (props: CanvasProps) => {
           setManage(new Eraser());
           break;
         case "BUCKET":
+          Tool.canvas.selectionColor = "transparent";
+          Tool.canvas.renderAll();
           setManage(new Bucket());
           break;
         case "TEXT":
@@ -207,18 +210,8 @@ export default (props: CanvasProps) => {
 
   const onMouseUp = (options: any) => {
     if (manager) {
-      const ctx = Tool.canvas.getContext();
-      const imageData = ctx.getImageData(
-        0,
-        0,
-        ctx.canvas.width,
-        ctx.canvas.height
-      );
-      if (Tool.ToolStoreList.length < 10) {
-        Tool.ToolStoreList.push(imageData);
-      } else {
-        Tool.ToolStoreList.shift();
-        Tool.ToolStoreList.push(imageData);
+      if (Tool.toolType === "PEN") {
+        addContext();
       }
       manager.onMouseUp(options);
     }
@@ -226,12 +219,15 @@ export default (props: CanvasProps) => {
 
   const onSelected = (options: any) => {
     Tool.currentSelected = options.selected;
+    console.log("Selected,", options);
     if ((manager && tool === "SHAPE") || (manager && tool === "TEXT")) {
       manager.onSelected(options);
     }
   };
 
   const onCancelSelected = (options: any) => {
+    Tool.currentSelected = options.selected;
+    console.log("onCancelSelected,", options);
     if (manager) {
       manager.onCancelSelected(options);
     }
