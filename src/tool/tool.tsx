@@ -20,6 +20,13 @@ export const getRandomColor = () => {
   );
 };
 
+//clacArea
+
+export const clacArea = (points: Point) => {
+  return Tool.showArea
+    ? Tool.showArea.find((item) => item[0] === points.x && item[1] === points.y)
+    : true;
+};
 // strawColor
 
 export const setStrawColor = (pos: Point) => {
@@ -64,6 +71,8 @@ export default class Tool {
   static imgSrc: string;
   static nextCanvas: any = [];
   static currentSelected: any;
+  static showArea: Array<[number, number]> | undefined;
+  static ThumbSrc: string | undefined;
 
   static afterRender() {
     if (this.recordTimer) {

@@ -226,7 +226,7 @@ export default (props: CanvasProps) => {
 
   const onSelected = (options: any) => {
     Tool.currentSelected = options.selected;
-    if (manager && tool === "SHAPE") {
+    if ((manager && tool === "SHAPE") || (manager && tool === "TEXT")) {
       manager.onSelected(options);
     }
   };

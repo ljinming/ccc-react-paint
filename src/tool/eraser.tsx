@@ -1,4 +1,4 @@
-import Tool, { getPixelColorOnCanvas, Point } from "./tool";
+import Tool, { clacArea, getPixelColorOnCanvas, Point } from "./tool";
 //import "libs/eraser_brush.mixin.js"; // 本地地址进行引用即可
 
 class Eraser extends Tool {
@@ -33,6 +33,10 @@ class Eraser extends Tool {
       return;
     }
     const { e, absolutePointer } = options;
+    if (!clacArea(absolutePointer)) {
+      Tool.canvas.isDrawingMode = false;
+      return;
+    }
     e.preventDefault();
     Tool.canvas.freeDrawingBrush.color = "transparent";
     const show = {

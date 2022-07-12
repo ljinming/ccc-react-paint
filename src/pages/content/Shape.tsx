@@ -2,10 +2,10 @@ import { Select } from "antd";
 import shape_line from "@/assets/icon/shape_line.svg";
 import shape_rect from "@/assets/icon/shape_rect.svg";
 import shape_circle from "@/assets/icon/shape_circle.svg";
-import shape_rhombus from "@/assets/icon/shape_rhombus.svg";
+//import shape_rhombus from "@/assets/icon/shape_rhombus.svg";
 import shape_triangle from "@/assets/icon/shape_triangle.svg";
-// import shape_pentagon from "@/assets/icon/shape_pentagon.svg";
-// import shape_sexangle from "@/assets/icon/shape_sexangle.svg";
+//import shape_pentagon from "@/assets/icon/shape_pentagon.svg";
+import shape_sexangle from "@/assets/icon/shape_sexangle.svg";
 // import shape_arrowtop from "@/assets/icon/shape_arrowtop.svg";
 // import shape_arrowright from "@/assets/icon/shape_arrowright.svg";
 // import shape_arrowdown from "@/assets/icon/shape_arrowdown.svg";
@@ -29,27 +29,27 @@ const ShapeRight = () => {
     {
       type: "LINE",
       img: shape_line,
-      title: "直线",
+      title: "Line",
     },
     {
       type: "RECT",
       img: shape_rect,
-      title: "矩形",
+      title: "Rectangle",
     },
     {
       type: "CIRCLE",
       img: shape_circle,
-      title: "圆（椭圆）",
+      title: "Oval",
     },
     {
       type: "RHOMBUS",
-      img: shape_rhombus,
-      title: "菱形",
+      img: shape_sexangle,
+      title: "Polygon",
     },
     {
       type: "TRIANGLE",
       img: shape_triangle,
-      title: "三角形",
+      title: "Triangle",
     },
     // {
     //   type: "PENTAGON",

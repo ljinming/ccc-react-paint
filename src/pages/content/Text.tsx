@@ -15,6 +15,7 @@ const textFamily = [
   "Poppins-Medium",
   "Poppins-Regular",
   "Poppins-SemiBold",
+  "System Font",
 ];
 
 const Text = () => {
@@ -27,6 +28,7 @@ const Text = () => {
       <div>
         <h3>Font</h3>
         <Select
+          defaultValue="System Font"
           style={{ width: "100%" }}
           onChange={(value) => handleChange("fontFamily", value)}
         >

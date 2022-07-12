@@ -1,4 +1,4 @@
-import Tool, { Point, setStrawColor } from "./tool";
+import Tool, { clacArea, Point, setStrawColor } from "./tool";
 import { parseColorString } from "./colorChange";
 import { fabric } from "fabric";
 
@@ -181,6 +181,9 @@ class Bucket extends Tool {
       return;
     }
     const { e, pointer, absolutePointer } = options;
+    if (!clacArea(absolutePointer)) {
+      return;
+    }
     e.preventDefault();
     if (Tool.strawFlag) {
       const show = {

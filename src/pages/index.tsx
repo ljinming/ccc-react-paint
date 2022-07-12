@@ -13,25 +13,8 @@ interface HomeProps {
   imgSrc?: string;
   cRef?: any;
   id: string;
-}
-
-function getImageSize(url: string): Promise<{
-  width: number;
-  height: number;
-}> {
-  return new Promise(function (resolve, reject) {
-    const image = new Image();
-    image.onload = function () {
-      resolve({
-        width: image.width,
-        height: image.height,
-      });
-    };
-    image.onerror = function () {
-      reject(new Error("error"));
-    };
-    image.src = url;
-  });
+  showArea?: Array<[number, number]> | undefined;
+  ThumbSrc?: string;
 }
 
 export default (props: HomeProps) => {
@@ -42,13 +25,9 @@ export default (props: HomeProps) => {
     height = 500,
     cRef,
     id,
+    showArea,
+    ThumbSrc,
   } = props;
-  const [size, setSize] = useState({ width, height });
-
-  const loadImgSize = async (src: string) => {
-    const size = await getImageSize(src);
-    setSize(size);
-  };
 
   useImperativeHandle(cRef, () => ({
     getCurrentImageData: () => {
@@ -58,16 +37,6 @@ export default (props: HomeProps) => {
     },
   }));
 
-  useEffect(() => {
-    if (imgSrc) {
-      loadImgSize(imgSrc);
-    } else {
-      if (width && height) {
-        setSize({ width, height });
-      }
-    }
-  }, [width, height, imgSrc]);
-
   return (
     <Provider store={store}>
       <div className={pre}>
@@ -75,8 +44,9 @@ export default (props: HomeProps) => {
         <Content
           id={id}
           pre={pre}
-          canvasSize={size}
           imgSrc={imgSrc}
+          showArea={showArea}
+          ThumbSrc={ThumbSrc}
           backgroundColor={"#fff"}
         />
       </div>

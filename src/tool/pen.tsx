@@ -1,4 +1,4 @@
-import Tool, { getRandomColor, setStrawColor } from "./tool";
+import Tool, { clacArea, getRandomColor, setStrawColor } from "./tool";
 
 class Pen extends Tool {
   static color: string = getRandomColor();
@@ -32,6 +32,10 @@ class Pen extends Tool {
     const { e, pointer, absolutePointer } = options;
     e.preventDefault();
     if (Tool.toolType === "PEN") {
+      if (!clacArea(absolutePointer)) {
+        Tool.canvas.isDrawingMode = false;
+        return;
+      }
       if (Tool.strawFlag) {
         const show = {
           x: absolutePointer.x * 2,
