@@ -14,8 +14,10 @@ import shape_triangle from "@/assets/icon/shape_triangle.svg";
 import ColorPicker from "../../components/colorPicker";
 import { useState } from "react";
 import { Shape } from "@/tool";
+import { strawState } from "../../type";
 
-const ShapeRight = () => {
+const ShapeRight = (props: { straw: strawState }) => {
+  const { straw } = props;
   const [showValue, setShow] = useState("LINE");
 
   const handleChange = (type: string, value: string) => {
@@ -119,6 +121,7 @@ const ShapeRight = () => {
         ))}
       </div>
       <ColorPicker
+        straw={straw}
         color={"#000"}
         onChange={(color: string) => handleChange("color", color)}
       />

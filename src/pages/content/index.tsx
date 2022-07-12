@@ -1,14 +1,11 @@
-import { connect, useSelector, shallowEqual } from "react-redux";
 import ToolType from "./ToolType";
 import "./index.less";
 import FabricJSCanvas from "./canvas";
-import { RootState } from "../../type";
 import Pencil from "./Pencil";
 import Shape from "./Shape";
 import Eraser from "./Eraser";
 import Text from "./Text";
 import FillColor from "./FillColor";
-import { useState } from "react";
 interface ContentProps {
   pre: string;
   //tool: string;
@@ -19,36 +16,28 @@ interface ContentProps {
     width: number;
     height: number;
   };
-  // straw : {
-  //   strawFlag: boolean;
-  //   strawColor: string;
-  // };
+  straw: {
+    strawFlag: boolean;
+    strawColor: string;
+  };
 }
 
 const Content = (props: ContentProps) => {
-  const { pre, imgSrc, select, backgroundColor, canvasSize } = props;
-  //const [fillColor, setFillColor] = useState(board.fillColor);
-
-  // const { tool, straw } = useSelector((state: RootState) => {
-  //   return {
-  //     tool: state["paint.tool"].select,
-  //     straw: state["paint.straw"],
-  //   };
-  // }, shallowEqual);
+  const { pre, imgSrc, select, backgroundColor, straw, canvasSize } = props;
 
   const renderRight = () => {
-    let right = <>test</>;
+    let right;
     switch (select) {
       case "PEN":
-        return <Pencil />;
-      // case "SHAPE":
-      //   return <Shape />;
-      // case "ERASER":
-      //   return <Eraser />;
-      // case "TEXT":
-      //   return <Text />;
-      // case "BUCKET":
-      //   return <FillColor />;
+        return <Pencil straw={straw} />;
+      case "SHAPE":
+        return <Shape straw={straw} />;
+      case "ERASER":
+        return <Eraser />;
+      case "TEXT":
+        return <Text straw={straw} />;
+      case "BUCKET":
+        return <FillColor straw={straw} />;
       default:
         break;
     }
@@ -72,14 +61,5 @@ const Content = (props: ContentProps) => {
     </div>
   );
 };
-
-// function mapStateToProps(state: RootState) {
-//   return {
-//     tool: state.paint.tool.select,
-//     straw: state.paint.straw,
-//   };
-// }
-
-// export default connect(mapStateToProps)(Content);
 
 export default Content;

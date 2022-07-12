@@ -18,40 +18,40 @@ const maxScale = 6;
 const minScale = 0.1;
 
 /*设置为2d模块 如不设置 默认webgl 为true*/
-const canvas2dBackend = new fabric.Canvas2dFilterBackend();
-fabric.filterBackend = canvas2dBackend;
+// const canvas2dBackend = new fabric.Canvas2dFilterBackend();
+// fabric.filterBackend = canvas2dBackend;
 
 /*filter*/
-fabric.Image.filters["ChangeColorFilter"] = fabric.util.createClass(
-  fabric.Image.filters.BaseFilter,
-  {
-    type: "ChangeColorFilter",
-    applyTo: function (options: any) {
-      let imageData = options.imageData;
-      // const context = options.canvasEl.getContext("2d");
-      // const newimageData = context.getImageData(
-      //   0,
-      //   0,
-      //   options.canvasEl.width,
-      //   options.canvasEl.height
-      // );
-      // const ctx = options.ctx;
-      if (this.fillColor && this.pos) {
-        imageData = efficentFloodFill(
-          imageData,
-          this.pos.x,
-          this.pos.y,
-          this.fillColor
-        );
-      }
-      options.ctx.putImageData(this.ctx || imageData, 0, 0);
-    },
-  }
-);
+// fabric.Image.filters["ChangeColorFilter"] = fabric.util.createClass(
+//   fabric.Image.filters.BaseFilter,
+//   {
+//     type: "ChangeColorFilter",
+//     applyTo: function (options: any) {
+//       let imageData = options.imageData;
+//       // const context = options.canvasEl.getContext("2d");
+//       // const newimageData = context.getImageData(
+//       //   0,
+//       //   0,
+//       //   options.canvasEl.width,
+//       //   options.canvasEl.height
+//       // );
+//       // const ctx = options.ctx;
+//       if (this.fillColor && this.pos) {
+//         imageData = efficentFloodFill(
+//           imageData,
+//           this.pos.x,
+//           this.pos.y,
+//           this.fillColor
+//         );
+//       }
+//       options.ctx.putImageData(this.ctx || imageData, 0, 0);
+//     },
+//   }
+// );
 
-fabric.Image.filters["ChangeColorFilter"].fromObject = function (object: any) {
-  return new fabric.Image.filters["ChangeColorFilter"](object);
-};
+// fabric.Image.filters["ChangeColorFilter"].fromObject = function (object: any) {
+//   return new fabric.Image.filters["ChangeColorFilter"](object);
+// };
 
 interface CanvasProps {
   backgroundColor?: string;
@@ -105,11 +105,10 @@ export default (props: CanvasProps) => {
             (img) => {
               img.selectable = false;
               img.evented = false;
-              img.width = canvasSize.width;
-              img.filters?.push(
-                new fabric.Image.filters["ChangeColorFilter"]()
-              );
-              img.applyFilters();
+              // img.filters?.push(
+              //   new fabric.Image.filters["ChangeColorFilter"]()
+              // );
+              // img.applyFilters();
               Tool.img = img;
               canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
             },

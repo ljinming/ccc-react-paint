@@ -43,6 +43,7 @@ class CanvasText extends Tool {
       return;
     }
     const { e, pointer, absolutePointer } = options;
+    console.log("===3", options);
     e.preventDefault();
     if (Tool.strawFlag) {
       const show = {

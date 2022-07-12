@@ -2,6 +2,7 @@ import Sider from "../../components/sliderCard";
 import { Select } from "antd";
 import ColorPicker from "../../components/colorPicker";
 import { CanvasText } from "@/tool";
+import { strawState } from "../../type";
 
 const { Option } = Select;
 
@@ -17,7 +18,8 @@ const textFamily = [
   "Poppins-SemiBold",
 ];
 
-const Text = () => {
+const Text = (props: { straw: strawState }) => {
+  const { straw } = props;
   const handleChange = (type: string, value: string | number) => {
     CanvasText.changeTextStyle(type, value);
   };
@@ -55,6 +57,7 @@ const Text = () => {
         />
       </div>
       <ColorPicker
+        straw={straw}
         color={"#000"}
         onChange={(color: string) => handleChange("fill", color)}
       />

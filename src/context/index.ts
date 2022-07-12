@@ -8,7 +8,7 @@ import { createContext } from "react";
 
 
 
-export const ToolTypeContext = createContextt({
+export const ToolTypeContext = createContext({
   select:"PEN",
   setSelect: (type: string) => { }
 });
@@ -17,6 +17,7 @@ export const ToolTypeContext = createContextt({
 export const StrawContext = createContext({
   strawFlag: false,
    strawColor: '',
-  setStrawColor: (type: string) => {}
+  setStrawColor: (type: string) => { },
+  setStrawFlag: (type: boolean) => {},
 });
 

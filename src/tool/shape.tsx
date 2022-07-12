@@ -235,7 +235,7 @@ class Shape extends Tool {
       return;
     }
     const { e, absolutePointer } = options;
-
+    console.log("===4", options);
     this.downPoints = absolutePointer; //鼠标按下的位置
     if (Tool.strawFlag) {
       const show = {

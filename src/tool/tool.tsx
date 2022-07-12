@@ -1,7 +1,10 @@
-import { store } from "../Action";
+//import { store } from "../Action";
 import { fabric } from "fabric";
 //import Action from "@/action";
 import { rgbToHex } from "./colorChange";
+//import { useContext } from "react";
+import { StrawContext } from "../context";
+//const strawContext = useContext(StrawContext);
 
 export interface Point {
   x: number;
@@ -27,10 +30,12 @@ export const setStrawColor = (pos: Point) => {
   const color = getPixelColorOnCanvas(pos, ctx);
   Tool.strawColor = color;
   Tool.strawFlag = false;
-  store.dispatch({
-    type: "paint.straw",
-    payload: { strawColor: color, strawFlag: false },
-  });
+  // strawContext.setStrawColor(color);
+  // strawContext.setStrawFlag(false);
+  // store.dispatch({
+  //   type: "paint.straw",
+  //   payload: { strawColor: color, strawFlag: false },
+  // });
 
   // Action.emit("paint.straw", { strawColor: color, strawFlag: false });
 };

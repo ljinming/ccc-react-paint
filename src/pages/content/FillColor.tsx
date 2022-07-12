@@ -1,7 +1,9 @@
 import ColorPicker from "../../components/colorPicker";
 import { Bucket } from "@/tool";
+import { strawState } from "../../type";
 
-const FillColor = () => {
+const FillColor = (props: { straw: strawState }) => {
+  const { straw } = props;
   const handleChange = (value: string) => {
     Bucket.changeColor(value);
   };
@@ -10,6 +12,7 @@ const FillColor = () => {
     <>
       <ColorPicker
         color={"#000"}
+        straw={straw}
         onChange={(color: string) => handleChange(color)}
       />
     </>

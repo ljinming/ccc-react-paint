@@ -11,7 +11,7 @@ interface HomeProps {
   height?: number;
   imgSrc?: string;
   cRef?: any;
-  id: string;
+  id?: string;
 }
 
 function getImageSize(url: string): Promise<{
@@ -42,11 +42,13 @@ export default (props: HomeProps) => {
     width = 500,
     height = 500,
     cRef,
-    id,
+    id = "test",
   } = props;
   const [size, setSize] = useState({ width, height });
   const [tool, setToolType] = useState("PEN");
   const [strawColor, setStrawColor] = useState("");
+  const [strawFlag, setStrawFlag] = useState(false);
+
   const loadImgSize = async (src: string) => {
     const size = await getImageSize(src);
     setSize(size);
@@ -82,13 +84,19 @@ export default (props: HomeProps) => {
           value={{
             strawFlag: false,
             strawColor: "",
-            setStrawColor: (type: string) => {},
+            setStrawColor: (type: string) => {
+              setStrawColor(type);
+            },
+            setStrawFlag: (type: boolean) => {
+              setStrawFlag(type);
+            },
           }}
         >
           <Header pre={pre} />
           <Content
             select={tool}
             pre={pre}
+            straw={{ strawColor, strawFlag }}
             canvasSize={size}
             imgSrc={imgSrc}
             backgroundColor={"#fff"}

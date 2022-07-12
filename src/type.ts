@@ -15,3 +15,9 @@ export interface PaintState {
 export interface RootState {
   paint: PaintState;
 }
+
+
+export interface strawState {
+    strawFlag: boolean;
+    strawColor: string;
+  };

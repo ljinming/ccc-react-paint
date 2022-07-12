@@ -1,8 +1,10 @@
 import Sider from "../../components/sliderCard";
 import ColorPicker from "../../components/colorPicker";
 import { Pen, Tool } from "@/tool";
+import { strawState } from "../../type";
 
-const Pencil = () => {
+const Pencil = (props: { straw: strawState }) => {
+  const { straw } = props;
   const handleChange = (type: string, value: number | string) => {
     Pen.setPenStyle(type, value);
   };
@@ -17,6 +19,7 @@ const Pencil = () => {
       />
       <ColorPicker
         color={Pen.color}
+        straw={straw}
         onChange={(color: string) => handleChange("color", color)}
       />
     </>
