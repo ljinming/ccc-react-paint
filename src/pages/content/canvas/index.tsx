@@ -123,7 +123,6 @@ export default (props: CanvasProps) => {
   const calcSelection = () => {
     //Tool.canvas.discardActiveObject().requestRenderAll();
     Tool.canvas?.getObjects()?.forEach((va) => {
-      // rgb(178,204,255)
       if (!va.fill) {
         //画笔模式
         va.set("selectable", false);
