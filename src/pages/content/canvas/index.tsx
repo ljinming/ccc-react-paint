@@ -91,6 +91,7 @@ export default (props: CanvasProps) => {
           height: canvasSize.height, // 画布高度
           backgroundColor: backgroundColor || "#2d2d2d", // 画布背景色
           //selection: false,
+          //preserveObjectStacking: false,
         });
 
         Tool.canvas = canvas;
@@ -119,9 +120,23 @@ export default (props: CanvasProps) => {
     }
   }, [canvasSize]);
 
+  const calcSelection = () => {
+    Tool.canvas.discardActiveObject().requestRenderAll();
+    Tool.canvas?.getObjects()?.forEach((va) => {
+      // rgb(178,204,255)
+      if (!va.strokeDashArray) {
+        //画笔模式
+        va.set("selectable", false);
+      } else {
+        va.set("selectable", true);
+      }
+    });
+    // }
+  };
   useEffect(() => {
     Tool.toolType = tool;
     if (fabricCanvas) {
+      calcSelection();
       switch (tool) {
         case "PEN":
           // 开启绘画功能
@@ -147,7 +162,7 @@ export default (props: CanvasProps) => {
     }
   }, [tool]);
 
-  useEffect(() => {
+  const calcDefaulrCursor = () => {
     if (fabricCanvas) {
       if (straw.strawFlag) {
         fabricCanvas.freeDrawingCursor = `url(${straw_jpg}) 6 20,auto`;
@@ -162,12 +177,17 @@ export default (props: CanvasProps) => {
             break;
           case "BUCKET":
             fabricCanvas.defaultCursor = `url(${bucket}) 12 16,auto`;
+            fabricCanvas.moveCursor = `url(${bucket}) 12 16,auto`;
             break;
           default:
             fabricCanvas.defaultCursor = "default";
         }
       }
     }
+  };
+
+  useEffect(() => {
+    calcDefaulrCursor();
   }, [tool, straw.strawFlag]);
 
   const clacCanvasTransform = (
@@ -202,7 +222,7 @@ export default (props: CanvasProps) => {
     }
   };
   const onMouseMove = (options: any) => {
-    if (manager && tool === "SHAPE") {
+    if (manager) {
       manager.onMouseMove(options);
     }
   };
@@ -218,7 +238,6 @@ export default (props: CanvasProps) => {
 
   const onSelected = (options: any) => {
     Tool.currentSelected = options.selected;
-    console.log("Selected,", options);
     if (manager && tool !== "PEN") {
       manager.onSelected(options);
     }
@@ -226,7 +245,6 @@ export default (props: CanvasProps) => {
 
   const onCancelSelected = (options: any) => {
     Tool.currentSelected = undefined;
-    console.log("onCancelSelected,", options);
     if (manager) {
       manager.onCancelSelected(options);
     }

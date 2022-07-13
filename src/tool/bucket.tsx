@@ -231,7 +231,7 @@ class Bucket extends Tool {
 
   static changeColor = (color: string) => {
     this.color = color;
-    Tool.currentSelected?.forEach((va: any) => {
+    Bucket.selectedList?.forEach((va: any) => {
       if (va.fill) {
         va.set("fill", color);
       }
@@ -282,6 +282,7 @@ class Bucket extends Tool {
       canvasBucket.height = colorLayer.height;
       canvasBucket?.getContext("2d")?.putImageData(colorLayer, 0, 0);
       const url = canvasBucket.toDataURL();
+      //Tool.canvas.clear();
       Tool.canvas.setBackgroundImage(
         url,
         (img: any) => {
@@ -325,7 +326,10 @@ class Bucket extends Tool {
       setStrawColor(show);
       return;
     }
-    this.filterChange(absolutePointer);
+
+    if (!Bucket.selected) {
+      this.filterChange(absolutePointer);
+    }
   }
 
   public onSelected(options: any): void {

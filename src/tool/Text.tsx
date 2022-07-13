@@ -74,6 +74,13 @@ class CanvasText extends Tool {
     }
   };
 
+  public onMouseMove(options: any): void {
+    if (Tool.toolType !== "TEXT") {
+      this.textObject?.exitEditing();
+      return;
+    }
+  }
+
   public onSelected(options: any): void {
     if (Tool.toolType !== "TEXT") {
       return;
