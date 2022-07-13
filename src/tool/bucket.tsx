@@ -185,7 +185,6 @@ export const efficentFloodFillPonits = (
       pixelPos += canvasWidth * 4;
     }
   }
-  console.log("==testStack", testStack);
   return testStack;
   //return colorLayer;
 };
@@ -223,6 +222,8 @@ const fillPixel = (
 
 class Bucket extends Tool {
   static color: string = "transparent";
+  static selected: boolean;
+  static selectedList: any;
   constructor() {
     super();
     this.init();
@@ -230,10 +231,16 @@ class Bucket extends Tool {
 
   static changeColor = (color: string) => {
     this.color = color;
+    Tool.currentSelected?.forEach((va: any) => {
+      if (va.fill) {
+        va.set("fill", color);
+      }
+      va.set("stroke", color);
+    });
+    Tool.canvas.renderAll();
   };
 
   init() {
-    Tool.canvas.interactive = false;
     Tool.canvas.isDrawingMode = false;
   }
 
@@ -268,8 +275,6 @@ class Bucket extends Tool {
     ]);
 
     if (colorLayer) {
-      addContext();
-      //Tool.BucketList.push(JSON.stringify(Tool.canvas));
       showCtx.putImageData(colorLayer, 0, 0);
       let canvasBucket: HTMLCanvasElement | undefined =
         document.createElement("canvas");
@@ -287,6 +292,7 @@ class Bucket extends Tool {
         { crossOrigin: "anonymous", scaleX: 0.5, scaleY: 0.5 }
       );
       canvasBucket = undefined;
+      addContext();
     }
 
     // const filter = new fabric.Image.filters["ChangeColorFilter"]({
@@ -321,13 +327,21 @@ class Bucket extends Tool {
     }
     this.filterChange(absolutePointer);
   }
-  public onMouseUp(options: any): void {
+
+  public onSelected(options: any): void {
     if (Tool.toolType !== "BUCKET") {
       return;
     }
-    const { e, pointer, absolutePointer } = options;
-    e.preventDefault();
-    addContext();
+    Bucket.selected = true;
+    Bucket.selectedList = options.selected;
+  }
+
+  public onCancelSelected(options: any): void {
+    if (Tool.toolType !== "BUCKET") {
+      return;
+    }
+    Bucket.selected = false;
+    Bucket.selectedList = [];
   }
 }
 

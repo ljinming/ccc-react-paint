@@ -40,7 +40,9 @@ class Shape extends Tool {
       this.selectedList.forEach((va) => {
         if (type === "color") {
           if (border === "FILL") {
-            va.set("fill", value);
+            if (va.fill) {
+              va.set("fill", value);
+            }
             va.set("stroke", value);
           } else {
             va.set("stroke", value);
@@ -223,7 +225,6 @@ class Shape extends Tool {
 
     points.pop();
     points.pop();
-    console.log("==2", points);
     Tool.canvas.remove(this.shapeCurrent);
     if (points.length > 1) {
       let polygon = new fabric.Polygon(points, {

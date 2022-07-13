@@ -90,6 +90,7 @@ export default (props: CanvasProps) => {
           width: canvasSize.width, // 画布宽度
           height: canvasSize.height, // 画布高度
           backgroundColor: backgroundColor || "#2d2d2d", // 画布背景色
+          //selection: false,
         });
 
         Tool.canvas = canvas;
@@ -102,8 +103,6 @@ export default (props: CanvasProps) => {
           fabric.Image.fromURL(
             imgSrc,
             (img) => {
-              img.selectable = false;
-              img.evented = false;
               //img.width = canvasSize.width;
               // img.filters?.push(
               //   new fabric.Image.filters["ChangeColorFilter"]()
@@ -220,13 +219,13 @@ export default (props: CanvasProps) => {
   const onSelected = (options: any) => {
     Tool.currentSelected = options.selected;
     console.log("Selected,", options);
-    if ((manager && tool === "SHAPE") || (manager && tool === "TEXT")) {
+    if (manager && tool !== "PEN") {
       manager.onSelected(options);
     }
   };
 
   const onCancelSelected = (options: any) => {
-    Tool.currentSelected = options.selected;
+    Tool.currentSelected = undefined;
     console.log("onCancelSelected,", options);
     if (manager) {
       manager.onCancelSelected(options);
@@ -318,8 +317,13 @@ export default (props: CanvasProps) => {
   };
 
   const onkeydown = (e: KeyboardEvent) => {
+    console.log("==5", Tool.currentSelected);
     const { keyCode } = e;
-    if (keyCode === 8 && Tool.currentSelected.length > 0) {
+    if (
+      Tool.currentSelected &&
+      keyCode === 8 &&
+      Tool.currentSelected.length > 0
+    ) {
       //删除选中的图层
       Tool.canvas.remove(...Tool.currentSelected);
     }
@@ -348,9 +352,19 @@ export default (props: CanvasProps) => {
       fabricCanvas.on("selection:created", onSelected);
       fabricCanvas.on("selection:cleared", onCancelSelected);
 
-      // fabricCanvas.on("after:render", () => {
-      //   Tool.afterRender();
-      // });
+      fabricCanvas.on("after:render", (options) => {
+        //Tool.afterRender();
+        // if (manager) {
+        //   manager.afterRender(options);
+        // }
+        console.log("==", Tool.canvas?.getObjects());
+        Tool.canvas?.getObjects()?.forEach((va) => {
+          if (!va.strokeDashArray) {
+            //画笔模式
+            va.set("selectable", false);
+          }
+        });
+      });
     }
     return () => {
       window.removeEventListener("keydown", onkeydown);
