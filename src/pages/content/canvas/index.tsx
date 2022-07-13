@@ -317,7 +317,6 @@ export default (props: CanvasProps) => {
   };
 
   const onkeydown = (e: KeyboardEvent) => {
-    console.log("==5", Tool.currentSelected);
     const { keyCode } = e;
     if (
       Tool.currentSelected &&
@@ -357,7 +356,6 @@ export default (props: CanvasProps) => {
         // if (manager) {
         //   manager.afterRender(options);
         // }
-        console.log("==", Tool.canvas?.getObjects());
         Tool.canvas?.getObjects()?.forEach((va) => {
           if (!va.strokeDashArray) {
             //画笔模式
