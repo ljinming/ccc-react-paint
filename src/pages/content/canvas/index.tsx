@@ -121,10 +121,10 @@ export default (props: CanvasProps) => {
   }, [canvasSize]);
 
   const calcSelection = () => {
-    Tool.canvas.discardActiveObject().requestRenderAll();
+    //Tool.canvas.discardActiveObject().requestRenderAll();
     Tool.canvas?.getObjects()?.forEach((va) => {
       // rgb(178,204,255)
-      if (!va.strokeDashArray) {
+      if (!va.fill) {
         //画笔模式
         va.set("selectable", false);
       } else {
@@ -374,12 +374,6 @@ export default (props: CanvasProps) => {
         // if (manager) {
         //   manager.afterRender(options);
         // }
-        Tool.canvas?.getObjects()?.forEach((va) => {
-          if (!va.strokeDashArray) {
-            //画笔模式
-            va.set("selectable", false);
-          }
-        });
       });
     }
     return () => {

@@ -2,6 +2,8 @@ import { store } from "../../Action";
 import { ToolTypeList } from "../utils";
 import { getToolIcon } from "../utils/tool";
 import { toolItem } from "../utils/tsType";
+import { Tool } from "../../tool";
+import { message } from "antd";
 //import Action from "@/action";
 
 interface ToolProps {
@@ -24,6 +26,10 @@ const ToolType = (props: ToolProps) => {
             }`}
             key={va.key}
             onClick={() => {
+              if (Tool.canvas.getActiveObjects()?.length > 0) {
+                message.warn("please cancel selected");
+                return;
+              }
               store.dispatch({ type: "paint.tool", select: va.key });
               // Action.emit("paint.tool", {
               //   select: va.key,

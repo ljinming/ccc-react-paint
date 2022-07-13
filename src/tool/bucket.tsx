@@ -1,4 +1,10 @@
-import Tool, { addContext, clacArea, Point, setStrawColor } from "./tool";
+import Tool, {
+  addContext,
+  clacArea,
+  getPixelColorOnCanvas,
+  Point,
+  setStrawColor,
+} from "./tool";
 import { parseColorString } from "./colorChange";
 import { fabric } from "fabric";
 
@@ -119,6 +125,10 @@ export const efficentFloodFillPonits = (
       y: Math.round(startY) / 2,
     },
   ];
+
+  const testStack1 = [["M", startX / 2, startY / 2]];
+  const testStack2 = [new fabric.Point(startX / 2, startY / 2)];
+
   const canvasWidth = imageData.width,
     canvasHeight = imageData.height;
   const startPos = (startY * canvasWidth + startX) * 4;
@@ -153,6 +163,8 @@ export const efficentFloodFillPonits = (
       continue;
     }
     testStack.push({ x: x / 2, y: y / 2 });
+    testStack1.push(["Q", x / 2, y / 2]);
+    testStack2.push(new fabric.Point(x / 2, y / 2));
     updatedPoint[pixelPos] = true;
     // newData.push(pixelPos);
     while (
@@ -160,6 +172,7 @@ export const efficentFloodFillPonits = (
       matchColor(colorLayer, pixelPos, startColor)
     ) {
       fillPixel(colorLayer, pixelPos, fillColor);
+
       if (x > 0) {
         if (matchColor(colorLayer, pixelPos - 4, startColor)) {
           if (!reachLeft) {
@@ -185,8 +198,100 @@ export const efficentFloodFillPonits = (
       pixelPos += canvasWidth * 4;
     }
   }
-  return testStack;
+  return testStack2;
   //return colorLayer;
+};
+
+export const clcPonits = (
+  imageData: ImageData,
+  startX: number,
+  startY: number,
+  fillColor: [number, number, number]
+) => {
+  const canvasWidth = imageData.width,
+    canvasHeight = imageData.height;
+  const startPos = (Math.round(startX) * canvasWidth + Math.round(startY)) * 4;
+  const colorLayer = imageData;
+  const startColor: [number, number, number] = [
+    //鼠标点的颜色 要被替换的颜色
+    colorLayer.data[startPos],
+    colorLayer.data[startPos + 1],
+    colorLayer.data[startPos + 2],
+  ];
+  const listPoints = [`M ${Math.round(startX) / 2} ${Math.round(startY) / 2}`];
+  let currentX = Math.round(startX);
+  let currentY = Math.round(startY);
+  while (currentX > 0) {
+    //向左找
+    currentX = currentX - 1;
+    const currentPos = (currentY * canvasWidth + currentX) * 4;
+    if (!matchColor(colorLayer, currentPos, startColor)) {
+      break;
+    }
+    //x 不变 y变化 找像素点
+    clacPonitsArea(
+      currentX,
+      currentY,
+      listPoints,
+      canvasWidth,
+      canvasHeight,
+      colorLayer,
+      startColor
+    );
+  }
+  while (currentX < canvasWidth) {
+    //向左找
+    currentX = currentX + 1;
+    const startPos = (currentY * canvasWidth + currentX) * 4;
+    if (!matchColor(colorLayer, startPos, startColor)) {
+      break;
+    }
+    clacPonitsArea(
+      currentX,
+      currentY,
+      listPoints,
+      canvasWidth,
+      canvasHeight,
+      colorLayer,
+      startColor
+    );
+  }
+  return listPoints;
+};
+
+const clacPonitsArea = (
+  x: number,
+  y: number,
+  listPoints: string[],
+  canvasWidth: number,
+  canvasHeight: number,
+  colorLayer: ImageData,
+  startColor: [number, number, number]
+) => {
+  //当前x的 上下像素
+  while (y > 0) {
+    // 向上找
+    y = y - 1;
+    //查看当前点颜色
+    const pos = (y * canvasWidth + x) * 4;
+    if (!matchColor(colorLayer, pos, startColor)) {
+      // 找到当前x 最小y的像素 要被替换的颜色
+      listPoints.push(`L ${x / 2},${y / 2}`);
+      //结束循环
+      break;
+    }
+  }
+  while (y < canvasHeight) {
+    //向下找
+    y = y + 1;
+    const pos = (y * canvasWidth + x) * 4;
+    if (!matchColor(colorLayer, pos, startColor)) {
+      // 找到当前x 最大y的像素 要被替换的颜色
+      listPoints.push(`L ${x / 2},${y / 2}`);
+      //结束循环
+      break;
+    }
+  }
 };
 
 const matchColor = (
@@ -197,7 +302,6 @@ const matchColor = (
   const r = colorLayer.data[pixelPos];
   const g = colorLayer.data[pixelPos + 1];
   const b = colorLayer.data[pixelPos + 2];
-
   return (
     Math.abs(r - color[0]) < 30 &&
     Math.abs(g - color[1]) < 30 &&
@@ -253,20 +357,29 @@ class Bucket extends Tool {
       showCtx.canvas.width,
       showCtx.canvas.height
     );
-    // const taskList = efficentFloodFillPonits(
-    //   showImageData,
-    //   pos.x * 2,
-    //   pos.y * 2,
-    //   [color.r, color.g, color.b]
-    // );
-    // if (taskList) {
-    //   const pask = new fabric.Polygon([...taskList], {
-    //     fill: "red",
-    //     //objectCaching: false,
-    //   });
-    //   Tool.canvas.add(pask);
-    //   Tool.canvas.renderAll();
-    // }
+
+    // const testStack = clcPonits(showImageData, pos.x * 2, pos.y * 2, [
+    //   color.r,
+    //   color.g,
+    //   color.b,
+    // ]);
+    // if (testStack) {
+    // const pask = new fabric.Polygon([...taskList], {
+    //   fill: "red",
+    //   //objectCaching: false,
+    // });
+    // console.log("==5", testStack);
+    // const str = testStack.join(" ") + " z";
+    // console.log("==456", str);
+    // let customPath = new fabric.Path(str);
+    // customPath.set({
+    //   left: pos.x,
+    //   top: pos.y,
+    //   fill: Tool.strawColor || Bucket.color,
+    // });
+    // Tool.canvas.add(customPath);
+    // Tool.canvas.renderAll();
+    //}
 
     const colorLayer = efficentFloodFill(showImageData, pos.x * 2, pos.y * 2, [
       color.r,
@@ -276,6 +389,8 @@ class Bucket extends Tool {
 
     if (colorLayer) {
       showCtx.putImageData(colorLayer, 0, 0);
+      let fe = new fabric.Object().render(showCtx);
+      //Tool.canvas.add(fe);
       let canvasBucket: HTMLCanvasElement | undefined =
         document.createElement("canvas");
       canvasBucket.width = colorLayer.width;
@@ -303,9 +418,9 @@ class Bucket extends Tool {
     // if (Tool.img) {
     //   Tool.img.filters?.push(filter);
     // }
-    // //Tool.img.filters.push(new fabric.Image.filters.Grayscale());
-    // Tool.img.applyFilters();
-    // Tool.canvas.renderAll();
+    Tool.img?.filters?.push(new fabric.Image.filters.Grayscale());
+    Tool.img.applyFilters();
+    Tool.canvas.renderAll();
   };
 
   public onMouseDown(options: any): void {
