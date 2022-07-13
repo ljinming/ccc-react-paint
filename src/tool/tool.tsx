@@ -117,6 +117,7 @@ export default class Tool {
         this.canvas.add(current);
       }
     }
+    console.log("==3", this.ToolStoreList);
     if (flag < 0 && removeList.length === 0 && this.ToolStoreList.length > 0) {
       //后退，但没有记录,imgdata有记录
       Tool.calcPic(flag);
@@ -127,6 +128,8 @@ export default class Tool {
     ) {
       //前进 但没有记录,imgdata有记录
       Tool.calcPic(flag);
+    } else {
+      this.clearAll();
     }
 
     // let stateIdx = this.stateIdx + flag;

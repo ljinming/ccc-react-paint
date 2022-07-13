@@ -223,6 +223,7 @@ class Shape extends Tool {
 
     points.pop();
     points.pop();
+    console.log("==2", points);
     Tool.canvas.remove(this.shapeCurrent);
     if (points.length > 1) {
       let polygon = new fabric.Polygon(points, {

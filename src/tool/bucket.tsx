@@ -19,6 +19,7 @@ export const efficentFloodFill = (
   const pixelStack: [number, number][] = [
     [Math.round(startX), Math.round(startY)],
   ];
+
   const canvasWidth = imageData.width,
     canvasHeight = imageData.height;
   const startPos = (startY * canvasWidth + startX) * 4;
@@ -74,6 +75,7 @@ export const efficentFloodFill = (
         if (matchColor(colorLayer, pixelPos + 4, startColor)) {
           if (!reachRight) {
             pixelStack.push([x + 1, y]);
+
             reachRight = true;
           }
         } else if (reachRight) {
@@ -84,6 +86,7 @@ export const efficentFloodFill = (
       pixelPos += canvasWidth * 4;
     }
   }
+
   return colorLayer;
 };
 
@@ -107,6 +110,15 @@ export const efficentFloodFillPonits = (
   const pixelStack: [number, number][] = [
     [Math.round(startX), Math.round(startY)],
   ];
+  const testStack: {
+    x: number;
+    y: number;
+  }[] = [
+    {
+      x: Math.round(startX) / 2,
+      y: Math.round(startY) / 2,
+    },
+  ];
   const canvasWidth = imageData.width,
     canvasHeight = imageData.height;
   const startPos = (startY * canvasWidth + startX) * 4;
@@ -140,6 +152,7 @@ export const efficentFloodFillPonits = (
     if (updatedPoint[pixelPos]) {
       continue;
     }
+    testStack.push({ x: x / 2, y: y / 2 });
     updatedPoint[pixelPos] = true;
     // newData.push(pixelPos);
     while (
@@ -172,7 +185,9 @@ export const efficentFloodFillPonits = (
       pixelPos += canvasWidth * 4;
     }
   }
-  return colorLayer;
+  console.log("==testStack", testStack);
+  return testStack;
+  //return colorLayer;
 };
 
 const matchColor = (
@@ -231,13 +246,30 @@ class Bucket extends Tool {
       showCtx.canvas.width,
       showCtx.canvas.height
     );
+    // const taskList = efficentFloodFillPonits(
+    //   showImageData,
+    //   pos.x * 2,
+    //   pos.y * 2,
+    //   [color.r, color.g, color.b]
+    // );
+    // if (taskList) {
+    //   const pask = new fabric.Polygon([...taskList], {
+    //     fill: "red",
+    //     //objectCaching: false,
+    //   });
+    //   Tool.canvas.add(pask);
+    //   Tool.canvas.renderAll();
+    // }
+
     const colorLayer = efficentFloodFill(showImageData, pos.x * 2, pos.y * 2, [
       color.r,
       color.g,
       color.b,
     ]);
+
     if (colorLayer) {
-      Tool.BucketList.push(JSON.stringify(Tool.canvas));
+      addContext();
+      //Tool.BucketList.push(JSON.stringify(Tool.canvas));
       showCtx.putImageData(colorLayer, 0, 0);
       let canvasBucket: HTMLCanvasElement | undefined =
         document.createElement("canvas");
@@ -261,7 +293,9 @@ class Bucket extends Tool {
     //   pos,
     //   fillColor: [color.r, color.g, color.b],
     // });
-    // Tool.img.filters.push(filter);
+    // if (Tool.img) {
+    //   Tool.img.filters?.push(filter);
+    // }
     // //Tool.img.filters.push(new fabric.Image.filters.Grayscale());
     // Tool.img.applyFilters();
     // Tool.canvas.renderAll();

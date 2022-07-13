@@ -27,23 +27,23 @@ const minScale = 0.1;
 //     type: "ChangeColorFilter",
 //     applyTo: function (options: any) {
 //       let imageData = options.imageData;
-//       // const context = options.canvasEl.getContext("2d");
-//       // const newimageData = context.getImageData(
-//       //   0,
-//       //   0,
-//       //   options.canvasEl.width,
-//       //   options.canvasEl.height
-//       // );
-//       // const ctx = options.ctx;
+//       const context = options.canvasEl.getContext("2d");
+//       const newimageData = context.getImageData(
+//         0,
+//         0,
+//         options.canvasEl.width,
+//         options.canvasEl.height
+//       );
+//       console.log("pp33", newimageData);
 //       if (this.fillColor && this.pos) {
 //         imageData = efficentFloodFill(
-//           imageData,
+//           newimageData,
 //           this.pos.x,
 //           this.pos.y,
 //           this.fillColor
 //         );
 //       }
-//       options.ctx.putImageData(this.ctx || imageData, 0, 0);
+//       options.ctx.putImageData(newimageData, 0, 0);
 //     },
 //   }
 // );
