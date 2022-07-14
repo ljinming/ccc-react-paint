@@ -1,6 +1,6 @@
 import Tool, { getMousePos, getTouchPos,setStraw, Point } from "./tool";
 import Color from "color";
-import { parseColorString } from "./colorChange";
+import { parseColorString } from "../colorChange";
 
 /**
  * 高效率的填充算法
@@ -127,8 +127,7 @@ const fillPixel = (
 class ColorFill extends Tool {
   mouseDownTimer: any;
   private operateStart(pos: Point) {
-    //const color = new Color(Tool.strawColor || Tool.fillColor);
-    const showColor = parseColorString(Tool.strawColor || Tool.fillColor)
+    const showColor = parseColorString(Tool.strawColor || Tool.fillColor ||"#000000FF")
     console.time("efficentFloodFill");
     const colorArr: number[] = [showColor.r, showColor.g, showColor.b, showColor.a * 255]
     Promise.resolve().then(() => { 

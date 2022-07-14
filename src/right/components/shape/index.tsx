@@ -117,6 +117,7 @@ const ShapePanel: React.FC<ShapePanelProps> = (props) => {
             </Select.Option>
           </Select>
         </div>
+
         <div className="shape-content">
           <ShapeTypeContext.Consumer>
             {({ type, setType }) =>

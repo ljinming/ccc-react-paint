@@ -114,6 +114,7 @@ class Shape extends Tool {
     private lineWidthBase = 1;
     public isDashed = false;
     private dashLineStyle = [10, 10];
+    static shapeWidth: any;
     public constructor(type: ShapeToolType, dashed = false) {
         super();
         this.type = type;
@@ -130,7 +131,7 @@ class Shape extends Tool {
         this.isMouseDown = true;
         this.mouseDownPos = pos;
         Tool.ctx.strokeStyle = Tool.mainColor;
-        Tool.ctx.lineWidth = 5// Tool.lineWidthFactor * this.lineWidthBase;
+        Tool.ctx.lineWidth = Shape.shapeWidth;//5// Tool.lineWidthFactor * this.lineWidthBase;
         Tool.ctx.fillStyle = Tool.subColor;
         if (this.isDashed) {
             Tool.ctx.setLineDash(this.dashLineStyle);

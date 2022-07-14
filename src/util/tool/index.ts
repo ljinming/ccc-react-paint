@@ -4,4 +4,6 @@ import Eraser from "./eraser";
 import ColorExtract from "./colorExtract";
 import ColorFill from "./colorFill";
 import Text from './Text'
-export {Tool, Pen, Eraser, ColorExtract, ColorFill,Text};
+import Shape from "./shape";
+
+export {Tool, Pen, Eraser, ColorExtract,Shape, ColorFill,Text};

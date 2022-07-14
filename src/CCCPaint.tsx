@@ -67,7 +67,7 @@ function Paint(props: PaintProps): JSX.Element {
   const [lineWidthType, setLineWidthType] = useState<LineWidthType>(
     LineWidthType.LINESIZE
   );
-  const [lineSize, setLineFontSize] = useState<number>(20);
+  const [lineSize, setLineFontSize] = useState<number>(1);
   const [fillColor, setFillColor] = useState<string>("");
   const [activeColorType, setActiveColorType] = useState<ColorType>(
     ColorType.MAIN
@@ -99,6 +99,7 @@ function Paint(props: PaintProps): JSX.Element {
   const loadImage = async (imgSrc: string) => {
     const size = await getImageSize(imgSrc);
     setSize(size);
+    setLineFontSize(size.width / 100);
     setLoadings(false);
   };
 
@@ -120,7 +121,6 @@ function Paint(props: PaintProps): JSX.Element {
   if (showArea) {
     Tool.showArea = showArea;
   }
-
   return (
     <ToolTypeContext.Provider
       value={{
@@ -156,7 +156,6 @@ function Paint(props: PaintProps): JSX.Element {
             Tool.textList = {};
           }
           setToolType(value);
-          setLineFontSize(20);
         },
       }}
     >
@@ -243,6 +242,7 @@ function Paint(props: PaintProps): JSX.Element {
                             toolType={toolType}
                             ThumbSrc={Thumbnail}
                             lineSize={lineSize}
+                            maxSize={size.width / 10}
                           />
                         </div>
                       </div>

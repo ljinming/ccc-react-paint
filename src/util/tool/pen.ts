@@ -1,5 +1,5 @@
 import { ColorType } from "../toolType";
-import { hexToRgba, parseColorString } from "./colorChange";
+import { hexToRgba, } from "../colorChange";
 import Tool, { Point, getMousePos, setStraw, getTouchPos, hexToRgb,clacArea, updateImageData } from "./tool";
 
 class Pen extends Tool {
@@ -23,9 +23,6 @@ class Pen extends Tool {
       ? Tool.mainColor
         : Tool.subColor;
     const testColor = hexToRgba(showColor)
-    const rgbaColor = parseColorString(testColor)
-        console.log('===44', showColor,testColor,rgbaColor)
-
     Tool.ctx.lineWidth = Tool.lineWidthFactor * this.lineWidthBase;
     Tool.ctx.strokeStyle = testColor;
     Tool.ctx.lineJoin = "round";

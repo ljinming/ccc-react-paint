@@ -22,8 +22,10 @@ export const getMousePos = (canvas: HTMLCanvasElement, event: MouseEvent|undefin
   const scale = Tool.currentScale || 1
   if (pos) { 
     return {
-      x: (pos.x) / scale - Tool.translate.translatex,
-    y: (pos.y )/scale -Tool.translate.translatey
+      x: (pos.x - rect.left) / scale,
+      y: (pos.y - rect.top) / scale
+    //   x: (pos.x) / scale - Tool.translate.translatex,
+    // y: (pos.y )/scale -Tool.translate.translatey
   };
   }
   if (event) { 

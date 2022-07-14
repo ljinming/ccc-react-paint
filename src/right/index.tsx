@@ -11,19 +11,19 @@ interface ToolbarProps {
   toolType: ToolType;
   lineSize: number;
   ThumbSrc?: string | undefined;
+  maxSize?: number;
 }
 
 const ToolRightBar: FC<ToolbarProps> = (props) => {
-  const { toolType, lineSize, ThumbSrc } = props;
-
+  const { toolType, lineSize, maxSize = 100, ThumbSrc } = props;
   const renderChild = (): any => {
     let content = null;
     switch (toolType) {
       case ToolType.PEN:
-        content = <ShowPen lineSize={lineSize} />;
+        content = <ShowPen lineSize={lineSize} maxSize={maxSize} />;
         break;
       case ToolType.SHAPE:
-        content = <ShowShape />;
+        content = <ShowShape lineSize={lineSize} maxSize={maxSize} />;
         break;
       case ToolType.ERASER:
         content = <Eraser lineSize={lineSize} />;

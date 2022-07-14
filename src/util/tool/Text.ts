@@ -24,6 +24,7 @@ class Text extends Tool {
   static currentPos: { x: number; y: number; };
   static currentCanvas: { x: number; y: number; };
   static canvasList: Record<string, any> = {};
+  client: { x: any; y: any; } | undefined;
   public constructor(fontType: any) {
     super();
     this._x = NaN;
@@ -50,14 +51,15 @@ class Text extends Tool {
 
   private drawing(x: number, y: number,arr:string[]) {
     const canvas = document.createElement("canvas");
+//    const calcStr = arr.sort((a,b) => { })
     const { fontSize, fontFamily, color, letterSpacing } = this.fontStyle;
     const canvasKey = `${new Date().getTime()}`;
     canvas.width = this.textBox.clientWidth; 
-    canvas.height =arr.length *fontSize ; 
+    canvas.height = this.textBox.clientHeight;
     canvas.title = canvasKey
     this.allCanvas?.appendChild(canvas);
 
-  function mousemoveEv  (e:MouseEvent) {
+    function mousemoveEv  (e:MouseEvent) {
        if (Text.currentDown) { 
          const clacx = e.clientX - Text.currentPos.x;
           const clacy = e.clientY- Text.currentPos.y;
@@ -69,7 +71,6 @@ class Text extends Tool {
 
     canvas.setAttribute(`style`,
       `position:absolute;left:${this._x}px; top: ${this._y}px;cursor:pointer;transform:scale(${Tool.currentScale});transform-origin: left top;`);
-
     canvas.addEventListener("mousedown", function (e) {
       canvas.style.transform = `scale(${Tool.currentScale})`
       canvas.style.background = '#362F395E';
@@ -93,7 +94,7 @@ class Text extends Tool {
         data: canvas.toDataURL(),
         canvas,
         event:e,
-        pos: [Number(canvas.style.left.split('px')[0]), Number(canvas.style.top.split('px')[0]),]
+        pos: [Number(canvas.style.left.split('px')[0])+80, Number(canvas.style.top.split('px')[0]+80),]
       }
 
      });
@@ -122,7 +123,10 @@ class Text extends Tool {
           context.fillText(va, 12, (fontSize / 2 + 20) * (i + 1));
         })
         
-        Tool.textList[canvasKey] = { data: canvas.toDataURL(),canvas, pos: [this._x,this._y] }
+        Tool.textList[canvasKey] = {
+          data: canvas.toDataURL(), canvas,
+          pos: [this._x+80, this._y+80]
+        }
         this.textBox.setAttribute("style", `z-index:-1;display:none`);
         this.canvasBox.setAttribute("style", `z-index:-2`);
         this.textBox.value = "";
@@ -140,7 +144,7 @@ class Text extends Tool {
 
   private drawLastText() { 
    Object.keys(Tool.textList).forEach((va) => {
-      const { data, pos } = Tool.textList[va];
+     const { data, pos } = Tool.textList[va];
       const img = new Image();
               img.crossOrigin = "anonymous";
               img.src = data;
@@ -185,6 +189,10 @@ class Text extends Tool {
         this._x = event.clientX - 80; // event.offsetX; // 鼠标按下时保存当前位置，为起始位置
         this._y = event.clientY - 80; //event.offsetY;
         //  新建文本
+      this.client = {
+        x: event.clientX,
+        y: event.clientY
+      }
           this.isMouseDown = true;
       this.textBox.innerText = "";
       let textStyleStr =  `display:block;
@@ -209,60 +217,3 @@ class Text extends Tool {
 }
 
 export default Text;
-
-
-const drawtextWrap = function (ctx: CanvasRenderingContext2D, t: string, x: number, y: number,w: number,fontSize:number)  {
-  //参数说明
- // ctx：canvas的 2d 对象，t：绘制的文字，x,y:文字坐标，w：文字最大宽度
-  const chr = t.split("")
-  let temp = ""
-  const row = []
-  const showHeight = 20
-
-  
-
-
-  for (let a = 0; a < chr.length; a++) {
-    if (ctx.measureText(temp).width < w && ctx.measureText(temp + (chr[a])).width <= w) {
-      temp += chr[a];
-     // height=Math.max(height,ctx.measureText(chr[a]).height)
-    } else {
-      row.push(temp);
-      temp = chr[a];
-    }
-  }
-  row.push(temp)
-  for (let b = 0; b < row.length; b++) {
-    ctx.fillText(row[b], x, y + (b + 1)*fontSize);//每行字体y坐标间隔20
-  }
-
-}
-
-const drawText = function (ctx: CanvasRenderingContext2D, textList: string[],x:number, y:number) {
-  if (textList.length > 0) { 
-    textList.forEach(va => { 
-        ctx.fillText(va, x, y );//每行字体y坐标间隔20
-    })
-  }
-}
-
-const calcTextSize =(fontSize:string ,fontFamily:string,text:string) =>{
-        const span = document.createElement("span");
-  const result: Record<string, string|number> = {}
-        result.width = span.offsetWidth;
-        result.height = span.offsetHeight;
-        span.style.visibility = "hidden";
-        span.style.fontSize = fontSize;
-        span.style.fontFamily = fontFamily;
-        span.style.display = "inline-block";
-        document.body.appendChild(span);
-        if(typeof span.textContent != "undefined"){
-          span.textContent = text;
-        }else{
-          span.innerText = text;
-        }
-        result.width = parseFloat(window.getComputedStyle(span).width) - result.width;
-        result.height = parseFloat(window.getComputedStyle(span).height) - result.height;
-        return result;
-      }
-      //console.log(textSize("20px","Arial","abcdefg"));

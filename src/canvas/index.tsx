@@ -229,6 +229,9 @@ const Canvas: FC<CanvasProps> = (props) => {
     const canvas = canvasRef.current;
     const textBox: any = textBoxRef.current;
     const showText = textBox?.resizableTextArea?.textArea;
+    if (text) {
+      setText("");
+    }
     if (canvas) {
       if (strawType) {
         //吸色
@@ -244,7 +247,6 @@ const Canvas: FC<CanvasProps> = (props) => {
         canvas.style.cursor = `auto`;
       }
       if (toolType !== 2 && textBox && showText) {
-        setText("");
         showText!.setAttribute("style", `z-index:-1;display:none`);
       }
     }
@@ -315,6 +317,9 @@ const Canvas: FC<CanvasProps> = (props) => {
   };
 
   const onMouseUp = (event: MouseEvent) => {
+    if (text) {
+      setText("");
+    }
     if (tool) {
       tool.onMouseUp(event);
       // 存储canvas剪影
@@ -381,7 +386,6 @@ const Canvas: FC<CanvasProps> = (props) => {
 
   const onMousewheel = (event: WheelEvent) => {
     event.preventDefault();
-
     if (toolType === ToolType.TEXT) {
       return;
     }
@@ -547,8 +551,9 @@ const Canvas: FC<CanvasProps> = (props) => {
         <TextArea
           id="textBox"
           ref={textBoxRef}
+          autoSize={true}
+          size={"small"}
           name="story"
-          autoFocus={true}
           value={text}
           onChange={(e) => setText(e.target.value)}
           className={`text-box`}
