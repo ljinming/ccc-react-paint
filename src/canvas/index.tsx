@@ -297,6 +297,10 @@ const Canvas: FC<CanvasProps> = (props) => {
       Tool.currentScale = show_scale;
       translatex = (width - CanvasSize.width * show_scale) / 2;
       translatey = (height - CanvasSize.height * show_scale) / 2;
+      Tool.translate = {
+        translatex,
+        translatey,
+      };
       canvas.style.transform = `scale(${show_scale}) translate(${translatex}px,${translatey}px)`;
     }
   }, [CanvasSize]);
@@ -420,6 +424,10 @@ const Canvas: FC<CanvasProps> = (props) => {
       translatey = translatey - transY;
       show_scale = newScale;
       Tool.currentScale = newScale;
+      Tool.translate = {
+        translatex,
+        translatey,
+      };
       canvas!.style.transform = `translate3d(${translatex}px, ${translatey}px, 0px) scale(${show_scale})`;
     }
     // else {
@@ -453,6 +461,10 @@ const Canvas: FC<CanvasProps> = (props) => {
         translatey = Number((translatey - deltaY).toFixed(3));
         // }
       }
+      Tool.translate = {
+        translatex,
+        translatey,
+      };
       canvas!.style.transform = `translate(${translatex}px, ${translatey}px) scale(${show_scale})`;
     }
   };
@@ -511,7 +523,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
   }
   return (
-    <div className="all-canvas" ref={allCanvasRef}>
+    <div className="all-canvas" ref={allCanvasRef} id="all-canvas">
       <canvas
         id={`ccc-paint-canvas ${id}`}
         className="ccc-paint-canvas"

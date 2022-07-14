@@ -17,13 +17,25 @@ export const setStraw = (pos?: Point) => {
 };
 
 
-export const getMousePos = (canvas: HTMLCanvasElement, event: MouseEvent, type?: string): Point => {
+export const getMousePos = (canvas: HTMLCanvasElement, event: MouseEvent|undefined, type?: string,pos?: Point): Point => {
   const rect = canvas.getBoundingClientRect();
   const scale = Tool.currentScale || 1
-  return {
+  if (pos) { 
+    return {
+      x: (pos.x) / scale - Tool.translate.translatex,
+    y: (pos.y )/scale -Tool.translate.translatey
+  };
+  }
+  if (event) { 
+ return {
     x: (event.clientX - rect.left)/scale,
     y: (event.clientY - rect.top)/scale
   };
+  }
+  return {
+    x: 0,
+    y:0
+  }
 };
 
 export const getTouchPos = (canvas: HTMLCanvasElement, event: TouchEvent): Point => {
@@ -113,6 +125,10 @@ export default class Tool {
   // 背景色
   public static fillColor = "#2d2d2d";
 
+  // textCanvas
+   public static textList: Record<string, any> = {};
+
+
 
 
   public static zoom = {
@@ -130,6 +146,7 @@ export default class Tool {
   static show_offset: any;
   static strawFlag: boolean;
   static mainColor: string;
+  static translate: { translatex: number; translatey: number; };
 
   public onMouseDown(event: MouseEvent): void {
     //

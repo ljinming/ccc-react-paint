@@ -27,6 +27,7 @@ import Right from "./right";
 import Edit from "./edit";
 import { getImageSize } from "./utils";
 import Loading from "./components/loading";
+import { getMousePos } from "./util/tool/tool";
 
 interface PaintProps {
   imgSrc?: string;
@@ -129,6 +130,31 @@ function Paint(props: PaintProps): JSX.Element {
           setStrawType(value);
         },
         setType: (value) => {
+          if (Tool.textList && Object.keys(Tool.textList).length > 0) {
+            Object.keys(Tool.textList).forEach((va) => {
+              const { data, pos } = Tool.textList[va];
+              const img = new Image();
+              img.crossOrigin = "anonymous";
+              img.src = data;
+              img.onload = function () {
+                /*1.在canvas 中绘制图像*/
+                const { x, y } = getMousePos(
+                  Tool.ctx.canvas,
+                  undefined,
+                  undefined,
+                  {
+                    x: pos[0],
+                    y: pos[1],
+                  }
+                );
+                Tool.ctx.drawImage(img, x, y);
+              };
+              document
+                .getElementById("all-canvas")
+                ?.removeChild(Tool.textList[va].canvas);
+            });
+            Tool.textList = {};
+          }
           setToolType(value);
           setLineFontSize(20);
         },
