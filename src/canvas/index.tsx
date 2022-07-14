@@ -80,6 +80,7 @@ const Canvas: FC<CanvasProps> = (props) => {
   const textBoxRef = useRef<HTMLTextAreaElement>(null);
   const dispatcherContext = useContext(DispatcherContext);
   const [snapshot] = useState<SnapShot>(new SnapShot());
+  const [text, setText] = useState("");
 
   useEffect(() => {
     showCanvasCursor();
@@ -226,7 +227,8 @@ const Canvas: FC<CanvasProps> = (props) => {
   //鼠标icon
   const showCanvasCursor = () => {
     const canvas = canvasRef.current;
-    const textBox = textBoxRef.current;
+    const textBox: any = textBoxRef.current;
+    const showText = textBox?.resizableTextArea?.textArea;
     if (canvas) {
       if (strawType) {
         //吸色
@@ -241,8 +243,9 @@ const Canvas: FC<CanvasProps> = (props) => {
       } else {
         canvas.style.cursor = `auto`;
       }
-      if (toolType !== 2 && textBox) {
-        // textBox!.setAttribute("style", `z-index:-1;display:none`);
+      if (toolType !== 2 && textBox && showText) {
+        setText("");
+        showText!.setAttribute("style", `z-index:-1;display:none`);
       }
     }
   };
@@ -378,6 +381,10 @@ const Canvas: FC<CanvasProps> = (props) => {
 
   const onMousewheel = (event: WheelEvent) => {
     event.preventDefault();
+
+    if (toolType === ToolType.TEXT) {
+      return;
+    }
     const canvas = canvasRef.current;
     const container = allCanvasRef!.current;
     const { clientX, clientY, deltaX, deltaY, ctrlKey } = event;
@@ -448,6 +455,9 @@ const Canvas: FC<CanvasProps> = (props) => {
   const onCanvasBoxWheel = (event: WheelEvent) => {
     const { clientX, clientY, deltaX, deltaY, ctrlKey } = event;
     event.preventDefault();
+    if (toolType === ToolType.TEXT) {
+      return;
+    }
     const canvas = canvasRef.current;
     if (!ctrlKey) {
       if (!!deltaX && !deltaY) {
@@ -483,9 +493,9 @@ const Canvas: FC<CanvasProps> = (props) => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const textBox = textBoxRef.current;
+    // const textBox = textBoxRef.current;
     const canvasBox = allCanvasRef.current;
-    if (canvas && textBox && canvasBox) {
+    if (canvas && canvasBox) {
       canvas.addEventListener("mousedown", onMouseDown);
       canvas.addEventListener("mousemove", onMouseMove);
       canvas.addEventListener("mouseup", onMouseUp);
@@ -529,25 +539,18 @@ const Canvas: FC<CanvasProps> = (props) => {
         className="ccc-paint-canvas"
         ref={canvasRef}
         style={{
-          background: background || "#2d2d2d",
+          background: background || "#fff",
           ...style,
         }}
-      >
-        <textarea name="" id="">
-          222
-        </textarea>
-      </canvas>
+      ></canvas>
       <div className="canvas-text" id="text-container" ref={canvasTextRef}>
         <TextArea
-          rows={1}
           id="textBox"
           ref={textBoxRef}
           name="story"
           autoFocus={true}
-          //autocomplete={fales}
-          //bordered={true}
-          defaultValue=""
-          // autoSize={{ minRows: 2, maxRows: 2 }}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
           className={`text-box`}
           // rows={1}
         />

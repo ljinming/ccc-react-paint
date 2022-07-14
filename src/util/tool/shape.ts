@@ -163,13 +163,13 @@ class Shape extends Tool {
     
     private operateEnd() {
         Tool.ctx.setLineDash([]);
-        let imageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
-        const colorRgb = hexToRgb(Tool.mainColor);
-        if (colorRgb && this.saveImageData) {
-            imageData = updateImageData(this.saveImageData, imageData, [colorRgb.r, colorRgb.g, colorRgb.b, colorRgb.a]);
+        // let imageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
+        // const colorRgb = hexToRgb(Tool.mainColor);
+        // if (colorRgb && this.saveImageData) {
+        //     imageData = updateImageData(this.saveImageData, imageData, [colorRgb.r, colorRgb.g, colorRgb.b, colorRgb.a]);
 
-            Tool.ctx.putImageData(imageData, 0, 0);
-        }
+        //     Tool.ctx.putImageData(imageData, 0, 0);
+        // }
         
         this.isMouseDown = false;
         this.saveImageData = undefined;

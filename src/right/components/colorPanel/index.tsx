@@ -1,24 +1,19 @@
 import React from "react";
 import { useContext } from "react";
 import { ColorContext, ToolTypeContext } from "@/context";
-import { ColorBox, createColor } from "material-ui-color";
-import {
-  Pen,
-  Tool,
-  Eraser,
-  ColorExtract,
-  ColorFill,
-  Text,
-} from "../../../util/tool";
+import { Tool } from "../../../util/tool";
 import "./index.less";
 import { useState } from "react";
 import { useEffect } from "react";
+import { SketchPicker } from "react-color";
 import { getRandomColor } from "../../../utils";
 import { strawIcon } from "../../../ToolTypeIcon";
+import { toHexString } from "../../../util/colorChange";
 
 interface ColorPanelProps {
   className?: string;
   testTool?: Tool;
+  color?: string;
   type?: string;
   onChange?: (color: string) => void;
 }
@@ -26,16 +21,15 @@ interface ColorPanelProps {
 const activeColorTypeCls = "active-color-type";
 
 const ColorPanel: React.FC<ColorPanelProps> = (props) => {
-  const { className, type, onChange, testTool } = props;
-  const [pickerColor, setPickerColor] = useState(
-    createColor(type && type === "pen" ? getRandomColor() : "#000000FF")
-  );
+  const { className, type, color, onChange, testTool } = props;
+  const colorStr = type === "pen" ? getRandomColor() : color || "#000000FF";
+  const [showColor, setColor] = useState(colorStr);
   const colorContext = useContext(ColorContext);
   const ToolContext = useContext(ToolTypeContext);
 
   useEffect(() => {
-    colorContext.setColor(`#${pickerColor.hex}`);
-  }, [pickerColor, testTool]);
+    colorContext.setColor(showColor);
+  }, [showColor, testTool]);
 
   const getStrawColor = () => {
     const startTime = new Date().getTime();
@@ -46,11 +40,24 @@ const ColorPanel: React.FC<ColorPanelProps> = (props) => {
         ToolContext.setStrawType(false);
       }
       if (Tool.strawColor) {
-        setPickerColor(createColor(Tool.strawColor));
+        setColor(Tool.strawColor);
         ToolContext.setStrawType(false);
         clearInterval(intervalId); //清除定时器
       }
     }, 200);
+  };
+
+  const handleChange = (color: any) => {
+    if (Tool.strawColor !== "") {
+      Tool.strawColor = "";
+    }
+    const hexColor: string = toHexString(color.rgb);
+    setColor(hexColor);
+    Tool.strawColor = "";
+    // Tool.colorPicker = "";
+    if (onChange) {
+      onChange(hexColor);
+    }
   };
 
   return (
@@ -58,16 +65,12 @@ const ColorPanel: React.FC<ColorPanelProps> = (props) => {
       <div className="content">
         <h3>Color</h3>
         <div className="material-color-box">
-          <ColorBox
-            value={pickerColor}
+          <SketchPicker
+            className="colorBox-picker"
+            width="100%"
             disableAlpha={false}
-            onChange={(color) => {
-              setPickerColor(color);
-              Tool.strawColor = "";
-              if (onChange) {
-                onChange(`#${color.hex}`);
-              }
-            }}
+            color={showColor}
+            onChange={handleChange}
           />
           {type !== "text" && (
             <span

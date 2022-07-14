@@ -74,59 +74,102 @@
                 display: inline-block;
             }
         }
-        .material-color-box {
-            width: 100%;
-            position: relative;
-            .MuiBox-root{
-                width: 100% !important;
-                overflow:unset !important
-            }
-            .muicc-colorbox-hsvgradient{
-                 width: 100% !important;
-              margin: 0px!important;
-                min-height: 240px;
-                 >div {
-                     min-height: 240px !important;
-                 }
+        // .material-color-box {
+        //     width: 100%;
+        //     position: relative;
+        //     .MuiBox-root{
+        //         width: 100% !important;
+        //         overflow:unset !important
+        //     }
+        //     .muicc-colorbox-hsvgradient{
+        //          width: 100% !important;
+        //       margin: 0px!important;
+        //         min-height: 240px;
+        //          >div {
+        //              min-height: 240px !important;
+        //          }
 
-            }
-            .muicc-colorbox-sliders{
-                width: 230px!important;
-                margin-left:30px !important;
-                padding: 10px 0px !important;
-            }
-            .muicc-colorbox-inputs{
-                align-items: center;
-                    .muicc-colorbox-colorBg {
-                        width: 40px !important;
-                        height: 40px !important;
-                        border: 0px !important;
-                        margin-right: 6px !important;
+        //     }
+        //     .muicc-colorbox-sliders{
+        //         width: 230px!important;
+        //         margin-left:30px !important;
+        //         padding: 10px 0px !important;
+        //     }
+        //     .muicc-colorbox-inputs{
+        //         align-items: center;
+        //             .muicc-colorbox-colorBg {
+        //                 width: 40px !important;
+        //                 height: 40px !important;
+        //                 border: 0px !important;
+        //                 margin-right: 6px !important;
 
-                        .muicc-colorbox-color {
-                            width: 40px !important;
-                            height: 40px !important;
-                            border: 0px !important;
+        //                 .muicc-colorbox-color {
+        //                     width: 40px !important;
+        //                     height: 40px !important;
+        //                     border: 0px !important;
 
-                        }
+        //                 }
+        //         }
+        //     }
+        // .straw-color {
+        //     position: absolute;
+        //     top: 258px;
+        //     width: 25px;
+        //     display: inline-block;
+        //     text-align: center;
+        //     &:hover {
+        //         background-color:#cbe0f7;
+        //     }
+        // }
+        // .select-item{
+        //     svg {
+        //         fill: #4338ca;
+        //     }
+        // }
+            
+        // }
+
+        .material-color-box{
+            .colorBox-picker {
+                width: 100%;
+                box-shadow: none !important;
+                padding: 0px !important;
+                // &:first-child {
+                //     padding-left: 12% !important;
+                // }
+
+                .flexbox-fix {
+                    padding-left: 12% !important;
+                    &:first-child {
+                     padding-left: 12% !important;
+                    }
+
+                    &:last-child {
+                        display: none !important;
+                    }
                 }
             }
-        .straw-color {
-            position: absolute;
-            top: 258px;
-            width: 25px;
-            display: inline-block;
-            text-align: center;
-            &:hover {
-                background-color:#cbe0f7;
+
+            .straw-color {
+                position: absolute;
+                bottom: 59px;
+                display: flex;
+                border-radius: 2px;
+                justify-content: center;
+                align-items: center;
+                width: 24px;
+                height: 24px;
+
+                &:hover {
+                    background-color: #cbe0f7;
+                }
             }
-        }
-        .select-item{
-            svg {
-                fill: #4338ca;
+
+            .selected-straw {
+                svg {
+                    fill: #4338ca;
+                }
             }
-        }
-            
         }
     }
 

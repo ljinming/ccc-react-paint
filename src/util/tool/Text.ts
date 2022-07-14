@@ -71,6 +71,7 @@ class Text extends Tool {
       `position:absolute;left:${this._x}px; top: ${this._y}px;cursor:pointer;transform:scale(${Tool.currentScale});transform-origin: left top;`);
 
     canvas.addEventListener("mousedown", function (e) {
+      canvas.style.transform = `scale(${Tool.currentScale})`
       canvas.style.background = '#362F395E';
       Text.currentDown = true
       Text.currentPos = {
@@ -181,7 +182,6 @@ class Text extends Tool {
     } else if (!this.isMouseDown ) {
       const mousePos = getMousePos(Tool.ctx.canvas, event);
       this.mousePos = mousePos;
-      console.log(mousePos, this.testList)
         this._x = event.clientX - 80; // event.offsetX; // 鼠标按下时保存当前位置，为起始位置
         this._y = event.clientY - 80; //event.offsetY;
         //  新建文本
@@ -200,12 +200,10 @@ class Text extends Tool {
        }
       const width = this.canvasBox.clientWidth - this._x;
       const height = this.canvasBox.clientHeight - this._y
-      textStyleStr = `${textStyleStr} width:${width}px;max-height:${height}px`
+      textStyleStr = `${textStyleStr} max-width:${width}px;max-height:${height}px`
       this.width = width
       this.canvasBox.setAttribute("style", `z-index:5;display:block,pointer-events:auto`);
       this.textBox.setAttribute("style",textStyleStr);
-  
-   
     }
   }
 }

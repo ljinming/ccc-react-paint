@@ -1,4 +1,5 @@
 import { ColorType } from "../toolType";
+import { hexToRgba, parseColorString } from "./colorChange";
 import Tool, { Point, getMousePos, setStraw, getTouchPos, hexToRgb,clacArea, updateImageData } from "./tool";
 
 class Pen extends Tool {
@@ -20,10 +21,13 @@ class Pen extends Tool {
       ? Tool.strawColor
       : this.drawColorType === ColorType.MAIN
       ? Tool.mainColor
-      : Tool.subColor;
-    Tool.ctx.lineWidth = Tool.lineWidthFactor * this.lineWidthBase;
-    Tool.ctx.strokeStyle = showColor;
+        : Tool.subColor;
+    const testColor = hexToRgba(showColor)
+    const rgbaColor = parseColorString(testColor)
+        console.log('===44', showColor,testColor,rgbaColor)
 
+    Tool.ctx.lineWidth = Tool.lineWidthFactor * this.lineWidthBase;
+    Tool.ctx.strokeStyle = testColor;
     Tool.ctx.lineJoin = "round";
     Tool.ctx.lineCap = "round";
     Tool.ctx.beginPath();
@@ -43,13 +47,19 @@ class Pen extends Tool {
     if (this.mouseDown) {
       Tool.ctx.closePath();
       this.mouseDown = false;
-      let imageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
-      const colorRgb = hexToRgb(this.drawColorType === ColorType.MAIN ? Tool.mainColor : Tool.subColor);
-      if (colorRgb && this.saveImageData) {
-        imageData = updateImageData(this.saveImageData, imageData, [colorRgb.r, colorRgb.g, colorRgb.b, colorRgb.a]);
-
-        Tool.ctx.putImageData(imageData, 0, 0);
-      }
+    //  let imageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
+    //    const showColor = Tool.strawColor
+    //   ? Tool.strawColor
+    //   : this.drawColorType === ColorType.MAIN
+    //   ? Tool.mainColor
+    //        : Tool.subColor;
+    //       const testColor = hexToRgba(showColor)
+    // const rgbaColor = parseColorString(testColor)
+    //   const colorRgb = hexToRgb(showColor);
+    //   if (colorRgb && this.saveImageData) {
+    //     imageData = updateImageData(this.saveImageData, imageData, [colorRgb.r, colorRgb.g, colorRgb.b, 0.5]);
+    //     Tool.ctx.putImageData(imageData, 0, 0);
+    //   }
     }
   }
   
