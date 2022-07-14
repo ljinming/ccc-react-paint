@@ -61,7 +61,7 @@ export default {
     }
   },
   // 将模块视为外部模块，不会打包在库中
-  external: ["react", "react-is", "antd", "@ant-design/icons", "prop-types", "react/jsx-runtime", "material-ui-color"], // 插件
+  external: ["react", "react-is", "antd", "@ant-design/icons", "prop-types", "react/jsx-runtime"], // 插件
   // 插件
   plugins: [
     image(),

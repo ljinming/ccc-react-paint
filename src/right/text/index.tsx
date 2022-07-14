@@ -1,10 +1,7 @@
 import React from "react";
 import { useContext } from "react";
-import { TextContext, ColorContext } from "@/context";
-import { ColorBox, createColor } from "material-ui-color";
+import { TextContext } from "@/context";
 import "./index.less";
-import { useState } from "react";
-import { useEffect } from "react";
 import { Select } from "antd";
 import IntegerStep from "../components/slider";
 import ColorPanel from "../components/colorPanel";
@@ -26,27 +23,23 @@ const textFamily = [
   "Poppins-Medium",
   "Poppins-Regular",
   "Poppins-SemiBold",
-  "System Font"
+  "System Font",
 ];
 
 const FormatColor: React.FC<FormatColor> = (props) => {
   const { className } = props;
-  const [pickerColor, setPickerColor] = useState(createColor("#000000FF"));
   const TextToolContext = useContext(TextContext);
-  const colorContext = useContext(ColorContext);
 
   const fontStyle = useMemo(() => {
     return TextToolContext.fontStyle;
   }, [TextToolContext.fontStyle]);
 
-  const activeColorType = colorContext.activeColor;
-
-  useEffect(() => {
-    colorContext.setColor(`#${pickerColor.hex}`);
-  }, [pickerColor]);
-
   return (
-    <div className={className ? `ccc-text formatColor ${className}` : "ccc-text colorpanel"}>
+    <div
+      className={
+        className ? `ccc-text formatColor ${className}` : "ccc-text colorpanel"
+      }
+    >
       <div className="content">
         <div>
           <h3>Font</h3>
@@ -56,7 +49,7 @@ const FormatColor: React.FC<FormatColor> = (props) => {
             onChange={(value: string) => {
               TextToolContext.setFont({
                 ...fontStyle,
-                fontFamily: value
+                fontFamily: value,
               });
             }}
           >
@@ -77,7 +70,7 @@ const FormatColor: React.FC<FormatColor> = (props) => {
             onPropsChange={(value) => {
               TextToolContext.setFont({
                 ...fontStyle,
-                letterSpacing: value + "px"
+                letterSpacing: value + "px",
               });
             }}
           />
@@ -91,7 +84,7 @@ const FormatColor: React.FC<FormatColor> = (props) => {
             onPropsChange={(value) => {
               TextToolContext.setFont({
                 ...fontStyle,
-                fontSize: value
+                fontSize: value,
               });
             }}
           />
@@ -104,7 +97,7 @@ const FormatColor: React.FC<FormatColor> = (props) => {
             onPropsChange={(value) => {
               TextToolContext.setFont({
                 ...fontStyle,
-                lineHeight: value + "px"
+                lineHeight: value + "px",
               });
             }}
           />
@@ -116,7 +109,7 @@ const FormatColor: React.FC<FormatColor> = (props) => {
             onChange={(color: string) => {
               TextToolContext.setFont({
                 ...fontStyle,
-                color: color
+                color: color,
               });
             }}
           />

@@ -60,13 +60,23 @@ const ColorPanel: React.FC<ColorPanelProps> = (props) => {
     }
   };
 
+  useEffect(() => {
+    const nodeColor = document.getElementsByClassName(
+      "ccc-paint-colorBox-picker"
+    )[0];
+    const fileList = nodeColor?.getElementsByClassName("flexbox-fix");
+    if (fileList[0]) {
+      fileList[0].setAttribute("style", "padding-left:12%;display: flex");
+    }
+  }, []);
+
   return (
     <div className={className ? `colorpanel ${className}` : "colorpanel"}>
       <div className="content">
         <h3>Color</h3>
         <div className="material-color-box">
           <SketchPicker
-            className="colorBox-picker"
+            className="ccc-paint-colorBox-picker"
             width="100%"
             disableAlpha={false}
             color={showColor}
