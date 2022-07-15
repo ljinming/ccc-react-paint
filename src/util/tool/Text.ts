@@ -1,6 +1,6 @@
 import { numberLiteralTypeAnnotation } from "@babel/types";
 import { formatLongStrToArr } from "./colorChange";
-import Tool, { Point, getMousePos } from "./tool";
+import Tool, { Point, getMousePos, setStraw } from "./tool";
 
 // interface propsInput = {
 //             x?: number,
@@ -49,6 +49,67 @@ class Text extends Tool {
   }
 
 
+  private drawingText(x: number, y: number, arr: string[]) { 
+    const textArea = document.createElement("textarea")
+    this.allCanvas?.appendChild(textArea);
+  function mousemoveEv(e: MouseEvent) {
+       if (Text.currentDown) { 
+         const clacx = e.clientX - Text.currentPos.x;
+          const clacy = e.clientY- Text.currentPos.y;
+         textArea.style.left =  Text.currentCanvas.x + clacx + 'px'
+         textArea.style.top =  Text.currentCanvas.y + clacy + 'px'
+       }
+     }
+    textArea.setAttribute(`style`,
+      `position:absolute;
+      left:${this._x}px;
+      background:#362F395E; 
+      top: ${this._y}px;
+      cursor:pointer;
+      transform:scale(${Tool.currentScale});
+      transform-origin: left top;`);
+    
+    textArea.addEventListener("mousedown", function (e) {
+      textArea.style.transform = `scale(${Tool.currentScale})`
+      Text.currentDown = true
+      Text.currentPos = {
+        x: e.clientX,
+        y:e.clientY,
+      }
+      Text.currentCanvas = {
+        x:Number(textArea.style.left.split('px')[0]),
+        y:Number(textArea.style.top.split('px')[0])
+      }
+    textArea.addEventListener("mousemove", mousemoveEv);
+
+    });
+    textArea.addEventListener("mouseup", function (e:MouseEvent) {
+      Text.currentDown = false
+      textArea.removeEventListener("mousemove", mousemoveEv);
+     // canvas.style.background = 'transparent';
+      
+      Tool.textList = {
+        data: textArea,
+        textArea,
+        event:e,
+        pos: [Number(textArea.style.left.split('px')[0])+80, Number(textArea.style.top.split('px')[0])+80,]
+      }
+
+    });
+    this.calcCurrentElement(textArea)
+  }
+
+ private calcCurrentElement =(ctx:HTMLElement)=> {
+ if (this.fontStyle) { 
+        const { fontSize, fontFamily, color, letterSpacing } = this.fontStyle;
+       ctx.setAttribute('font-size', fontSize)
+        ctx.setAttribute('font-family', fontSize)
+        ctx.setAttribute('color', color)
+        ctx.setAttribute('letterSpacing', letterSpacing)
+       }
+  }
+
+
 
   private drawing(x: number, y: number,arr:string[]) {
     const canvas = document.createElement("canvas");
@@ -58,7 +119,9 @@ class Text extends Tool {
     canvas.height =Math.ceil(this.textBox.clientHeight);
     canvas.title = canvasKey
     this.allCanvas?.appendChild(canvas);
-    function mousemoveEv  (e:MouseEvent) {
+ //canvas.style.background = '#362F395E';
+    
+    function mousemoveEv(e: MouseEvent) {
        if (Text.currentDown) { 
          const clacx = e.clientX - Text.currentPos.x;
           const clacy = e.clientY- Text.currentPos.y;
@@ -66,13 +129,11 @@ class Text extends Tool {
          canvas.style.top =  Text.currentCanvas.y + clacy + 'px'
        }
      }
-
-
     canvas.setAttribute(`style`,
-      `position:absolute;left:${this._x}px; top: ${this._y}px;cursor:pointer;transform:scale(${Tool.currentScale});transform-origin: left top;`);
+      `position:absolute;left:${this._x}px;background:#362F395E;top:${this._y}px;cursor:pointer;transform:scale(${Tool.currentScale});transform-origin: left top;`);
+   
     canvas.addEventListener("mousedown", function (e) {
       canvas.style.transform = `scale(${Tool.currentScale})`
-      canvas.style.background = '#362F395E';
       Text.currentDown = true
       Text.currentPos = {
         x: e.clientX,
@@ -88,8 +149,8 @@ class Text extends Tool {
     canvas.addEventListener("mouseup", function (e:MouseEvent) {
       Text.currentDown = false
       canvas.removeEventListener("mousemove", mousemoveEv);
-      canvas.style.background = 'transparent';
-      
+     // canvas.style.background = 'transparent';
+
       Tool.textList[canvasKey] = {
         data: canvas.toDataURL(),
         canvas,
@@ -97,7 +158,12 @@ class Text extends Tool {
         pos: [Number(canvas.style.left.split('px')[0])+80, Number(canvas.style.top.split('px')[0])+80,]
       }
 
-     });
+    });
+    
+
+    // canvas.addEventListener("keydown", (event) => { 
+    //   console.log('==546',event)
+    // });
     
 
     const context = canvas.getContext('2d');
@@ -139,6 +205,7 @@ class Text extends Tool {
         this.textBox.setAttribute("style", `z-index:-1;display:none`);
         this.canvasBox.setAttribute("style", `z-index:-2`);
         this.textBox.value = "";
+
       }
     }
   }
@@ -146,8 +213,16 @@ class Text extends Tool {
   private startText() {
     this.textContent = this.textBox.value;
     this.isMouseDown = false;
-    const arr = this.textBox.value.split(/[(\r\n)\r\n]+/);
-    this.drawing(this.mousePos.x, this.mousePos.y,arr);
+    if (this.textContent) {
+      const arr = this.textBox.value.split(/[(\r\n)\r\n]+/);
+      this.drawing(this.mousePos.x, this.mousePos.y, arr);
+      //this.drawingText(this.mousePos.x, this.mousePos.y, arr)
+    } else { 
+       this.textBox.setAttribute("style", `z-index:-1;display:none`);
+        this.canvasBox.setAttribute("style", `z-index:-2`);
+        this.textBox.value = "";
+    }
+   
   }
 
 
@@ -178,22 +253,32 @@ class Text extends Tool {
   }
 
   public onKeyDown(event: any): void {
-    if (event.keyCode == 13) {
-      //鼠标
-      this.startText();
-      event.preventDefault();
+        //  event.preventDefault();
+    if (event.keyCode == 8) {
+      //delete 
+      Object.keys(Tool.textList).forEach(va => { 
+              document
+                .getElementById("all-canvas")
+                ?.removeChild(Tool.textList[va].canvas);
+      })
+      Tool.textList = {}
+
     }
   }
 
   public onMouseDown(event: any): void {
     // 鼠标按下位置保存
     event.preventDefault();
+    const mousePos = getMousePos(Tool.ctx.canvas, event);
+    if (Tool.strawFlag) { 
+        setStraw(mousePos)
+      return
+    }
     if (this.isMouseDown) {
-      this.drawLastText()
       this.startText();
 
-    } else if (!this.isMouseDown ) {
-      const mousePos = getMousePos(Tool.ctx.canvas, event);
+    } else if (!this.isMouseDown) {
+       this.drawLastText()
       this.mousePos = mousePos;
         this._x = event.clientX - 80; // event.offsetX; // 鼠标按下时保存当前位置，为起始位置
         this._y = event.clientY - 80; //event.offsetY;
@@ -202,7 +287,7 @@ class Text extends Tool {
         x: event.clientX,
         y: event.clientY
       }
-          this.isMouseDown = true;
+      this.isMouseDown = true;
       this.textBox.innerText = "";
       let textStyleStr =  `display:block;
         position:absolute;

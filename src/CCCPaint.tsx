@@ -26,7 +26,6 @@ import Dispatcher from "./util/dispatcher";
 import Right from "./right";
 import Edit from "./edit";
 import { getImageSize } from "./utils";
-import Loading from "./components/loading";
 import { getMousePos } from "./util/tool/tool";
 
 interface PaintProps {
@@ -204,7 +203,6 @@ function Paint(props: PaintProps): JSX.Element {
                       <div className="ccc-edit">
                         <Edit />
                       </div>
-                      <Loading />
                       <div className="ccc-content">
                         <div className="ToolPanel">
                           <ToolPanel

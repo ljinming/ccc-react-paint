@@ -507,7 +507,8 @@ const Canvas: FC<CanvasProps> = (props) => {
       canvas.addEventListener("touchstart", onTouchStart);
       canvas.addEventListener("touchmove", onTouchMove);
       canvas.addEventListener("touchend", onTouchEnd);
-      //textBox.addEventListener("keydown", onKeyDown);
+      window.addEventListener("keydown", onKeyDown);
+      // textBox.addEventListener("keydown", onKeyDown);
       canvasBox.addEventListener("wheel", onCanvasBoxWheel, { passive: false });
 
       return () => {

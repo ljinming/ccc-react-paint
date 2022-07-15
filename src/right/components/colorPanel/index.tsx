@@ -82,19 +82,19 @@ const ColorPanel: React.FC<ColorPanelProps> = (props) => {
             color={showColor}
             onChange={handleChange}
           />
-          {type !== "text" && (
-            <span
-              className={`straw-color ${Tool.strawFlag ? "select-item" : ""}`}
-              onClick={() => {
-                Tool.strawFlag = true;
-                Tool.strawColor = "";
-                ToolContext.setStrawType(true);
-                getStrawColor();
-              }}
-            >
-              {strawIcon}
-            </span>
-          )}
+          {/* {type !== "text" && ( */}
+          <span
+            className={`straw-color ${Tool.strawFlag ? "select-item" : ""}`}
+            onClick={() => {
+              Tool.strawFlag = true;
+              Tool.strawColor = "";
+              ToolContext.setStrawType(true);
+              getStrawColor();
+            }}
+          >
+            {strawIcon}
+          </span>
+          {/* )} */}
         </div>
       </div>
     </div>

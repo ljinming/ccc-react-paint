@@ -43,6 +43,17 @@ const FormatColor: React.FC<FormatColor> = (props) => {
     // TextToolContext.fontStyle.fontSize = maxSize / 2;
   }, [maxSize]);
 
+  const handleChange = (type: string, value: string | number) => {
+    const textBox = document.getElementById("textBox");
+    if (textBox && textBox.style.display !== "none") {
+      textBox.setAttribute("style", `z-index:-1;display:none`);
+    }
+    TextToolContext.setFont({
+      ...fontStyle,
+      [type]: value,
+    });
+  };
+
   return (
     <div
       className={
@@ -56,10 +67,7 @@ const FormatColor: React.FC<FormatColor> = (props) => {
             defaultValue="System Font"
             className="ccc-text-family"
             onChange={(value: string) => {
-              TextToolContext.setFont({
-                ...fontStyle,
-                fontFamily: value,
-              });
+              handleChange("fontFamily", value);
             }}
           >
             {textFamily.map((va) => {
@@ -77,10 +85,12 @@ const FormatColor: React.FC<FormatColor> = (props) => {
             min={1}
             max={8}
             onPropsChange={(value) => {
-              TextToolContext.setFont({
-                ...fontStyle,
-                letterSpacing: value + "px",
-              });
+              handleChange("letterSpacing", value + "px");
+
+              // TextToolContext.setFont({
+              //   ...fontStyle,
+              //   letterSpacing: value + "px",
+              // });
             }}
           />
         </div>
@@ -91,14 +101,15 @@ const FormatColor: React.FC<FormatColor> = (props) => {
             max={maxSize * 2}
             value={maxSize / 2}
             onPropsChange={(value) => {
-              TextToolContext.setFont({
-                ...fontStyle,
-                fontSize: value,
-              });
+              handleChange("fontSize", value);
+              // TextToolContext.setFont({
+              //   ...fontStyle,
+              //   fontSize: value,
+              // });
             }}
           />
         </div>
-        <div className="font">
+        {/* <div className="font">
           <h3>Line Height</h3>
           <IntegerStep
             min={24}
@@ -110,7 +121,7 @@ const FormatColor: React.FC<FormatColor> = (props) => {
               });
             }}
           />
-        </div>
+        </div> */}
         <div className="material-color-box">
           <ColorPanel
             type="text"
