@@ -1,4 +1,5 @@
 import { numberLiteralTypeAnnotation } from "@babel/types";
+import { formatLongStrToArr } from "./colorChange";
 import Tool, { Point, getMousePos } from "./tool";
 
 // interface propsInput = {
@@ -51,14 +52,12 @@ class Text extends Tool {
 
   private drawing(x: number, y: number,arr:string[]) {
     const canvas = document.createElement("canvas");
-//    const calcStr = arr.sort((a,b) => { })
     const { fontSize, fontFamily, color, letterSpacing } = this.fontStyle;
     const canvasKey = `${new Date().getTime()}`;
-    canvas.width = this.textBox.clientWidth; 
-    canvas.height = this.textBox.clientHeight;
+    canvas.width = Math.ceil(this.textBox.clientWidth); 
+    canvas.height =Math.ceil(this.textBox.clientHeight);
     canvas.title = canvasKey
     this.allCanvas?.appendChild(canvas);
-
     function mousemoveEv  (e:MouseEvent) {
        if (Text.currentDown) { 
          const clacx = e.clientX - Text.currentPos.x;
@@ -89,12 +88,13 @@ class Text extends Tool {
     canvas.addEventListener("mouseup", function (e:MouseEvent) {
       Text.currentDown = false
       canvas.removeEventListener("mousemove", mousemoveEv);
-     canvas.style.background = 'transparent';
+      canvas.style.background = 'transparent';
+      
       Tool.textList[canvasKey] = {
         data: canvas.toDataURL(),
         canvas,
         event:e,
-        pos: [Number(canvas.style.left.split('px')[0])+80, Number(canvas.style.top.split('px')[0]+80),]
+        pos: [Number(canvas.style.left.split('px')[0])+80, Number(canvas.style.top.split('px')[0])+80,]
       }
 
      });
@@ -108,8 +108,6 @@ class Text extends Tool {
       context.fillStyle = "#000"; // 填充颜色为红色
       context.lineWidth = 5; // 指定描边线的宽度
       context.font = "72px System Font";
-      const text = context.measureText(arr[0]);
-      canvas.width = text.width + 20;
       if (context && this.fontStyle) {
         context.fillStyle = color || "#000";
         context.font = `${fontSize}px ${fontFamily}`;
@@ -117,10 +115,21 @@ class Text extends Tool {
           context.canvas.style.letterSpacing = letterSpacing;
         }
       }
-
-      if (arr.length > 0) {
-        arr.forEach((va, i) => {
-          context.fillText(va, 12, (fontSize / 2 + 20) * (i + 1));
+      let showArr: string[] = [];
+      arr.forEach(va => { 
+        const textWidth = Number(context.measureText(va).width);
+        if (textWidth > canvas.width) {
+          const showNum = Math.floor((canvas.width-14) / Math.ceil(textWidth / va.length)) ;
+          const newArr = formatLongStrToArr(va,showNum)
+          showArr.push(...newArr)
+        } else { 
+          showArr.push(va)
+        }
+      })
+      const height = Math.floor(canvas.height / showArr.length)
+      if (showArr.length > 0) {
+        showArr.forEach((va, i) => {
+          context.fillText(va, 12, (height/2 + fontSize/2) * (i + 1));
         })
         
         Tool.textList[canvasKey] = {
@@ -143,8 +152,8 @@ class Text extends Tool {
 
 
   private drawLastText() { 
-   Object.keys(Tool.textList).forEach((va) => {
-     const { data, pos } = Tool.textList[va];
+    Object.keys(Tool.textList).forEach((va) => {
+      const { data, pos } = Tool.textList[va];
       const img = new Image();
               img.crossOrigin = "anonymous";
               img.src = data;
@@ -204,11 +213,14 @@ class Text extends Tool {
         `
        if (this.fontStyle) { 
       const { fontSize, fontFamily, color, letterSpacing } = this.fontStyle;
-      textStyleStr = `${textStyleStr} font-size:${fontSize}px;font-family:${fontFamily};color:${color};letterSpacing:${letterSpacing};`;
+      textStyleStr = `${textStyleStr}; font-size:${fontSize}px;font-family:${fontFamily};color:${color};letterSpacing:${letterSpacing};`;
        }
       const width = this.canvasBox.clientWidth - this._x;
       const height = this.canvasBox.clientHeight - this._y
-      textStyleStr = `${textStyleStr} max-width:${width}px;max-height:${height}px`
+      textStyleStr = `${textStyleStr} max-width:${width}px;max-height:${height}px;`
+      if (width > 300) { 
+        textStyleStr = `${textStyleStr} width:${300}px;`
+      }
       this.width = width
       this.canvasBox.setAttribute("style", `z-index:5;display:block,pointer-events:auto`);
       this.textBox.setAttribute("style",textStyleStr);

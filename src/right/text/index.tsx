@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useContext } from "react";
 import { TextContext } from "@/context";
 import "./index.less";
@@ -11,6 +11,7 @@ const { Option } = Select;
 
 interface FormatColor {
   className?: string;
+  maxSize?: number;
 }
 
 const textFamily = [
@@ -27,12 +28,20 @@ const textFamily = [
 ];
 
 const FormatColor: React.FC<FormatColor> = (props) => {
-  const { className } = props;
+  const { className, maxSize = 100 } = props;
   const TextToolContext = useContext(TextContext);
 
   const fontStyle = useMemo(() => {
     return TextToolContext.fontStyle;
   }, [TextToolContext.fontStyle]);
+
+  useEffect(() => {
+    TextToolContext.setFont({
+      ...fontStyle,
+      fontSize: maxSize / 2,
+    });
+    // TextToolContext.fontStyle.fontSize = maxSize / 2;
+  }, [maxSize]);
 
   return (
     <div
@@ -79,8 +88,8 @@ const FormatColor: React.FC<FormatColor> = (props) => {
           <h3>Font Size</h3>
           <IntegerStep
             min={12}
-            max={720}
-            value={TextToolContext?.fontStyle?.fontSize}
+            max={maxSize * 2}
+            value={maxSize / 2}
             onPropsChange={(value) => {
               TextToolContext.setFont({
                 ...fontStyle,

@@ -29,7 +29,7 @@ const ToolRightBar: FC<ToolbarProps> = (props) => {
         content = <Eraser lineSize={lineSize} />;
         break;
       case ToolType.TEXT:
-        content = <Text />;
+        content = <Text maxSize={maxSize} />;
         break;
       case ToolType.COLOR_FILL:
         content = <FormatColor />;

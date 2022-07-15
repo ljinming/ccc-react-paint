@@ -151,3 +151,14 @@ export const hexToRgba = (hex: string) => {
   const colorObj = parseColorString(rgba);
   return toHexString(colorObj);
 };
+
+
+//动态截取字符串
+ export function formatLongStrToArr(str:string, len:number):string[]{
+      const arrLength = Math.ceil(str.length / len);
+      let tempArr = new Array(arrLength);
+      for(let index = 0; index<arrLength; index++){
+        tempArr[index] = str.substr(index*len,len);
+      }
+      return tempArr;
+    }
