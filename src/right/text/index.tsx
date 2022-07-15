@@ -32,7 +32,6 @@ const textFamily = [
 const FormatColor: React.FC<FormatColor> = (props) => {
   const { className, maxSize = 100 } = props;
   const TextToolContext = useContext(TextContext);
-
   const fontStyle = useMemo(() => {
     return TextToolContext.fontStyle;
   }, [TextToolContext.fontStyle]);
@@ -116,19 +115,19 @@ const FormatColor: React.FC<FormatColor> = (props) => {
             }}
           />
         </div>
-        {/* <div className="font">
+        <div className="font">
           <h3>Line Height</h3>
           <IntegerStep
             min={24}
-            max={56}
+            max={maxSize}
             onPropsChange={(value) => {
               TextToolContext.setFont({
                 ...fontStyle,
-                lineHeight: value + "px",
+                lineHeight: value,
               });
             }}
           />
-        </div> */}
+        </div>
         <div className="material-color-box">
           <ColorPanel
             type="text"

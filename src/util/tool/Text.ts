@@ -113,7 +113,7 @@ class Text extends Tool {
 
   private drawing(x: number, y: number,arr:string[]) {
     const canvas = document.createElement("canvas");
-    const { fontSize, fontFamily, color, letterSpacing } = this.fontStyle;
+    const { fontSize, fontFamily, color, lineHeight=24 ,letterSpacing } = this.fontStyle;
     const showColor = Tool.strawColor || color
     const canvasKey = `${new Date().getTime()}`;
     canvas.width = Math.ceil(this.textBox.clientWidth); 
@@ -191,11 +191,14 @@ class Text extends Tool {
           showArr.push(va)
         }
       })
-      //context.canvas.width = Math.ceil(showWidth);
-      const height = Math.floor(canvas.height / showArr.length)
+      const showHeight = canvas.height + (showArr.length - 1) * lineHeight
+      context.canvas.style.height = showHeight+'px';
+      //context.canvas.height = Math.ceil(showHeight);
+      const height = Math.floor(canvas.height / showArr.length)    
+      //canvas.height = canvas.height + (showArr.length - 1) * lineHeight
       if (showArr.length > 0) {
         showArr.forEach((va, i) => {
-          context.fillText(va, 7, (height/2 ) * (i + 1));
+          context.fillText(va, 7, height/2 + fontSize/2 + height*i + lineHeight);
         })
         
         Tool.textList[canvasKey] = {
@@ -296,7 +299,7 @@ class Text extends Tool {
         left:${this._x}px;
         top:${this._y}px;
         `
-      const { fontSize, fontFamily, color, letterSpacing } = this.fontStyle;
+      const { fontSize, fontFamily, color,lineHeight=24, letterSpacing } = this.fontStyle;
       const showColor = Tool.strawColor ||color
        if (this.fontStyle) { 
       textStyleStr = `${textStyleStr}; font-size:${fontSize}px;font-family:${fontFamily};color:${showColor};letterSpacing:${letterSpacing};`;
