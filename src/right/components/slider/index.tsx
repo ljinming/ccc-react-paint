@@ -30,7 +30,7 @@ const IntegerStep = (props: IntegerStepProps) => {
   return (
     <div className="slider">
       <Slider
-        className="slider-step"
+        className="ccc-slider-step"
         min={min}
         max={max}
         onChange={handleChange}

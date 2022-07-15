@@ -306,13 +306,15 @@ const Canvas: FC<CanvasProps> = (props) => {
         translatex,
         translatey,
       };
-      console.log("===45", translatex / show_scale);
       canvas.style.transform = `scale(${show_scale}) translate(${translatex}px,${translatey}px)`;
       //canvas.style.transform = `translate(${translatex}px,${translatey}px)`;
     }
   }, [CanvasSize]);
 
   const onMouseDown = (event: MouseEvent) => {
+    // if (text) {
+    //   setText("");
+    // }
     if (tool) {
       tool.onMouseDown(event);
     }

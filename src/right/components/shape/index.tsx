@@ -25,6 +25,7 @@ import shape_arrowright from "@/icon/shape_arrowright.svg";
 import shape_arrowdown from "@/icon/shape_arrowdown.svg";
 import shape_arrowleft from "@/icon/shape_arrowleft.svg";
 import shape_fourstar from "@/icon/shape_fourstar.svg";
+import arrow from "@/icon/arrow.svg";
 const selectedShapeClass = "selected-shape";
 
 const shapes = [
@@ -109,6 +110,9 @@ const ShapePanel: React.FC<ShapePanelProps> = (props) => {
             value={shapeOutlineContext.type}
             onChange={(value) =>
               shapeOutlineContext.setType(value as ShapeOutlineType)
+            }
+            suffixIcon={
+              <img style={{ width: "21px", marginRight: "10px" }} src={arrow} />
             }
           >
             <Select.Option value={ShapeOutlineType.SOLID}>

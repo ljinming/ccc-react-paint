@@ -6,6 +6,8 @@ import { Select } from "antd";
 import IntegerStep from "../components/slider";
 import ColorPanel from "../components/colorPanel";
 import { useMemo } from "react";
+import { DownOutlined } from "@ant-design/icons";
+import arrow from "@/assets/icon/arrow.svg";
 
 const { Option } = Select;
 
@@ -67,10 +69,13 @@ const FormatColor: React.FC<FormatColor> = (props) => {
             defaultValue="System Font"
             className="ccc-text-family paint-select"
             dropdownClassName="paint-select-dropCard"
-            // open={true}
+            //open={true}
             onChange={(value: string) => {
               handleChange("fontFamily", value);
             }}
+            suffixIcon={
+              <img style={{ width: "21px", marginRight: "10px" }} src={arrow} />
+            }
           >
             {textFamily.map((va) => {
               return (

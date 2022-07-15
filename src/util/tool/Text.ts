@@ -114,13 +114,14 @@ class Text extends Tool {
   private drawing(x: number, y: number,arr:string[]) {
     const canvas = document.createElement("canvas");
     const { fontSize, fontFamily, color, letterSpacing } = this.fontStyle;
+    const showColor = Tool.strawColor || color
     const canvasKey = `${new Date().getTime()}`;
     canvas.width = Math.ceil(this.textBox.clientWidth); 
     canvas.height =Math.ceil(this.textBox.clientHeight);
    // canvas.title = canvasKey
     this.allCanvas?.appendChild(canvas);
 
- //canvas.style.background = '#362F395E';
+ //
     
     function mousemoveEv(e: MouseEvent) {
        if (Text.currentDown) { 
@@ -131,10 +132,11 @@ class Text extends Tool {
        }
      }
     canvas.setAttribute(`style`,
-      `position:absolute;left:${this._x}px;background:#362F395E;top:${this._y}px;cursor:pointer;transform:scale(${Tool.currentScale});transform-origin: left top;`);
+      `position:absolute;left:${this._x}px;top:${this._y}px;cursor:pointer;transform:scale(${Tool.currentScale});transform-origin: left top;`);
    
     canvas.addEventListener("mousedown", function (e) {
       canvas.style.transform = `scale(${Tool.currentScale})`
+      canvas.style.background = '#362F395E';
       Text.currentDown = true
       Text.currentPos = {
         x: e.clientX,
@@ -150,7 +152,7 @@ class Text extends Tool {
     canvas.addEventListener("mouseup", function (e:MouseEvent) {
       Text.currentDown = false
       canvas.removeEventListener("mousemove", mousemoveEv);
-     // canvas.style.background = 'transparent';
+      canvas.style.background = 'transparent';
       Tool.textList[canvasKey] = {
         data: canvas.toDataURL(),
         canvas,
@@ -169,7 +171,7 @@ class Text extends Tool {
       context.lineWidth = 5; // 指定描边线的宽度
       context.font = "72px System Font";
       if (context && this.fontStyle) {
-        context.fillStyle = color || "#000";
+        context.fillStyle = showColor || "#000";
         context.font = `${fontSize}px ${fontFamily}`;
         if (context.canvas && letterSpacing) {
           context.canvas.style.letterSpacing = letterSpacing;
@@ -190,16 +192,15 @@ class Text extends Tool {
         }
       })
       //context.canvas.width = Math.ceil(showWidth);
-     // console.log('==456',showWidth,canvas.width)
       const height = Math.floor(canvas.height / showArr.length)
       if (showArr.length > 0) {
         showArr.forEach((va, i) => {
-          context.fillText(va, 12, (height/2 + fontSize/2) * (i + 1));
+          context.fillText(va, 7, (height/2 ) * (i + 1));
         })
         
         Tool.textList[canvasKey] = {
           data: canvas.toDataURL(), canvas,
-          pos: [this._x+80, this._y+80]
+          pos: [this._x + 80, this._y +80]
         }
         this.textBox.setAttribute("style", `z-index:-1;display:none`);
         this.canvasBox.setAttribute("style", `z-index:-2`);
@@ -293,11 +294,12 @@ class Text extends Tool {
         z-index:6;
         width:auto;
         left:${this._x}px;
-        top:${this._y - 10}px;
+        top:${this._y}px;
         `
-            const { fontSize, fontFamily, color, letterSpacing } = this.fontStyle;
+      const { fontSize, fontFamily, color, letterSpacing } = this.fontStyle;
+      const showColor = Tool.strawColor ||color
        if (this.fontStyle) { 
-      textStyleStr = `${textStyleStr}; font-size:${fontSize}px;font-family:${fontFamily};color:${color};letterSpacing:${letterSpacing};`;
+      textStyleStr = `${textStyleStr}; font-size:${fontSize}px;font-family:${fontFamily};color:${showColor};letterSpacing:${letterSpacing};`;
        }
       const width = this.canvasBox.clientWidth - this._x;
       //const height = this.canvasBox.clientHeight - this._y

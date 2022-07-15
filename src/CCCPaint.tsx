@@ -40,6 +40,7 @@ interface PaintProps {
 }
 //= https://bafybeibsrvi7eb2eibdkr73e2d3znucfpbkvml2jsbgt7cctdk7m4p2fi4.ipfs.dweb.link/orign.png
 //"https://bafybeicgvg3vwtv5c633cjexbykjp75yjt755qhma4o7vgusa4ldvocz44.ipfs.dweb.link/orign.png"
+//https://bafybeifgfvlt6qhz5b2gb4t35pzalywvzxm7qmlj3d4vpmcwq7vmqtqtdu.ipfs.dweb.link/orign.png
 
 function Paint(props: PaintProps): JSX.Element {
   const {

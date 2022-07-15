@@ -4,7 +4,7 @@ import ColorPanel from "../components/colorPanel";
 import { DownOutlined } from "@ant-design/icons";
 import IntegerStep from "../components/slider";
 import { Shape } from "../../util/tool";
-
+import arrow from "@/icon/arrow.svg";
 import "./index.less";
 
 interface shapeType {
@@ -33,7 +33,7 @@ const showShape = (props: shapeType) => {
       </div>
       <h3 className="ccc-shape-title">
         <span>Shapes</span>
-        <DownOutlined />
+        <img src={arrow}></img>
       </h3>
       <ShapeComponent className="toolbar-item" />
       <ColorPanel className="toolbar-item" />
