@@ -65,7 +65,9 @@ const FormatColor: React.FC<FormatColor> = (props) => {
           <h3>Font</h3>
           <Select
             defaultValue="System Font"
-            className="ccc-text-family"
+            className="ccc-text-family paint-select"
+            dropdownClassName="paint-select-dropCard"
+            // open={true}
             onChange={(value: string) => {
               handleChange("fontFamily", value);
             }}

@@ -103,6 +103,8 @@ const ShapePanel: React.FC<ShapePanelProps> = (props) => {
       <div className="shape-container">
         <div className="shape-style">
           <Select
+            className="ccc-text-family paint-select"
+            dropdownClassName="paint-select-dropCard"
             style={{ width: "100%" }}
             value={shapeOutlineContext.type}
             onChange={(value) =>
