@@ -117,8 +117,9 @@ class Text extends Tool {
     const canvasKey = `${new Date().getTime()}`;
     canvas.width = Math.ceil(this.textBox.clientWidth); 
     canvas.height =Math.ceil(this.textBox.clientHeight);
-    canvas.title = canvasKey
+   // canvas.title = canvasKey
     this.allCanvas?.appendChild(canvas);
+
  //canvas.style.background = '#362F395E';
     
     function mousemoveEv(e: MouseEvent) {
@@ -150,7 +151,6 @@ class Text extends Tool {
       Text.currentDown = false
       canvas.removeEventListener("mousemove", mousemoveEv);
      // canvas.style.background = 'transparent';
-
       Tool.textList[canvasKey] = {
         data: canvas.toDataURL(),
         canvas,
@@ -160,12 +160,6 @@ class Text extends Tool {
 
     });
     
-
-    // canvas.addEventListener("keydown", (event) => { 
-    //   console.log('==546',event)
-    // });
-    
-
     const context = canvas.getContext('2d');
     if (!context) {
       return;
@@ -182,16 +176,21 @@ class Text extends Tool {
         }
       }
       let showArr: string[] = [];
+      let showWidth = 0;
       arr.forEach(va => { 
         const textWidth = Number(context.measureText(va).width);
         if (textWidth > canvas.width) {
-          const showNum = Math.floor((canvas.width-14) / Math.ceil(textWidth / va.length)) ;
+          showWidth= canvas.width
+          const showNum = Math.floor((canvas.width - 14) / Math.ceil(textWidth / va.length));
           const newArr = formatLongStrToArr(va,showNum)
           showArr.push(...newArr)
         } else { 
+          showWidth =Math.max(textWidth,showWidth);
           showArr.push(va)
         }
       })
+      //context.canvas.width = Math.ceil(showWidth);
+     // console.log('==456',showWidth,canvas.width)
       const height = Math.floor(canvas.height / showArr.length)
       if (showArr.length > 0) {
         showArr.forEach((va, i) => {
@@ -296,15 +295,15 @@ class Text extends Tool {
         left:${this._x}px;
         top:${this._y - 10}px;
         `
+            const { fontSize, fontFamily, color, letterSpacing } = this.fontStyle;
        if (this.fontStyle) { 
-      const { fontSize, fontFamily, color, letterSpacing } = this.fontStyle;
       textStyleStr = `${textStyleStr}; font-size:${fontSize}px;font-family:${fontFamily};color:${color};letterSpacing:${letterSpacing};`;
        }
       const width = this.canvasBox.clientWidth - this._x;
-      const height = this.canvasBox.clientHeight - this._y
-      textStyleStr = `${textStyleStr} max-width:${width}px;max-height:${height}px;`
-      if (width > 300) { 
-        textStyleStr = `${textStyleStr} width:${300}px;`
+      //const height = this.canvasBox.clientHeight - this._y
+      textStyleStr = `${textStyleStr} max-width:${width}px;`
+      if (fontSize /2 < 260) { 
+        textStyleStr = `${textStyleStr} width:${260}px;`
       }
       this.width = width
       this.canvasBox.setAttribute("style", `z-index:5;display:block,pointer-events:auto`);

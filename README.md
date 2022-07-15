@@ -10,3 +10,7 @@ you need to have in your dependencies:
     "antd/icon",
     "prop-types"
 ```
+
+    当前浏览器不支持canvas元素，请升级或更换浏览器！
+
+registry https://registry.npm.taobao.org

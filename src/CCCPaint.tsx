@@ -38,13 +38,13 @@ interface PaintProps {
   ThumbSrc?: string;
   showArea?: Array<[number, number]>;
 }
-//= https://bafybeih7buvkqebcu3olxinxsjh7iqqtlw2xoapp63dwqw5bj43ytxtcia.ipfs.dweb.link/orign.png"
+//= https://bafybeibsrvi7eb2eibdkr73e2d3znucfpbkvml2jsbgt7cctdk7m4p2fi4.ipfs.dweb.link/orign.png
 //"https://bafybeicgvg3vwtv5c633cjexbykjp75yjt755qhma4o7vgusa4ldvocz44.ipfs.dweb.link/orign.png"
 
 function Paint(props: PaintProps): JSX.Element {
   const {
     id = "test",
-    imgSrc = "https://bafybeicgvg3vwtv5c633cjexbykjp75yjt755qhma4o7vgusa4ldvocz44.ipfs.dweb.link/orign.png",
+    imgSrc = "https://bafybeibsrvi7eb2eibdkr73e2d3znucfpbkvml2jsbgt7cctdk7m4p2fi4.ipfs.dweb.link/orign.png",
     width = 0,
     height = 0,
     background,
@@ -98,7 +98,7 @@ function Paint(props: PaintProps): JSX.Element {
   const loadImage = async (imgSrc: string) => {
     const size = await getImageSize(imgSrc);
     setSize(size);
-    setLineFontSize(size.width / 100);
+    setLineFontSize(Math.floor(size.width / 100));
     setLoadings(false);
   };
 
@@ -240,7 +240,7 @@ function Paint(props: PaintProps): JSX.Element {
                             toolType={toolType}
                             ThumbSrc={Thumbnail}
                             lineSize={lineSize}
-                            maxSize={size.width / 10}
+                            maxSize={Math.floor(size.width / 10)}
                           />
                         </div>
                       </div>

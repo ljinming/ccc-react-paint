@@ -24,7 +24,7 @@ const showShape = (props: shapeType) => {
         <h3>Shape Thickness</h3>
         <IntegerStep
           min={1}
-          max={maxSize / 2}
+          max={Math.floor(maxSize / 2)}
           value={Shape.shapeWidth || lineSize / 2}
           onPropsChange={(value) => {
             Shape.shapeWidth = value;

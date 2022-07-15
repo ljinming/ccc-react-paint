@@ -99,7 +99,7 @@ const FormatColor: React.FC<FormatColor> = (props) => {
           <IntegerStep
             min={12}
             max={maxSize * 2}
-            value={maxSize / 2}
+            value={Math.ceil(maxSize / 2)}
             onPropsChange={(value) => {
               handleChange("fontSize", value);
               // TextToolContext.setFont({

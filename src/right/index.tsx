@@ -26,7 +26,7 @@ const ToolRightBar: FC<ToolbarProps> = (props) => {
         content = <ShowShape lineSize={lineSize} maxSize={maxSize} />;
         break;
       case ToolType.ERASER:
-        content = <Eraser lineSize={lineSize} />;
+        content = <Eraser lineSize={lineSize} maxSize={maxSize} />;
         break;
       case ToolType.TEXT:
         content = <Text maxSize={maxSize} />;

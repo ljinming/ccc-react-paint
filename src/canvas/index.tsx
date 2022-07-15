@@ -154,7 +154,7 @@ const Canvas: FC<CanvasProps> = (props) => {
     const canvas = canvasRef.current;
     if (canvas) {
       showCanvasCursor();
-      drawCanvas();
+      // drawCanvas();
       Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       // 注册清空画布事件
       const dispatcher = dispatcherContext.dispatcher;
@@ -300,13 +300,15 @@ const Canvas: FC<CanvasProps> = (props) => {
           Math.max(CanvasSize.height, CanvasSize.width) || 1;
       show_scale = showScale; //getScale({ width, height }, CanvasSize);
       Tool.currentScale = show_scale;
-      translatex = (width - CanvasSize.width * show_scale) / 2;
+      translatex = (width - CanvasSize.width * show_scale) / 2 / show_scale;
       translatey = (height - CanvasSize.height * show_scale) / 2;
       Tool.translate = {
         translatex,
         translatey,
       };
+      console.log("===45", translatex / show_scale);
       canvas.style.transform = `scale(${show_scale}) translate(${translatex}px,${translatey}px)`;
+      //canvas.style.transform = `translate(${translatex}px,${translatey}px)`;
     }
   }, [CanvasSize]);
 
@@ -544,7 +546,7 @@ const Canvas: FC<CanvasProps> = (props) => {
         className="ccc-paint-canvas"
         ref={canvasRef}
         style={{
-          background: background || "#fff",
+          background: background,
           ...style,
         }}
       ></canvas>
