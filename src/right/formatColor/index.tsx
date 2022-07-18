@@ -12,8 +12,8 @@ const FormatColor: React.FC<FormatColor> = (props) => {
   const FillColorContext = useContext(FillContext);
 
   return (
-    <div className={className ? `formatColor ${className}` : "colorpanel"}>
-      <div className="content">
+    <div className={className ? `formatColor ${className}` : `formatColor`}>
+      <div className="color-box">
         <ColorPanel
           className="toolbar-item"
           onChange={(color: string) => {

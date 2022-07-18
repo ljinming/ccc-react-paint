@@ -112,7 +112,7 @@ const ShapePanel: React.FC<ShapePanelProps> = (props) => {
               shapeOutlineContext.setType(value as ShapeOutlineType)
             }
             suffixIcon={
-              <img style={{ width: "21px", marginRight: "10px" }} src={arrow} />
+              <img style={{ width: "15px", marginRight: "10px" }} src={arrow} />
             }
           >
             <Select.Option value={ShapeOutlineType.SOLID}>

@@ -198,7 +198,7 @@ class Text extends Tool {
       //canvas.height = canvas.height + (showArr.length - 1) * lineHeight
       if (showArr.length > 0) {
         showArr.forEach((va, i) => {
-          context.fillText(va, 7, height/2 + fontSize/2 + height*i + lineHeight);
+          context.fillText(va, 7, height/2 +fontSize/4 + height*i );
         })
         
         Tool.textList[canvasKey] = {

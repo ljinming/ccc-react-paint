@@ -61,19 +61,19 @@ const FormatColor: React.FC<FormatColor> = (props) => {
         className ? `ccc-text formatColor ${className}` : "ccc-text colorpanel"
       }
     >
-      <div className="content">
+      <div className="ccc-text-box">
         <div>
           <h3>Font</h3>
           <Select
             defaultValue="System Font"
             className="ccc-text-family paint-select"
             dropdownClassName="paint-select-dropCard"
-            //open={true}
+            //  open={true}
             onChange={(value: string) => {
               handleChange("fontFamily", value);
             }}
             suffixIcon={
-              <img style={{ width: "21px", marginRight: "10px" }} src={arrow} />
+              <img style={{ width: "15px", marginRight: "10px" }} src={arrow} />
             }
           >
             {textFamily.map((va) => {
@@ -115,7 +115,7 @@ const FormatColor: React.FC<FormatColor> = (props) => {
             }}
           />
         </div>
-        <div className="font">
+        {/* <div className="font">
           <h3>Line Height</h3>
           <IntegerStep
             min={24}
@@ -126,8 +126,8 @@ const FormatColor: React.FC<FormatColor> = (props) => {
                 lineHeight: value,
               });
             }}
-          />
-        </div>
+          /> 
+        </div> */}
         <div className="material-color-box">
           <ColorPanel
             type="text"
