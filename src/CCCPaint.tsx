@@ -27,6 +27,7 @@ import Right from "./right";
 import Edit from "./edit";
 import { getImageSize } from "./utils";
 import { getMousePos } from "./util/tool/tool";
+import PiexCanvas from "./piexCanvas";
 
 interface PaintProps {
   imgSrc?: string;
@@ -45,7 +46,7 @@ interface PaintProps {
 function Paint(props: PaintProps): JSX.Element {
   const {
     id = "test",
-    imgSrc = "https://bafybeifgfvlt6qhz5b2gb4t35pzalywvzxm7qmlj3d4vpmcwq7vmqtqtdu.ipfs.dweb.link/orign.png",
+    imgSrc = "https://iwnuo-oqaaa-aaaah-qcwcq-cai.raw.ic0.app/thumbnail/231",
     width = 0,
     height = 0,
     background,
@@ -217,7 +218,7 @@ function Paint(props: PaintProps): JSX.Element {
                           </div>
                         ) : (
                           <div className="show-Canvas">
-                            <Canvas
+                            <PiexCanvas
                               id={id}
                               strawType={strawType}
                               CanvasSize={size}

@@ -5,6 +5,9 @@ export interface Point {
 }
 
 
+
+
+
 // 吸色功能
 export const setStraw = (pos?: Point) => {
   if (Tool.strawFlag && pos) {
@@ -28,11 +31,18 @@ export const getMousePos = (canvas: HTMLCanvasElement, event: MouseEvent|undefin
     // y: (pos.y )/scale -Tool.translate.translatey
   };
   }
-  if (event) { 
- return {
-    x: (event.clientX - rect.left)/scale,
-    y: (event.clientY - rect.top)/scale
-  };
+  if (event) {
+    console.log('----23455',Tool.isPixel)
+      if (Tool.isPixel ) { 
+        return {
+          x: event.clientX  - rect.left * (canvas.width / rect.width),
+          y: event.clientY - rect.top * (canvas.height / rect.height)+ 16
+        };
+     }
+        return {
+            x: (event.clientX - rect.left)/scale,
+            y: (event.clientY - rect.top)/scale
+          };
   }
   return {
     x: 0,
@@ -128,8 +138,21 @@ export default class Tool {
   public static fillColor = "#2d2d2d";
 
   // textCanvas
-   public static textList: Record<string, any> = {};
+  public static textList: Record<string, any> = {};
+  
+  //像素风基本设置
+  public static OptPixel = {
+  stepX: 16,
+  stepY: 16,
+    EMPTY_COLOR: "#fff",
+  penHeight : 10
+};
 
+//是否像素风
+  public static isPixel = false;
+  
+  //像素风格子数组、
+  public static PixelBoxs:any[] = [];
 
 
 

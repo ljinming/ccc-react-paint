@@ -1,6 +1,7 @@
 import { ColorType } from "../toolType";
 import { hexToRgba, } from "../colorChange";
 import Tool, { Point, getMousePos, setStraw, getTouchPos, hexToRgb,clacArea, updateImageData } from "./tool";
+import { drawColorToPixel } from "./pixelUtil";
 
 class Pen extends Tool {
   protected lineWidthBase = 1;
@@ -12,26 +13,44 @@ class Pen extends Tool {
     x: 0,
     y: 0
   };
+  penColor: string ='' ;
   private operateStart(pos: Point) {
     if (!Tool.ctx) return;
-    setStraw(pos);
-    this.saveImageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
-    this.mouseDown = true;
+        setStraw(pos);
+  this.mouseDown = true;
     const showColor = Tool.strawColor
       ? Tool.strawColor
       : this.drawColorType === ColorType.MAIN
       ? Tool.mainColor
         : Tool.subColor;
     const testColor = hexToRgba(showColor)
-    Tool.ctx.lineWidth = Tool.lineWidthFactor * this.lineWidthBase;
+        this.previousPos = pos;
+    this.penColor = testColor
+     Tool.ctx.lineWidth = Tool.lineWidthFactor * this.lineWidthBase;
+    if (Tool.isPixel) {
+      for (let p = 0; p < Tool.PixelBoxs.length; p++) {
+        const pixel = Tool.PixelBoxs[p];
+        if (pixel.isPointInPath(Tool.ctx, pos)) {
+          pixel.fillStyle = testColor;
+        }
+      }
+      return
+    }
+    this.saveImageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
     Tool.ctx.strokeStyle = testColor;
     Tool.ctx.lineJoin = "round";
     Tool.ctx.lineCap = "round";
     Tool.ctx.beginPath();
-    this.previousPos = pos;
-  }
+    }
+    
   private operateMove(pos: Point) {
     if (this.mouseDown) {
+      if (Tool.isPixel) { 
+				drawColorToPixel(this.previousPos, pos, this.penColor);
+				this.previousPos = pos;
+      }
+
+
       Tool.ctx.moveTo(this.previousPos.x, this.previousPos.y);
       const c = 0.5 * (this.previousPos.x + pos.x);
       const d = 0.5 * (this.previousPos.y + pos.y);
@@ -63,7 +82,7 @@ class Pen extends Tool {
   public onMouseDown(event: MouseEvent): void {
     event.preventDefault();
     const mousePos = getMousePos(Tool.ctx.canvas, event);
-    
+    console.log('mouseDown', mousePos)
     if (clacArea(mousePos)) { 
     this.operateStart(mousePos);
     }
