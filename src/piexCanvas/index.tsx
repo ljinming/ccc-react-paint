@@ -292,9 +292,9 @@ const Canvas: FC<CanvasProps> = (props) => {
               for (let y = Opt.stepY + 1; y < ctxHeight; y += Opt.stepY) {
                 let index = y * ctxWidth + x;
                 let i = index * 4;
-                let rgb = `rgb(${imgData[i]},${imgData[i + 1]},${
+                let rgb = `rgba(${imgData[i]},${imgData[i + 1]},${
                   imgData[i + 2]
-                })`;
+                },${imgData[i + 3]})`;
                 //透明色转默认色
                 if (
                   imgData[i] == 0 &&

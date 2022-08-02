@@ -45,12 +45,11 @@ class Pen extends Tool {
     
   private operateMove(pos: Point) {
     if (this.mouseDown) {
-      if (Tool.isPixel) { 
-				drawColorToPixel(this.previousPos, pos, this.penColor);
-				this.previousPos = pos;
-      }
-
-
+      if (Tool.isPixel) {
+        drawColorToPixel(this.previousPos, pos, this.penColor);
+        this.previousPos = pos;
+        return
+      } 
       Tool.ctx.moveTo(this.previousPos.x, this.previousPos.y);
       const c = 0.5 * (this.previousPos.x + pos.x);
       const d = 0.5 * (this.previousPos.y + pos.y);

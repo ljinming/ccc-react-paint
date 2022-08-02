@@ -1,3 +1,5 @@
+import { getPixelColorOnPixelBoxs } from "./pixelUtil";
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export interface Point {
   x: number;
@@ -12,7 +14,8 @@ export interface Point {
 export const setStraw = (pos?: Point) => {
   if (Tool.strawFlag && pos) {
     // 吸色
-    const color = getPixelColorOnCanvas(Tool.ctx, pos.x, pos!.y);
+    const color = Tool.isPixel ? getPixelColorOnPixelBoxs(pos) : getPixelColorOnCanvas(Tool.ctx, pos.x, pos!.y);
+    console.log('----3',color)
     Tool.strawColor = color;
     Tool.strawFlag = false;
   } 

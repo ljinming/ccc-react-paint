@@ -8,6 +8,22 @@ const dist2 = (p1: Point, p2: Point) => {
   return sqr(p1.x - p2.x) + sqr(p1.y - p2.y);
 };
 
+export const getPixelColorOnPixelBoxs = (pos: Point): string => {
+  for (let i = 0; i < Tool.PixelBoxs.length; i++) {
+    const pixel = Tool.PixelBoxs[i];
+    if (
+      pixel.x - Tool.OptPixel.stepX / 2 <= pos.x &&
+      pos.x <= pixel.x + Tool.OptPixel.stepX / 2 &&
+      pixel.y - Tool.OptPixel.stepY / 2 <= pos.y &&
+      pos.y <= pixel.y + Tool.OptPixel.stepY / 2
+    ) {
+      console.log("---3", pixel);
+      return pixel.getColor();
+    }
+  }
+  return "";
+};
+
 //像素风改色功能
 export const drawColorToPixel = (p1: Point, p2: Point, color: string) => {
   Tool.PixelBoxs.forEach((pixel, index) => {
