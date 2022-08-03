@@ -15,7 +15,6 @@ export const setStraw = (pos?: Point) => {
   if (Tool.strawFlag && pos) {
     // 吸色
     const color = Tool.isPixel ? getPixelColorOnPixelBoxs(pos) : getPixelColorOnCanvas(Tool.ctx, pos.x, pos!.y);
-    console.log('----3',color)
     Tool.strawColor = color;
     Tool.strawFlag = false;
   } 
@@ -29,19 +28,10 @@ export const getMousePos = (canvas: HTMLCanvasElement, event: MouseEvent|undefin
   if (pos) { 
     return {
       x: (pos.x - rect.left) / scale,
-      y: (pos.y - rect.top) / scale
-    //   x: (pos.x) / scale - Tool.translate.translatex,
-    // y: (pos.y )/scale -Tool.translate.translatey
+      y: (pos.y - rect.top) / scale,
   };
   }
   if (event) {
-    console.log('----23455',Tool.isPixel)
-      if (Tool.isPixel ) { 
-        return {
-          x: event.clientX  - rect.left * (canvas.width / rect.width),
-          y: event.clientY - rect.top * (canvas.height / rect.height)+ 16
-        };
-     }
         return {
             x: (event.clientX - rect.left)/scale,
             y: (event.clientY - rect.top)/scale
@@ -145,10 +135,11 @@ export default class Tool {
   
   //像素风基本设置
   public static OptPixel = {
-  stepX: 16,
-  stepY: 16,
-    EMPTY_COLOR: "#fff",
-  penHeight : 10
+  stepX: 3,
+  stepY: 3,
+  EMPTY_COLOR: "#fff",
+  size:2,
+  penHeight : 2
 };
 
 //是否像素风

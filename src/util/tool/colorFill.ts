@@ -1,6 +1,7 @@
 import Tool, { getMousePos, getTouchPos,setStraw, Point } from "./tool";
 import Color from "color";
 import { parseColorString } from "../colorChange";
+import { refresh } from "./pixelUtil";
 
 /**
  * 高效率的填充算法
@@ -86,7 +87,40 @@ const efficentFloodFill = (
       pixelPos += canvasWidth * 4;
     }
   }
-  ctx.putImageData(colorLayer, 0, 0);
+  if (Tool.isPixel) { 
+    //
+    let array = [];
+    const imgData = colorLayer.data;
+      for (let x = Tool.OptPixel.stepX + 1; x < canvasWidth; x += Tool.OptPixel.stepX) {
+        for (let y = Tool.OptPixel.stepY + 1; y < canvasHeight; y += Tool.OptPixel.stepY) {
+         let index = y * canvasWidth + x;
+                let i = index * 4;
+                let rgb = `rgba(${imgData[i]},${imgData[i + 1]},${
+                  imgData[i + 2]
+                },${imgData[i + 3]})`;
+                //透明色转默认色
+                if (
+                  imgData[i] == 0 &&
+                  imgData[i + 1] == 0 &&
+                  imgData[i + 2] == 0 &&
+                  imgData[i + 3] == 0
+                ) {
+                  array.push(Tool.OptPixel.EMPTY_COLOR);
+                } else {
+                  array.push(rgb);
+                 }       
+        }
+    }
+    for (let index = 0; index < array.length; index++) {
+      Tool.PixelBoxs[index].setColor(array[index]);
+     }
+    console.log('----43546',array,Tool.PixelBoxs)
+           refresh();
+
+  }
+
+
+ // ctx.putImageData(colorLayer, 0, 0);
 };
 
 /**

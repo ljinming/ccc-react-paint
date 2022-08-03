@@ -28,6 +28,7 @@ import Edit from "./edit";
 import { getImageSize } from "./utils";
 import { getMousePos } from "./util/tool/tool";
 import PiexCanvas from "./piexCanvas";
+import { Button } from "antd";
 
 interface PaintProps {
   imgSrc?: string;
@@ -96,6 +97,42 @@ function Paint(props: PaintProps): JSX.Element {
       return imageData;
     },
   }));
+
+  const transformImageData2Base64 = (data: {
+    imageData: ImageData;
+    height: number;
+    width: number;
+  }): string => {
+    const { imageData, height, width } = data;
+    const canvas = document.createElement("canvas");
+    canvas.height = height;
+    canvas.width = width;
+    const ctx = canvas.getContext("2d");
+    ctx?.putImageData(imageData, 0, 0);
+    return canvas.toDataURL("image/jpeg", 1);
+  };
+
+  const handleClick = () => {
+    const canvasElem: any = document.getElementById(`ccc-paint-canvas ${id}`);
+    const imageData = canvasElem
+      .getContext("2d")
+      .getImageData(canvasElem.width, canvasElem.height);
+    // 创建一个 a 标签，并设置 href 和 download 属性
+    const el = document.createElement("a");
+    // 设置 href 为图片经过 base64 编码后的字符串，默认为 png 格式
+    const base64 = transformImageData2Base64({
+      imageData,
+      height,
+      width,
+    });
+
+    el.href = base64;
+    el.download = "文件名称";
+
+    // 创建一个点击事件并对 a 标签进行触发
+    const event = new MouseEvent("click");
+    el.dispatchEvent(event);
+  };
 
   const loadImage = async (imgSrc: string) => {
     const size = await getImageSize(imgSrc);
@@ -204,6 +241,7 @@ function Paint(props: PaintProps): JSX.Element {
                     <div className="ccc">
                       <div className="ccc-edit">
                         <Edit />
+                        <Button onClick={handleClick}>保存</Button>
                       </div>
                       <div className="ccc-content">
                         <div className="ToolPanel">

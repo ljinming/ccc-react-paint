@@ -17,7 +17,6 @@ export const getPixelColorOnPixelBoxs = (pos: Point): string => {
       pixel.y - Tool.OptPixel.stepY / 2 <= pos.y &&
       pos.y <= pixel.y + Tool.OptPixel.stepY / 2
     ) {
-      console.log("---3", pixel);
       return pixel.getColor();
     }
   }
@@ -40,8 +39,7 @@ export const drawColorToPixel = (p1: Point, p2: Point, color: string) => {
   refresh();
 };
 
-//distToSegment
-
+//刷新
 export const refresh = () => {
   Tool.ctx.clearRect(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
   for (let i = 0; i < Tool.PixelBoxs.length; i++) {

@@ -1,4 +1,5 @@
 import {ShapeToolType} from "../toolType";
+import { drawColorToPixel } from "./pixelUtil";
 import Tool, {Point, getMousePos, getTouchPos,setStraw, hexToRgb,clacArea, updateImageData} from "./tool";
 
 /**
@@ -136,23 +137,33 @@ class Shape extends Tool {
         if (this.isDashed) {
             Tool.ctx.setLineDash(this.dashLineStyle);
         }
+                        Tool.ctx.beginPath();
+
     }
 
-    private operateMove(pos: {x: number; y: number}) {
-        if (this.isMouseDown && this.saveImageData) {
-            const ctx = Tool.ctx;
-            ctx.clearRect(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
+    private operateMove(pos: { x: number; y: number }) {
+                    const ctx = Tool.ctx;
+        if (this.isMouseDown && Tool.isPixel) { 
+            const vertexs: Point[] = getVertexs(this.type, this.mouseDownPos.x, this.mouseDownPos.y, pos.x, pos.y);
+            if (Tool.isPixel) {
+                drawColorToPixel(vertexs[0],vertexs[1],Tool.mainColor );
+                
+            }
+            return
+        }
 
+
+        if (this.isMouseDown && this.saveImageData) {
+            ctx.clearRect(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
             ctx.putImageData(this.saveImageData, 0, 0);
             const vertexs: Point[] = getVertexs(this.type, this.mouseDownPos.x, this.mouseDownPos.y, pos.x, pos.y);
-
             if (this.type === ShapeToolType.CIRCLE) {
                 ctx.beginPath();
                 ctx.ellipse(vertexs[0].x, vertexs[0].y, Math.abs(0.5 * (pos.x - this.mouseDownPos.x)), Math.abs(0.5 * (pos.y - this.mouseDownPos.y)), 0, 0, Math.PI * 2);
                 ctx.stroke();
             } else {
                 ctx.beginPath();
-                ctx.moveTo(vertexs[0].x, vertexs[0].y);
+                 ctx.moveTo(vertexs[0].x, vertexs[0].y);
                 for (let i = 1; i < vertexs.length; i++) {
                     ctx.lineTo(vertexs[i].x, vertexs[i].y);
                 }

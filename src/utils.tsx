@@ -30,21 +30,27 @@ export function getImageSize(url: string): Promise<{
 }> {
   return new Promise(function (resolve, reject) {
     const image = new Image();
+    image.src = url;
+    image.crossOrigin = "anonymous";
     image.onload = function () {
+      image.width = 150;
+      image.height = 150;
+
       resolve({
         width: image.width,
-        height: image.height
+        height: image.height,
       });
     };
     image.onerror = function () {
       reject(new Error("error"));
     };
-    image.src = url;
   });
 }
 
 export const getRandomColor = () => {
-  return "#" + ("00000" + ((Math.random() * 0x1000000) << 0).toString(16)).substr(-6);
+  return (
+    "#" + ("00000" + ((Math.random() * 0x1000000) << 0).toString(16)).substr(-6)
+  );
 };
 
 export function throttle(fn: any, delay: number) {

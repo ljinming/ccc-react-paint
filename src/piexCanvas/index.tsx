@@ -23,6 +23,7 @@ import cursorErase from "@/assets/icon/cursorErase.jpg";
 import straw from "@/assets/icon/straw.jpg";
 import bucket from "@/assets/icon/bucket.jpg";
 import Pixel from "./Pixel";
+import { refresh } from "../util/tool/pixelUtil";
 const { TextArea } = Input;
 
 interface CanvasProps {
@@ -55,12 +56,6 @@ let translatey = 0;
 const maxScale = 6;
 const minScale = 0.1;
 const scaleStep = 0.1;
-
-const Opt = {
-  stepX: 16,
-  stepY: 16,
-  EMPTY_COLOR: "#fff",
-};
 
 const Canvas: FC<CanvasProps> = (props) => {
   const {
@@ -172,6 +167,8 @@ const Canvas: FC<CanvasProps> = (props) => {
             const img = new Image();
             img.crossOrigin = "anonymous";
             img.src = imgSrc;
+            img.style.width = "150px";
+            img.style.height = "150px";
             img.onload = function () {
               const { width, height } = img;
               /*1.在canvas 中绘制图像*/
@@ -259,18 +256,6 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
   };
 
-  const refresh = (newBox: any[]) => {
-    const canvas = canvasRef.current;
-    const showBox = newBox || Tool.PixelBoxs;
-    if (canvas) {
-      Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i < showBox.length; i++) {
-        const pixel = showBox[i];
-        pixel.draw(Tool.ctx);
-      }
-    }
-  };
-
   const DrawImgPiex = (imgSrc: string, boxData: any[]) => {
     const canvas = canvasRef.current;
     if (canvas) {
@@ -282,14 +267,22 @@ const Canvas: FC<CanvasProps> = (props) => {
           const img = new Image();
           img.crossOrigin = "anonymous";
           img.src = imgSrc;
-          img.style.width = "200px";
-          img.style.height = "200px";
+          img.style.width = "150px";
+          img.style.height = "150px";
           img.onload = function () {
             ctx.drawImage(img, 0, 0, ctxWidth, ctxHeight);
             const imgData = ctx.getImageData(0, 0, ctxWidth, ctxHeight).data;
             const array = [];
-            for (let x = Opt.stepX + 1; x < ctxWidth; x += Opt.stepX) {
-              for (let y = Opt.stepY + 1; y < ctxHeight; y += Opt.stepY) {
+            for (
+              let x = Tool.OptPixel.stepX + 1;
+              x < ctxWidth;
+              x += Tool.OptPixel.stepX
+            ) {
+              for (
+                let y = Tool.OptPixel.stepY + 1;
+                y < ctxHeight;
+                y += Tool.OptPixel.stepY
+              ) {
                 let index = y * ctxWidth + x;
                 let i = index * 4;
                 let rgb = `rgba(${imgData[i]},${imgData[i + 1]},${
@@ -302,7 +295,7 @@ const Canvas: FC<CanvasProps> = (props) => {
                   imgData[i + 2] == 0 &&
                   imgData[i + 3] == 0
                 ) {
-                  array.push(Opt.EMPTY_COLOR);
+                  array.push(Tool.OptPixel.EMPTY_COLOR);
                 } else {
                   array.push(rgb);
                 }
@@ -313,7 +306,7 @@ const Canvas: FC<CanvasProps> = (props) => {
               newBox[index].setColor(array[index]);
             }
             Tool.PixelBoxs = newBox;
-            refresh(newBox);
+            refresh();
           };
         }
       }
@@ -327,16 +320,24 @@ const Canvas: FC<CanvasProps> = (props) => {
       const ctx = canvas.getContext("2d");
       if (ctx) {
         let boxArr = [];
-        for (let i = Opt.stepX + 1; i < canvas.width; i += Opt.stepX) {
-          for (let j = Opt.stepY + 1; j < canvas.height; j += Opt.stepY) {
+        for (
+          let i = Tool.OptPixel.stepX + 1;
+          i < canvas.width;
+          i += Tool.OptPixel.stepX
+        ) {
+          for (
+            let j = Tool.OptPixel.stepY + 1;
+            j < canvas.height;
+            j += Tool.OptPixel.stepY
+          ) {
             const options = {
               x: i,
               y: j,
               shape: "rect",
               isFill: true,
-              size: 15,
-              fillStyle: Opt.EMPTY_COLOR,
-              strokeStyle: "red",
+              size: Tool.OptPixel.size,
+              fillStyle: Tool.OptPixel.EMPTY_COLOR,
+              strokeStyle: "",
             };
             const pixel = new Pixel(options);
             boxArr.push(pixel);
@@ -362,20 +363,20 @@ const Canvas: FC<CanvasProps> = (props) => {
       }
       drawPixelCanvas();
 
-      //   const height = container!.clientHeight;
-      //   const width = container!.clientWidth;
-      //   const showScale =
-      //     Math.min(width, height) /
-      //       Math.max(CanvasSize.height, CanvasSize.width) || 1;
-      //   show_scale = showScale; //getScale({ width, height }, CanvasSize);
-      //   Tool.currentScale = show_scale;
-      //   translatex = (width - CanvasSize.width * show_scale) / 2 / show_scale;
-      //   translatey = (height - CanvasSize.height * show_scale) / 2;
-      //   Tool.translate = {
-      //     translatex,
-      //     translatey,
-      //   };
-      //   canvas.style.transform = `scale(${show_scale}) translate(${translatex}px,${translatey}px)`;
+      const height = container!.clientHeight;
+      const width = container!.clientWidth;
+      const showScale =
+        Math.min(width - 20, height - 20) /
+          Math.max(CanvasSize.height, CanvasSize.width) || 1;
+      show_scale = showScale; //getScale({ width, height }, CanvasSize);
+      Tool.currentScale = show_scale;
+      translatex = (width - CanvasSize.width * show_scale) / 2 / show_scale;
+      translatey = (height - CanvasSize.height * show_scale) / 2 / show_scale;
+      Tool.translate = {
+        translatex,
+        translatey,
+      };
+      canvas.style.transform = `scale(${show_scale}) translate(${translatex}px,${translatey}px)`;
     }
   }, [CanvasSize]);
 
