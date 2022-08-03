@@ -135,8 +135,8 @@ export default class Tool {
   
   //像素风基本设置
   public static OptPixel = {
-  stepX: 3,
-  stepY: 3,
+  stepX: 2,
+  stepY: 2,
   EMPTY_COLOR: "#fff",
   size:2,
   penHeight : 2
@@ -147,9 +147,6 @@ export default class Tool {
   
   //像素风格子数组、
   public static PixelBoxs:any[] = [];
-
-
-
   public static zoom = {
     scaleX:1,
     scaleY:1

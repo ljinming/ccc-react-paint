@@ -38,6 +38,7 @@ interface PaintProps {
   id?: string;
   cRef?: any;
   ThumbSrc?: string;
+  isPixel?: boolean;
   showArea?: Array<[number, number]>;
 }
 //= https://bafybeibsrvi7eb2eibdkr73e2d3znucfpbkvml2jsbgt7cctdk7m4p2fi4.ipfs.dweb.link/orign.png
@@ -47,13 +48,14 @@ interface PaintProps {
 function Paint(props: PaintProps): JSX.Element {
   const {
     id = "test",
-    imgSrc = "https://iwnuo-oqaaa-aaaah-qcwcq-cai.raw.ic0.app/thumbnail/231",
+    imgSrc = "https://v4oyv-zaaaa-aaaah-qctya-cai.raw.ic0.app/token/5479",
     width = 0,
     height = 0,
     background,
     cRef,
     showArea,
     ThumbSrc,
+    isPixel = true,
   } = props;
 
   const [toolType, setToolType] = useState<ToolType>(ToolType.PEN);
@@ -246,6 +248,7 @@ function Paint(props: PaintProps): JSX.Element {
                       <div className="ccc-content">
                         <div className="ToolPanel">
                           <ToolPanel
+                            isPixel={isPixel}
                             className="toolbar-item"
                             fillColor={fillColor}
                           />

@@ -23,6 +23,41 @@ export const getPixelColorOnPixelBoxs = (pos: Point): string => {
   return "";
 };
 
+export const updatePixelBoxs = (ctx: CanvasRenderingContext2D) => {
+  const ctxWidth = ctx.canvas.width;
+  const ctxHeight = ctx.canvas.height;
+  const imgData = ctx.getImageData(0, 0, ctxWidth, ctxHeight).data;
+  let array = [];
+  for (let x = 0; x < ctxWidth * Tool.OptPixel.size; x += Tool.OptPixel.size) {
+    for (
+      let y = 0;
+      y < ctxHeight * Tool.OptPixel.size;
+      y += Tool.OptPixel.size
+    ) {
+      let index = y * ctxWidth + x;
+      let i = index * 4;
+      let rgb = `rgba(${imgData[i]},${imgData[i + 1]},${imgData[i + 2]},${
+        imgData[i + 3] / 255
+      })`;
+      //透明色转默认色
+      if (
+        imgData[i] == 0 &&
+        imgData[i + 1] == 0 &&
+        imgData[i + 2] == 0 &&
+        imgData[i + 3] == 0
+      ) {
+        array.push(Tool.OptPixel.EMPTY_COLOR);
+      } else {
+        array.push(rgb);
+      }
+    }
+  }
+  for (let index = 0; index < array.length; index++) {
+    Tool.PixelBoxs[index].setColor(array[index]);
+  }
+  refresh();
+};
+
 //像素风改色功能
 export const drawColorToPixel = (p1: Point, p2: Point, color: string) => {
   Tool.PixelBoxs.forEach((pixel, index) => {

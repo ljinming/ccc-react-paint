@@ -33,9 +33,6 @@ export function getImageSize(url: string): Promise<{
     image.src = url;
     image.crossOrigin = "anonymous";
     image.onload = function () {
-      image.width = 150;
-      image.height = 150;
-
       resolve({
         width: image.width,
         height: image.height,

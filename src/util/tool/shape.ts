@@ -1,5 +1,5 @@
 import {ShapeToolType} from "../toolType";
-import { drawColorToPixel } from "./pixelUtil";
+import { drawColorToPixel, updatePixelBoxs } from "./pixelUtil";
 import Tool, {Point, getMousePos, getTouchPos,setStraw, hexToRgb,clacArea, updateImageData} from "./tool";
 
 /**
@@ -137,22 +137,11 @@ class Shape extends Tool {
         if (this.isDashed) {
             Tool.ctx.setLineDash(this.dashLineStyle);
         }
-                        Tool.ctx.beginPath();
 
     }
 
     private operateMove(pos: { x: number; y: number }) {
-                    const ctx = Tool.ctx;
-        if (this.isMouseDown && Tool.isPixel) { 
-            const vertexs: Point[] = getVertexs(this.type, this.mouseDownPos.x, this.mouseDownPos.y, pos.x, pos.y);
-            if (Tool.isPixel) {
-                drawColorToPixel(vertexs[0],vertexs[1],Tool.mainColor );
-                
-            }
-            return
-        }
-
-
+        const ctx = Tool.ctx;
         if (this.isMouseDown && this.saveImageData) {
             ctx.clearRect(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
             ctx.putImageData(this.saveImageData, 0, 0);
@@ -175,14 +164,16 @@ class Shape extends Tool {
     
     private operateEnd() {
         Tool.ctx.setLineDash([]);
-        // let imageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
+        let imageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
         // const colorRgb = hexToRgb(Tool.mainColor);
         // if (colorRgb && this.saveImageData) {
         //     imageData = updateImageData(this.saveImageData, imageData, [colorRgb.r, colorRgb.g, colorRgb.b, colorRgb.a]);
 
         //     Tool.ctx.putImageData(imageData, 0, 0);
         // }
-        
+        if (Tool.isPixel) { 
+         updatePixelBoxs(Tool.ctx);
+        }
         this.isMouseDown = false;
         this.saveImageData = undefined;
     }

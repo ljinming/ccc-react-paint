@@ -34,7 +34,7 @@ class Pen extends Tool {
           pixel.fillStyle = testColor;
         }
       }
-      return
+      
     }
     this.saveImageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
     Tool.ctx.strokeStyle = testColor;
@@ -48,7 +48,7 @@ class Pen extends Tool {
       if (Tool.isPixel) {
         drawColorToPixel(this.previousPos, pos, this.penColor);
         this.previousPos = pos;
-        return
+        
       } 
       Tool.ctx.moveTo(this.previousPos.x, this.previousPos.y);
       const c = 0.5 * (this.previousPos.x + pos.x);

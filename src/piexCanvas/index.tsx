@@ -23,7 +23,7 @@ import cursorErase from "@/assets/icon/cursorErase.jpg";
 import straw from "@/assets/icon/straw.jpg";
 import bucket from "@/assets/icon/bucket.jpg";
 import Pixel from "./Pixel";
-import { refresh } from "../util/tool/pixelUtil";
+import { refresh, updatePixelBoxs } from "../util/tool/pixelUtil";
 const { TextArea } = Input;
 
 interface CanvasProps {
@@ -167,8 +167,6 @@ const Canvas: FC<CanvasProps> = (props) => {
             const img = new Image();
             img.crossOrigin = "anonymous";
             img.src = imgSrc;
-            img.style.width = "150px";
-            img.style.height = "150px";
             img.onload = function () {
               const { width, height } = img;
               /*1.在canvas 中绘制图像*/
@@ -267,46 +265,9 @@ const Canvas: FC<CanvasProps> = (props) => {
           const img = new Image();
           img.crossOrigin = "anonymous";
           img.src = imgSrc;
-          img.style.width = "150px";
-          img.style.height = "150px";
           img.onload = function () {
             ctx.drawImage(img, 0, 0, ctxWidth, ctxHeight);
-            const imgData = ctx.getImageData(0, 0, ctxWidth, ctxHeight).data;
-            const array = [];
-            for (
-              let x = Tool.OptPixel.stepX + 1;
-              x < ctxWidth;
-              x += Tool.OptPixel.stepX
-            ) {
-              for (
-                let y = Tool.OptPixel.stepY + 1;
-                y < ctxHeight;
-                y += Tool.OptPixel.stepY
-              ) {
-                let index = y * ctxWidth + x;
-                let i = index * 4;
-                let rgb = `rgba(${imgData[i]},${imgData[i + 1]},${
-                  imgData[i + 2]
-                },${imgData[i + 3]})`;
-                //透明色转默认色
-                if (
-                  imgData[i] == 0 &&
-                  imgData[i + 1] == 0 &&
-                  imgData[i + 2] == 0 &&
-                  imgData[i + 3] == 0
-                ) {
-                  array.push(Tool.OptPixel.EMPTY_COLOR);
-                } else {
-                  array.push(rgb);
-                }
-              }
-            }
-            let newBox = [...boxData];
-            for (let index = 0; index < array.length; index++) {
-              newBox[index].setColor(array[index]);
-            }
-            Tool.PixelBoxs = newBox;
-            refresh();
+            updatePixelBoxs(ctx);
           };
         }
       }
@@ -321,14 +282,14 @@ const Canvas: FC<CanvasProps> = (props) => {
       if (ctx) {
         let boxArr = [];
         for (
-          let i = Tool.OptPixel.stepX + 1;
-          i < canvas.width;
-          i += Tool.OptPixel.stepX
+          let i = 0;
+          i < canvas.width * Tool.OptPixel.size;
+          i += Tool.OptPixel.size
         ) {
           for (
-            let j = Tool.OptPixel.stepY + 1;
-            j < canvas.height;
-            j += Tool.OptPixel.stepY
+            let j = 0;
+            j < canvas.height * Tool.OptPixel.size;
+            j += Tool.OptPixel.size
           ) {
             const options = {
               x: i,

@@ -14,10 +14,11 @@ const selectedToolClass = "selected-tool";
 export interface ToolPanelProps {
   className?: string;
   fillColor?: string;
+  isPixel: boolean;
 }
 
 const ToolPanel: React.FC<ToolPanelProps> = (props) => {
-  const { className, fillColor } = props;
+  const { className, fillColor, isPixel } = props;
   return (
     <div className={className ? `toolpanel ${className}` : "toolpanel"}>
       <ToolTypeContext.Consumer>
@@ -85,20 +86,22 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
                 />
               </span>
             </span>
-            <span title="Text" className="tool-Icon">
-              <span
-                className={
-                  type === ToolType.TEXT
-                    ? `tool-item ${selectedToolClass}`
-                    : "tool-item"
-                }
-                onClick={() => {
-                  setType(ToolType.TEXT);
-                }}
-              >
-                {textIcon}
+            {!isPixel && (
+              <span title="Text" className="tool-Icon">
+                <span
+                  className={
+                    type === ToolType.TEXT
+                      ? `tool-item ${selectedToolClass}`
+                      : "tool-item"
+                  }
+                  onClick={() => {
+                    setType(ToolType.TEXT);
+                  }}
+                >
+                  {textIcon}
+                </span>
               </span>
-            </span>
+            )}
           </>
         )}
       </ToolTypeContext.Consumer>
