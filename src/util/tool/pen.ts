@@ -1,7 +1,7 @@
 import { ColorType } from "../toolType";
 import { hexToRgba, } from "../colorChange";
 import Tool, { Point, getMousePos, setStraw, getTouchPos, hexToRgb,clacArea, updateImageData } from "./tool";
-import { drawColorToPixel } from "./pixelUtil";
+import { drawColorToPixel, isPointInPath } from "./pixelUtil";
 
 class Pen extends Tool {
   protected lineWidthBase = 1;
@@ -31,7 +31,7 @@ class Pen extends Tool {
       for (let p = 0; p < Tool.PixelBoxs.length; p++) {
         const pixel = Tool.PixelBoxs[p];
         if (pixel.isPointInPath(Tool.ctx, pos)) {
-          pixel.fillStyle = testColor;
+           pixel.fillStyle = testColor;
         }
       }
       
@@ -45,10 +45,10 @@ class Pen extends Tool {
     
   private operateMove(pos: Point) {
     if (this.mouseDown) {
-      if (Tool.isPixel) {
+      if (Tool.isPixel ) {
         drawColorToPixel(this.previousPos, pos, this.penColor);
         this.previousPos = pos;
-        
+        return
       } 
       Tool.ctx.moveTo(this.previousPos.x, this.previousPos.y);
       const c = 0.5 * (this.previousPos.x + pos.x);
@@ -81,7 +81,6 @@ class Pen extends Tool {
   public onMouseDown(event: MouseEvent): void {
     event.preventDefault();
     const mousePos = getMousePos(Tool.ctx.canvas, event);
-    console.log('mouseDown', mousePos)
     if (clacArea(mousePos)) { 
     this.operateStart(mousePos);
     }

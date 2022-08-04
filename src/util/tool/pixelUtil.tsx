@@ -12,10 +12,10 @@ export const getPixelColorOnPixelBoxs = (pos: Point): string => {
   for (let i = 0; i < Tool.PixelBoxs.length; i++) {
     const pixel = Tool.PixelBoxs[i];
     if (
-      pixel.x - Tool.OptPixel.stepX / 2 <= pos.x &&
-      pos.x <= pixel.x + Tool.OptPixel.stepX / 2 &&
-      pixel.y - Tool.OptPixel.stepY / 2 <= pos.y &&
-      pos.y <= pixel.y + Tool.OptPixel.stepY / 2
+      pixel.x - Tool.OptPixel.size / 2 <= pos.x &&
+      pos.x <= pixel.x + Tool.OptPixel.size / 2 &&
+      pixel.y - Tool.OptPixel.size / 2 <= pos.y &&
+      pos.y <= pixel.y + Tool.OptPixel.size / 2
     ) {
       return pixel.getColor();
     }
@@ -23,39 +23,30 @@ export const getPixelColorOnPixelBoxs = (pos: Point): string => {
   return "";
 };
 
-export const updatePixelBoxs = (ctx: CanvasRenderingContext2D) => {
+export const updatePixelBoxs = (
+  ctx: CanvasRenderingContext2D,
+  imageData?: any
+) => {
   const ctxWidth = ctx.canvas.width;
   const ctxHeight = ctx.canvas.height;
-  const imgData = ctx.getImageData(0, 0, ctxWidth, ctxHeight).data;
+  const imgData = imageData || ctx.getImageData(0, 0, ctxWidth, ctxHeight).data;
   let array = [];
-  for (let x = 0; x < ctxWidth * Tool.OptPixel.size; x += Tool.OptPixel.size) {
-    for (
-      let y = 0;
-      y < ctxHeight * Tool.OptPixel.size;
-      y += Tool.OptPixel.size
-    ) {
+  for (let x = 0; x < ctxWidth; x += Tool.OptPixel.size) {
+    for (let y = 0; y < ctxHeight; y += Tool.OptPixel.size) {
       let index = y * ctxWidth + x;
       let i = index * 4;
       let rgb = `rgba(${imgData[i]},${imgData[i + 1]},${imgData[i + 2]},${
         imgData[i + 3] / 255
       })`;
-      //透明色转默认色
-      if (
-        imgData[i] == 0 &&
-        imgData[i + 1] == 0 &&
-        imgData[i + 2] == 0 &&
-        imgData[i + 3] == 0
-      ) {
-        array.push(Tool.OptPixel.EMPTY_COLOR);
-      } else {
-        array.push(rgb);
-      }
+      array.push(rgb);
     }
   }
-  for (let index = 0; index < array.length; index++) {
-    Tool.PixelBoxs[index].setColor(array[index]);
+  if (Tool.PixelBoxs.length > 0) {
+    for (let index = 0; index < array.length; index++) {
+      Tool.PixelBoxs[index].setColor(array[index]);
+    }
+    refresh();
   }
-  refresh();
 };
 
 //像素风改色功能
@@ -66,7 +57,7 @@ export const drawColorToPixel = (p1: Point, p2: Point, color: string) => {
       y: pixel.y,
     };
     const distance = distToSegment(p, p1, p2, Tool.ctx.lineWidth);
-    if (distance <= Tool.ctx.lineWidth) {
+    if (distance <= Tool.ctx.lineWidth * Tool.OptPixel.size) {
       const pixel = Tool.PixelBoxs[index];
       pixel.setColor(color);
     }
@@ -111,4 +102,19 @@ const distToSegment = (p: Point, v: Point, w: Point, offset: number) => {
     return Number.MAX_VALUE;
   }
   return Math.sqrt(distToSegmentSquared(p, v, w));
+};
+
+export const isPointInPath = (
+  ctx: CanvasRenderingContext2D,
+  p: Point
+): boolean => {
+  let isIn = false;
+  ctx.save();
+  ctx.beginPath();
+  if (ctx.isPointInPath(p.x, p.y)) {
+    isIn = true;
+  }
+  ctx.closePath();
+  ctx.restore();
+  return isIn;
 };

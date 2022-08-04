@@ -28,6 +28,7 @@
     "importHelpers": true
   },
   "include": [
-    "src"
+    "src",
+    "type.d.ts"
   ]
 }

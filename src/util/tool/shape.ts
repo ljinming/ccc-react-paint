@@ -115,7 +115,7 @@ class Shape extends Tool {
     private lineWidthBase = 1;
     public isDashed = false;
     private dashLineStyle = [10, 10];
-    static shapeWidth: any;
+    static shapeWidth: any = 1;
     public constructor(type: ShapeToolType, dashed = false) {
         super();
         this.type = type;
@@ -128,12 +128,13 @@ class Shape extends Tool {
 
     private operateStart(pos: { x: number; y: number }) {
         setStraw(pos)
+        const lineWidth = Shape.shapeWidth || 1;
         this.saveImageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
         this.isMouseDown = true;
         this.mouseDownPos = pos;
         Tool.ctx.strokeStyle = Tool.mainColor;
-        Tool.ctx.lineWidth = Shape.shapeWidth;//5// Tool.lineWidthFactor * this.lineWidthBase;
-        Tool.ctx.fillStyle = Tool.subColor;
+        Tool.ctx.lineWidth = Tool.isPixel?lineWidth*Tool.OptPixel.size:lineWidth;//5// Tool.lineWidthFactor * this.lineWidthBase;
+        Tool.ctx.fillStyle = Tool.mainColor;
         if (this.isDashed) {
             Tool.ctx.setLineDash(this.dashLineStyle);
         }
@@ -164,13 +165,6 @@ class Shape extends Tool {
     
     private operateEnd() {
         Tool.ctx.setLineDash([]);
-        let imageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
-        // const colorRgb = hexToRgb(Tool.mainColor);
-        // if (colorRgb && this.saveImageData) {
-        //     imageData = updateImageData(this.saveImageData, imageData, [colorRgb.r, colorRgb.g, colorRgb.b, colorRgb.a]);
-
-        //     Tool.ctx.putImageData(imageData, 0, 0);
-        // }
         if (Tool.isPixel) { 
          updatePixelBoxs(Tool.ctx);
         }

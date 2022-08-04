@@ -34,6 +34,16 @@ class Snapshot {
     }
     return this.imageData1.length > 0 ? this.imageData1[this.imageData1.length - 1] : null;
   }
+  public getImageDatalist(type:string) { 
+    switch (type) {
+      case "back":
+        return this.imageData1;
+      case 'forward':
+        return this.imageData2;
+      default:
+        return undefined
+    }
+  }
 }
 
 export default Snapshot;

@@ -25,7 +25,6 @@ import bucket from "@/assets/icon/bucket.jpg";
 import Pixel from "./Pixel";
 import { refresh, updatePixelBoxs } from "../util/tool/pixelUtil";
 const { TextArea } = Input;
-
 interface CanvasProps {
   toolType: ToolType;
   shapeType: ShapeToolType;
@@ -83,6 +82,7 @@ const Canvas: FC<CanvasProps> = (props) => {
   const dispatcherContext = useContext(DispatcherContext);
   const [snapshot] = useState<SnapShot>(new SnapShot());
   const [text, setText] = useState("");
+  const [showScale, setScale] = useState(1);
   useEffect(() => {
     showCanvasCursor();
     switch (toolType) {
@@ -155,7 +155,6 @@ const Canvas: FC<CanvasProps> = (props) => {
     const canvas = canvasRef.current;
     if (canvas) {
       showCanvasCursor();
-      // drawCanvas();
       Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       Tool.isPixel = true;
       // 注册清空画布事件
@@ -164,6 +163,11 @@ const Canvas: FC<CanvasProps> = (props) => {
         const ctx = canvas.getContext("2d");
         if (ctx) {
           if (imgSrc) {
+            if (Tool.isPixel) {
+              Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
+              DrawImgPiex(imgSrc);
+              return;
+            }
             const img = new Image();
             img.crossOrigin = "anonymous";
             img.src = imgSrc;
@@ -189,7 +193,6 @@ const Canvas: FC<CanvasProps> = (props) => {
         }
       };
       dispatcher.on(CLEAR_EVENT, callback);
-
       // 注册画布前进事件
       const forward = () => {
         const ctx = canvas.getContext("2d");
@@ -208,14 +211,19 @@ const Canvas: FC<CanvasProps> = (props) => {
         const ctx = canvas.getContext("2d");
         if (ctx) {
           const imageData = snapshot.back();
-          if (imageData) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+          const imageDataList = snapshot.getImageDatalist("back") || [];
+          if (imageData && imageDataList.length > 1) {
+            Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.putImageData(imageData, 0, 0);
+          } else if (imageDataList.length === 1) {
+            if (imgSrc) {
+              Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
+              DrawImgPiex(imgSrc);
+            }
           }
         }
       };
       dispatcher.on(UNDO_EVENT, back);
-
       return () => {
         dispatcher.off(CLEAR_EVENT, callback);
       };
@@ -254,60 +262,44 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
   };
 
-  const DrawImgPiex = (imgSrc: string, boxData: any[]) => {
+  const DrawImgPiex = async (imgSrc: string) => {
     const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      const ctxWidth = canvas.width;
-      const ctxHeight = canvas.height;
+    if (canvas && CanvasSize) {
+      const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       if (ctx) {
         if (imgSrc) {
           const img = new Image();
           img.crossOrigin = "anonymous";
           img.src = imgSrc;
           img.onload = function () {
-            ctx.drawImage(img, 0, 0, ctxWidth, ctxHeight);
-            updatePixelBoxs(ctx);
+            let boxArr = [];
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+            const imgData = ctx?.getImageData(0, 0, img.width, img.height);
+            const data = imgData.data;
+            for (let i = 0; i < imgData.width; i++) {
+              for (let j = 0; j < imgData.height; j++) {
+                let index = j * imgData.width + i;
+                const flag = index * 4;
+                let rgb = `rgba(${data[flag]},${data[flag + 1]},${
+                  data[flag + 2]
+                },${data[flag + 3] / 255})`;
+                const options = {
+                  x: i * Tool.OptPixel.size,
+                  y: j * Tool.OptPixel.size,
+                  shape: "rect",
+                  isFill: true,
+                  size: Tool.OptPixel.size,
+                  fillStyle: rgb,
+                  strokeStyle: "",
+                };
+                const pixel = new Pixel(options);
+                boxArr.push(pixel);
+                pixel.draw(ctx);
+              }
+            }
+            Tool.PixelBoxs = boxArr;
           };
-        }
-      }
-    }
-  };
-
-  const drawPixelCanvas = () => {
-    //初始化
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        let boxArr = [];
-        for (
-          let i = 0;
-          i < canvas.width * Tool.OptPixel.size;
-          i += Tool.OptPixel.size
-        ) {
-          for (
-            let j = 0;
-            j < canvas.height * Tool.OptPixel.size;
-            j += Tool.OptPixel.size
-          ) {
-            const options = {
-              x: i,
-              y: j,
-              shape: "rect",
-              isFill: true,
-              size: Tool.OptPixel.size,
-              fillStyle: Tool.OptPixel.EMPTY_COLOR,
-              strokeStyle: "",
-            };
-            const pixel = new Pixel(options);
-            boxArr.push(pixel);
-            pixel.draw(ctx);
-          }
-        }
-        Tool.PixelBoxs = boxArr;
-        if (imgSrc) {
-          DrawImgPiex(imgSrc, boxArr);
+          updatePixelBoxs(ctx);
         }
       }
     }
@@ -317,27 +309,22 @@ const Canvas: FC<CanvasProps> = (props) => {
     const container = allCanvasRef!.current;
     const canvas = canvasRef.current;
     if (CanvasSize && container && canvas) {
-      canvas.width = CanvasSize.width;
-      canvas.height = CanvasSize.height;
       if (Tool.ctx) {
         Tool.ctx.clearRect(0, 0, canvas.width, canvas?.height);
       }
-      drawPixelCanvas();
-
       const height = container!.clientHeight;
       const width = container!.clientWidth;
-      const showScale =
+      const showScale = Math.floor(
         Math.min(width - 20, height - 20) /
-          Math.max(CanvasSize.height, CanvasSize.width) || 1;
-      show_scale = showScale; //getScale({ width, height }, CanvasSize);
-      Tool.currentScale = show_scale;
-      translatex = (width - CanvasSize.width * show_scale) / 2 / show_scale;
-      translatey = (height - CanvasSize.height * show_scale) / 2 / show_scale;
-      Tool.translate = {
-        translatex,
-        translatey,
-      };
-      canvas.style.transform = `scale(${show_scale}) translate(${translatex}px,${translatey}px)`;
+          Math.max(CanvasSize.height, CanvasSize.width) || 1
+      );
+      show_scale = showScale;
+      Tool.OptPixel.size = showScale;
+      canvas.width = CanvasSize.width * showScale;
+      canvas.height = CanvasSize.height * showScale;
+      if (imgSrc) {
+        DrawImgPiex(imgSrc);
+      }
     }
   }, [CanvasSize]);
 
@@ -390,47 +377,12 @@ const Canvas: FC<CanvasProps> = (props) => {
     );
   };
 
-  const getTrans = (
-    client: number,
-    newScale: number,
-    direction: string,
-    img: any,
-    boxdom: any,
-    scale: number
-  ) => {
-    const lastTrans = direction === "width" ? translatex : translatey;
-    // console.log("已经偏移的距离:", lastTrans);
-
-    const sizeChanage = img[direction] * newScale - img[direction] * scale;
-    // console.log(`img ${direction}放大了:`, sizeChanage);
-
-    // 整体已经移动过了，需要弥补回来
-    const pre = client - lastTrans - boxdom[direction === "width" ? "x" : "y"];
-
-    //console.log("缩放中心到边界的距离", pre);
-
-    const percent = pre / (img[direction] * scale);
-
-    //  console.log("当前缩放尺度下，缩放中心到边界比例", percent);
-
-    const trans = percent * sizeChanage;
-    // console.log("缩放中心移动的距离:", trans);
-    return trans;
-  };
-
   const onMousewheel = (event: WheelEvent) => {
     event.preventDefault();
-    if (toolType === ToolType.TEXT) {
-      return;
-    }
-    const canvas = canvasRef.current;
-    const container = allCanvasRef!.current;
-    const { clientX, clientY, deltaX, deltaY, ctrlKey } = event;
-    const { width, height, x, y } = container!.getBoundingClientRect();
-    const { width: canvasWidth, height: canvasHeight } =
-      container!.getBoundingClientRect();
+    const { deltaY, ctrlKey } = event;
     let newScale;
-    if (ctrlKey) {
+    const canvas = canvasRef.current;
+    if (ctrlKey && CanvasSize && canvas) {
       //双指放大缩小
       if (deltaY < 0) {
         newScale = show_scale + scaleStep;
@@ -439,41 +391,12 @@ const Canvas: FC<CanvasProps> = (props) => {
         newScale = show_scale - scaleStep;
         newScale = Math.max(newScale, minScale);
       }
-      const transX = getTrans(
-        clientX,
-        newScale,
-        "width",
-        CanvasSize,
-        {
-          width,
-          height,
-          x,
-          y,
-        },
-        show_scale
-      );
-      const transY = getTrans(
-        clientY,
-        newScale,
-        "height",
-        CanvasSize,
-        {
-          width,
-          height,
-          x,
-          y,
-        },
-        show_scale
-      );
-      translatex = translatex - transX;
-      translatey = translatey - transY;
       show_scale = newScale;
-      Tool.currentScale = newScale;
-      Tool.translate = {
-        translatex,
-        translatey,
-      };
-      canvas!.style.transform = `translate3d(${translatex}px, ${translatey}px, 0px) scale(${show_scale})`;
+      canvas.width = CanvasSize.width * showScale;
+      canvas.height = CanvasSize.height * showScale;
+      if (imgSrc) {
+        DrawImgPiex(imgSrc);
+      }
     }
   };
 
@@ -500,7 +423,7 @@ const Canvas: FC<CanvasProps> = (props) => {
         translatex,
         translatey,
       };
-      canvas!.style.transform = `translate(${translatex}px, ${translatey}px) scale(${show_scale})`;
+      canvas!.style.transform = `translate(${translatex}px, ${translatey}px)`;
     }
   };
 
@@ -524,7 +447,9 @@ const Canvas: FC<CanvasProps> = (props) => {
       canvas.addEventListener("mousedown", onMouseDown);
       canvas.addEventListener("mousemove", onMouseMove);
       canvas.addEventListener("mouseup", onMouseUp);
-      canvas.addEventListener("wheel", onMousewheel, { passive: false });
+      canvas.addEventListener("wheel", onMousewheel, {
+        passive: false,
+      });
       canvas.addEventListener("touchstart", onTouchStart);
       canvas.addEventListener("touchmove", onTouchMove);
       canvas.addEventListener("touchend", onTouchEnd);
@@ -536,7 +461,7 @@ const Canvas: FC<CanvasProps> = (props) => {
         canvas.removeEventListener("mousedown", onMouseDown);
         canvas.removeEventListener("mousemove", onMouseMove);
         canvas.removeEventListener("mouseup", onMouseUp);
-        canvas.removeEventListener("wheel", onMousewheel);
+        //canvas.removeEventListener("wheel", onMousewheel);
 
         canvas.removeEventListener("touchstart", onTouchStart);
         canvas.removeEventListener("touchmove", onTouchMove);
