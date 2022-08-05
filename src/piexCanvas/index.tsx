@@ -494,12 +494,35 @@ const Canvas: FC<CanvasProps> = (props) => {
     }
   }
   const handleClick = () => {
+    const dpr = window.devicePixelRatio;
     const canvas = canvasRef.current;
     if (canvas && CanvasSize && imgSrc) {
+      const imgData = Tool.ctx.getImageData(
+        0,
+        0,
+        Tool.ctx.canvas.width,
+        Tool.ctx.canvas.height
+      );
+      const data = imgData.data;
+      Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
       canvas.width = CanvasSize.width;
       canvas.height = CanvasSize.height;
-      Tool.OptPixel.size = 1;
-      DrawImgPiex(imgSrc);
+      const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+
+      for (let i = 0; i < imgData.width; i += Tool.OptPixel.size) {
+        for (let j = 0; j < imgData.height; j += Tool.OptPixel.size) {
+          let index = j * imgData.width + i;
+          const flag = index * 4;
+          let rgb = `rgba(${data[flag]},${data[flag + 1]},${data[flag + 2]},${
+            data[flag + 3]
+          })`;
+          if (ctx) {
+            ctx.fillStyle = rgb;
+            ctx.fillRect(i / Tool.OptPixel.size, j / Tool.OptPixel.size, 1, 1);
+          }
+        }
+      }
+      //DrawImgPiex(imgSrc);
     }
   };
   return (

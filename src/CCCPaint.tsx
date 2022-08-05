@@ -118,8 +118,8 @@ function Paint(props: PaintProps): JSX.Element {
     const imgData = imageData;
     const ctx = canvasElem.getContext("2d");
     const data = imgData.data;
-    for (let i = 0; i < imgData.width; i++) {
-      for (let j = 0; j < imgData.height; j++) {
+    for (let i = 0; i < imgData.width; i += Tool.OptPixel.size) {
+      for (let j = 0; j < imgData.height; j += Tool.OptPixel.size) {
         let index = j * imgData.width + i;
         const flag = index * 4;
         let rgb = `rgba(${data[flag]},${data[flag + 1]},${data[flag + 2]},${
@@ -130,8 +130,8 @@ function Paint(props: PaintProps): JSX.Element {
       }
     }
 
-    console.log("imageData===3", canvasElem.toDataURL("image/png"));
-    const dataSrc = canvasElem.toDataURL("image/png", 1.0);
+    // console.log("imageData===3", canvasElem.toDataURL("image/png"));
+    // const dataSrc = canvasElem.toDataURL("image/png", 1.0);
 
     // const a = document.createElement("a");
     // // 创建一个单击事件
