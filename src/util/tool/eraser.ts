@@ -1,5 +1,5 @@
 import { ColorType } from "../toolType";
-import { drawColorToPixel, getPixelColorOnPixelBoxs } from "./pixelUtil";
+import { drawColorToPixel, getPixelColorOnPixelBoxs, updatePixelBoxs } from "./pixelUtil";
 import Tool, { Point, getMousePos, getPixelColorOnCanvas, getTouchPos, hexToRgb, updateImageData, clacArea } from "./tool";
 class Eraser extends Tool {
   protected lineWidthBase = 1;
@@ -20,21 +20,23 @@ class Eraser extends Tool {
     this.saveImageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
     this.mouseDown = true;
     this.previousPos = pos;
-    this.color = Tool.isPixel ? getPixelColorOnPixelBoxs(pos):getPixelColorOnCanvas(Tool.ctx, pos.x - 2, pos.y - 2);
-    Tool.ctx.lineWidth =Tool.isPixel ? this.lineWidthBase*Tool.OptPixel.size/2: this.lineWidthBase;
-    //   if (Tool.isPixel && Tool.PixelBoxs) {
-    //   for (let p = 0; p < Tool.PixelBoxs.length; p++) {
-    //     const pixel = Tool.PixelBoxs[p];
-    //     if (pixel.isPointInPath(Tool.ctx, pos)) {
-    //       pixel.fillStyle = this.color;
-    //     }
-    //   }
-    //   return
-    // }
+        Tool.ctx.lineWidth =Tool.isPixel ? this.lineWidthBase*Tool.OptPixel.size/2: this.lineWidthBase;
+
+    const newPos = {
+      x: pos.x -   Tool.ctx.lineWidth,
+      y:pos.y -   Tool.ctx.lineWidth
+    }
+
+    this.color = Tool.isPixel ? getPixelColorOnPixelBoxs(newPos) : getPixelColorOnCanvas(Tool.ctx, pos.x - 2, pos.y - 2);
+            console.log(this.color)
+
     Tool.ctx.strokeStyle = this.color;
     Tool.ctx.lineJoin = "round";
     Tool.ctx.lineCap = "round";
     Tool.ctx.beginPath();
+     if (Tool.isPixel) { 
+       drawColorToPixel(pos, pos, this.color);
+    }
   }
   private operateMove(pos: Point) {
     if (this.mouseDown) {
@@ -64,6 +66,8 @@ class Eraser extends Tool {
         Tool.ctx.putImageData(imageData, 0, 0);
       }
       }
+              updatePixelBoxs(Tool.ctx)
+
      
     }
   }

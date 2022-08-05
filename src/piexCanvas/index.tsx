@@ -56,6 +56,8 @@ const maxScale = 6;
 const minScale = 0.1;
 const scaleStep = 0.1;
 
+let lastSrcImageData: ImageData | undefined;
+
 const Canvas: FC<CanvasProps> = (props) => {
   const {
     id,
@@ -158,11 +160,13 @@ const Canvas: FC<CanvasProps> = (props) => {
       // 注册清空画布事件
       const dispatcher = dispatcherContext.dispatcher;
       const callback = () => {
-        const ctx = canvas.getContext("2d");
-        snapshot.clear();
-        if (ctx) {
+        const ctx = Tool.ctx;
+        const imageDataList = snapshot.getImageDatalist("back") || [];
+        if (ctx && imageDataList.length > 0) {
+          snapshot.clear();
+
           if (imgSrc) {
-            if (Tool.isPixel) {
+            if (Tool.isPixel && lastSrcImageData) {
               Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
               DrawImgPiex(imgSrc);
               return;
@@ -197,6 +201,7 @@ const Canvas: FC<CanvasProps> = (props) => {
           if (imageData && imageDataList.length > 1) {
             Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.putImageData(imageData, 0, 0);
+            updatePixelBoxs(ctx);
           } else if (imageDataList.length === 1) {
             if (imgSrc) {
               Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -204,7 +209,6 @@ const Canvas: FC<CanvasProps> = (props) => {
               DrawImgPiex(imgSrc);
             }
           }
-          updatePixelBoxs(ctx);
         }
       };
       dispatcher.on(UNDO_EVENT, back);
@@ -282,6 +286,9 @@ const Canvas: FC<CanvasProps> = (props) => {
                 pixel.draw(ctx);
               }
             }
+            lastSrcImageData = canvas
+              .getContext("2d")
+              ?.getImageData(0, 0, canvas.width, canvas.height);
             Tool.PixelBoxs = boxArr;
           };
           updatePixelBoxs(ctx);
