@@ -194,12 +194,13 @@ const Canvas: FC<CanvasProps> = (props) => {
       dispatcher.on(CLEAR_EVENT, callback);
       // 注册画布前进事件
       const forward = () => {
-        const ctx = canvas.getContext("2d");
+        const ctx = Tool.ctx;
         if (ctx) {
           const imageData = snapshot.forward();
           if (imageData) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.putImageData(imageData, 0, 0);
+            updatePixelBoxs(Tool.ctx);
           }
         }
       };
