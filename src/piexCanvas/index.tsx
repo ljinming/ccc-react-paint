@@ -154,7 +154,6 @@ const Canvas: FC<CanvasProps> = (props) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
-      showCanvasCursor();
       Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       // 注册清空画布事件
       const dispatcher = dispatcherContext.dispatcher;
@@ -205,6 +204,7 @@ const Canvas: FC<CanvasProps> = (props) => {
               DrawImgPiex(imgSrc);
             }
           }
+          updatePixelBoxs(ctx);
         }
       };
       dispatcher.on(UNDO_EVENT, back);
