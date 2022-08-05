@@ -35,9 +35,7 @@ export const updatePixelBoxs = (
     for (let y = 0; y < ctxHeight; y += Tool.OptPixel.size) {
       let index = y * ctxWidth + x;
       let i = index * 4;
-      let rgb = `rgba(${imgData[i]},${imgData[i + 1]},${imgData[i + 2]},${
-        imgData[i + 3] / 255
-      })`;
+      let rgb = `rgba(${imgData[i]},${imgData[i + 1]},${imgData[i + 2]})`;
       array.push(rgb);
     }
   }
@@ -57,7 +55,7 @@ export const drawColorToPixel = (p1: Point, p2: Point, color: string) => {
       y: pixel.y,
     };
     const distance = distToSegment(p, p1, p2, Tool.ctx.lineWidth);
-    if (distance <= Tool.ctx.lineWidth * Tool.OptPixel.size) {
+    if (distance <= Tool.ctx.lineWidth) {
       const pixel = Tool.PixelBoxs[index];
       pixel.setColor(color);
     }

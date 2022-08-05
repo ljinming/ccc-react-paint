@@ -21,7 +21,7 @@ class Eraser extends Tool {
     this.mouseDown = true;
     this.previousPos = pos;
     this.color = Tool.isPixel ? getPixelColorOnPixelBoxs(pos):getPixelColorOnCanvas(Tool.ctx, pos.x - 2, pos.y - 2);
-    Tool.ctx.lineWidth = this.lineWidthBase;
+    Tool.ctx.lineWidth =Tool.isPixel ? this.lineWidthBase*Tool.OptPixel.size/2: this.lineWidthBase;
     //   if (Tool.isPixel && Tool.PixelBoxs) {
     //   for (let p = 0; p < Tool.PixelBoxs.length; p++) {
     //     const pixel = Tool.PixelBoxs[p];

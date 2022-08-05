@@ -66,6 +66,7 @@ function Paint(props: PaintProps): JSX.Element {
   const [size, setSize] = useState({ width, height });
   const [Thumbnail, setThumbnail] = useState(ThumbSrc);
   const [loadings, setLoadings] = useState(true);
+  const [showPixel, setIsPixel] = useState(isPixel);
 
   const [shapeOutlineType, setShapeOutlineType] = useState<ShapeOutlineType>(
     ShapeOutlineType.SOLID
@@ -150,12 +151,16 @@ function Paint(props: PaintProps): JSX.Element {
   const loadImage = async (imgSrc: string) => {
     const size = await getImageSize(imgSrc);
     setSize(size);
-    setLineFontSize(Math.floor(size.width / 100));
+    if (!isPixel) {
+      setLineFontSize(Math.floor(size.width / 100));
+    }
     setLoadings(false);
   };
 
   useEffect(() => {
     // 再一次进入
+    setIsPixel(isPixel);
+    Tool.isPixel = isPixel;
     if (imgSrc) {
       loadImage(imgSrc);
     } else if (width && height) {
@@ -167,7 +172,7 @@ function Paint(props: PaintProps): JSX.Element {
       setThumbnail("");
       Tool.showArea = null;
     }
-  }, [width, imgSrc, height]);
+  }, [width, imgSrc, height, isPixel]);
 
   if (showArea) {
     Tool.showArea = showArea;

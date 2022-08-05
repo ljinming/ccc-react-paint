@@ -132,6 +132,7 @@ const Canvas: FC<CanvasProps> = (props) => {
         Tool.lineWidthFactor = 4;
         break;
       case LineWidthType.LINESIZE:
+        console.log("-lineSize--3", lineSize);
         Tool.lineWidthFactor = lineSize;
         break;
       default:
@@ -156,7 +157,6 @@ const Canvas: FC<CanvasProps> = (props) => {
     if (canvas) {
       showCanvasCursor();
       Tool.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-      Tool.isPixel = true;
       // 注册清空画布事件
       const dispatcher = dispatcherContext.dispatcher;
       const callback = () => {
@@ -245,12 +245,12 @@ const Canvas: FC<CanvasProps> = (props) => {
     if (canvas) {
       if (strawType) {
         //吸色
-        return (canvas.style.cursor = `url(${straw}) 12 16,auto`);
+        return (canvas.style.cursor = `url(${straw}) 10 14,auto`);
       }
       if (toolType === 0) {
-        canvas.style.cursor = `url(${cursorPen}) 12 16,auto`;
+        canvas.style.cursor = `url(${cursorPen}) 8 14,auto`;
       } else if (toolType === 4) {
-        canvas.style.cursor = `url(${cursorErase}) 12 16,auto`;
+        canvas.style.cursor = `url(${cursorErase}) 12 15,auto`;
       } else if (toolType === 1) {
         canvas.style.cursor = `url(${bucket}) 12 16,auto`;
       } else {
