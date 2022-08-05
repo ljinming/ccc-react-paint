@@ -161,6 +161,8 @@ function Paint(props: PaintProps): JSX.Element {
     // 再一次进入
     setIsPixel(isPixel);
     Tool.isPixel = isPixel;
+    Tool.currentScale = 1;
+    Tool.translate = { translatex: 0, translatey: 0 };
     if (imgSrc) {
       loadImage(imgSrc);
     } else if (width && height) {

@@ -104,6 +104,13 @@ const matchColor = (
   const r = colorLayer.data[pixelPos];
   const g = colorLayer.data[pixelPos + 1];
   const b = colorLayer.data[pixelPos + 2];
+  if (Tool.isPixel) {
+    return  (
+    Math.abs(r - color[0]) < 10 &&
+    Math.abs(g - color[1]) < 10 &&
+    Math.abs(b - color[2]) < 10
+  );
+  }
  
   return (
     Math.abs(r - color[0]) < 30 &&
@@ -142,10 +149,11 @@ class ColorFill extends Tool {
   public onMouseDown(event: MouseEvent): void {
     event.preventDefault();
     if(this.mouseDownTimer) return 
-    const mousepos = getMousePos(Tool.ctx.canvas, event);
+    const mousepos = getMousePos(Tool.ctx.canvas, event);    
     setStraw(mousepos);
-    this.operateStart(mousepos);
-
+    if (!Tool.strawFlag) { 
+            this.operateStart(mousepos);
+    }
     this.mouseDownTimer = setTimeout(() => {
       clearTimeout(this.mouseDownTimer);
       this.mouseDownTimer = undefined;

@@ -49,12 +49,28 @@ export const updatePixelBoxs = (
 
 //像素风改色功能
 export const drawColorToPixel = (p1: Point, p2: Point, color: string) => {
+  let mainPixel: any;
+  const size: number = Tool.ctx.lineWidth / (Tool.OptPixel.size / 2);
   Tool.PixelBoxs.forEach((pixel, index) => {
     const p = {
       x: pixel.x,
       y: pixel.y,
     };
     const distance = distToSegment(p, p1, p2, Tool.ctx.lineWidth);
+    // if (distance <= Tool.ctx.lineWidth && !mainPixel) {
+    //   const pixel = Tool.PixelBoxs[index];
+    //   pixel.setColor(color);
+    //   mainPixel = pixel;
+    // } else if (mainPixel && size > 1) {
+    //   if (
+    //     pixel.x - mainPixel.x <= Tool.OptPixel.size * size &&
+    //     pixel.y - mainPixel.y <= Tool.OptPixel.size * size &&
+    //     pixel.y >= mainPixel.y
+    //   ) {
+    //     pixel.setColor(color);
+    //   }
+    // }
+
     if (distance <= Tool.ctx.lineWidth) {
       const pixel = Tool.PixelBoxs[index];
       pixel.setColor(color);

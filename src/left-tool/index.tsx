@@ -38,7 +38,7 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
                 {toolPen}
               </span>
             </span>
-            <span title="Draw Shape" className="tool-Icon">
+            {/* <span title="Draw Shape" className="tool-Icon">
               <span
                 className={
                   type === ToolType.SHAPE
@@ -51,7 +51,7 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
               >
                 {toolShape}
               </span>
-            </span>
+            </span> */}
             <span title="Eraser Tool" className="tool-Icon">
               <span
                 className={
