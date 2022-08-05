@@ -132,7 +132,6 @@ const Canvas: FC<CanvasProps> = (props) => {
         Tool.lineWidthFactor = 4;
         break;
       case LineWidthType.LINESIZE:
-        console.log("-lineSize--3", lineSize);
         Tool.lineWidthFactor = lineSize;
         break;
       default:
@@ -218,6 +217,7 @@ const Canvas: FC<CanvasProps> = (props) => {
           } else if (imageDataList.length === 1) {
             if (imgSrc) {
               Tool.ctx.clearRect(0, 0, canvas.width, canvas.height);
+              snapshot.clear("forward");
               DrawImgPiex(imgSrc);
             }
           }
@@ -301,6 +301,14 @@ const Canvas: FC<CanvasProps> = (props) => {
             Tool.PixelBoxs = boxArr;
           };
           updatePixelBoxs(ctx);
+          snapshot.add(
+            Tool.ctx.getImageData(
+              0,
+              0,
+              Tool.ctx.canvas.width,
+              Tool.ctx.canvas.height
+            )
+          );
         }
       }
     }
@@ -342,9 +350,6 @@ const Canvas: FC<CanvasProps> = (props) => {
   };
 
   const onMouseUp = (event: MouseEvent) => {
-    if (text) {
-      setText("");
-    }
     if (tool) {
       tool.onMouseUp(event);
       // 存储canvas剪影

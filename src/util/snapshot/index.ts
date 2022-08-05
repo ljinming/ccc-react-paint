@@ -13,6 +13,21 @@ class Snapshot {
     this.imageData1.push(imageData);
   }
  
+  public clear(type:string) {
+    switch (type) {
+      case 'back':
+        this.imageData2 = []
+        break;
+      case 'forward':
+       this.imageData1 = []
+        break;
+      default:
+      this.imageData1 = []
+        this.imageData2 = []
+        break
+     }
+  
+  }
 
 
   public getCurrent() {
