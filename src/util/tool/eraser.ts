@@ -22,15 +22,15 @@ class Eraser extends Tool {
     this.previousPos = pos;
     this.color = Tool.isPixel ? getPixelColorOnPixelBoxs(pos):getPixelColorOnCanvas(Tool.ctx, pos.x - 2, pos.y - 2);
     Tool.ctx.lineWidth = this.lineWidthBase;
-      if (Tool.isPixel && Tool.PixelBoxs) {
-      for (let p = 0; p < Tool.PixelBoxs.length; p++) {
-        const pixel = Tool.PixelBoxs[p];
-        if (pixel.isPointInPath(Tool.ctx, pos)) {
-          pixel.fillStyle = this.color;
-        }
-      }
-      return
-    }
+    //   if (Tool.isPixel && Tool.PixelBoxs) {
+    //   for (let p = 0; p < Tool.PixelBoxs.length; p++) {
+    //     const pixel = Tool.PixelBoxs[p];
+    //     if (pixel.isPointInPath(Tool.ctx, pos)) {
+    //       pixel.fillStyle = this.color;
+    //     }
+    //   }
+    //   return
+    // }
     Tool.ctx.strokeStyle = this.color;
     Tool.ctx.lineJoin = "round";
     Tool.ctx.lineCap = "round";

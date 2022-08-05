@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import "./index.less";
 import { useEffect } from "react";
 import { useRef } from "react";
-import { Input } from "antd";
+import { Button, Input } from "antd";
 
 import {
   LineWidthType,
@@ -290,8 +290,9 @@ const Canvas: FC<CanvasProps> = (props) => {
                   isFill: true,
                   size: Tool.OptPixel.size,
                   fillStyle: rgb,
-                  strokeStyle: "",
+                  strokeStyle: "transparent",
                 };
+
                 const pixel = new Pixel(options);
                 boxArr.push(pixel);
                 pixel.draw(ctx);
@@ -314,7 +315,7 @@ const Canvas: FC<CanvasProps> = (props) => {
       }
       const height = container!.clientHeight;
       const width = container!.clientWidth;
-      const showScale = Math.floor(
+      const showScale = Math.ceil(
         Math.min(width - 20, height - 20) /
           Math.max(CanvasSize.height, CanvasSize.width) || 1
       );
@@ -322,6 +323,9 @@ const Canvas: FC<CanvasProps> = (props) => {
       Tool.OptPixel.size = showScale;
       canvas.width = CanvasSize.width * showScale;
       canvas.height = CanvasSize.height * showScale;
+      translatex = (width - CanvasSize.width * show_scale) / 2;
+      translatey = (height - CanvasSize.height * show_scale) / 2;
+      canvas.style.transform = `translate(${translatex}px,${translatey}px)`;
       if (imgSrc) {
         DrawImgPiex(imgSrc);
       }
@@ -447,9 +451,9 @@ const Canvas: FC<CanvasProps> = (props) => {
       canvas.addEventListener("mousedown", onMouseDown);
       canvas.addEventListener("mousemove", onMouseMove);
       canvas.addEventListener("mouseup", onMouseUp);
-      canvas.addEventListener("wheel", onMousewheel, {
-        passive: false,
-      });
+      //   canvas.addEventListener("wheel", onMousewheel, {
+      //     passive: false,
+      //   });
       canvas.addEventListener("touchstart", onTouchStart);
       canvas.addEventListener("touchmove", onTouchMove);
       canvas.addEventListener("touchend", onTouchEnd);
@@ -483,8 +487,18 @@ const Canvas: FC<CanvasProps> = (props) => {
         allCanvas.offsetWidth < (CanvasSize?.width || 0) ? "unset" : "auto";
     }
   }
+  const handleClick = () => {
+    const canvas = canvasRef.current;
+    if (canvas && CanvasSize && imgSrc) {
+      canvas.width = CanvasSize.width;
+      canvas.height = CanvasSize.height;
+      Tool.OptPixel.size = 1;
+      DrawImgPiex(imgSrc);
+    }
+  };
   return (
     <div className="all-canvas" ref={allCanvasRef} id="all-canvas">
+      {/* <Button onClick={handleClick}>恢复</Button> */}
       <canvas
         id={`ccc-paint-canvas ${id}`}
         className="ccc-paint-canvas pixel-canvas"

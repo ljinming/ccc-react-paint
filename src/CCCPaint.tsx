@@ -46,6 +46,7 @@ interface PaintProps {
 //"https://bafybeicgvg3vwtv5c633cjexbykjp75yjt755qhma4o7vgusa4ldvocz44.ipfs.dweb.link/orign.png"
 //https://bafybeifgfvlt6qhz5b2gb4t35pzalywvzxm7qmlj3d4vpmcwq7vmqtqtdu.ipfs.dweb.link/orign.png
 
+//https://bafybeiblav74hxa4r4vojadmrvitljxqksm4g24mkkvk64bqar5ii3a3t4.ipfs.dweb.link/orign.jpeg
 function Paint(props: PaintProps): JSX.Element {
   const {
     id = "test",
@@ -127,6 +128,22 @@ function Paint(props: PaintProps): JSX.Element {
         ctx.fillRect(i / Tool.OptPixel.size, j / Tool.OptPixel.size, 1, 1);
       }
     }
+
+    console.log("imageData===3", canvasElem.toDataURL("image/png"));
+    const dataSrc = canvasElem.toDataURL("image/png", 1.0);
+
+    // const a = document.createElement("a");
+    // // 创建一个单击事件
+    // const event = new MouseEvent("click");
+
+    // // 将a的download属性设置为我们想要下载的图片名称，若name不存在则使用‘下载图片名称’作为默认名称
+    // a.download = "下载图片名称";
+    // // 将生成的URL设置为a.href属性
+    // a.href = dataSrc;
+
+    // // 触发a的单击事件
+    // a.dispatchEvent(event);
+
     return canvasElem.toDataURL("image/png");
   };
 
@@ -237,6 +254,24 @@ function Paint(props: PaintProps): JSX.Element {
                     <div className="ccc">
                       <div className="ccc-edit">
                         <Edit />
+                        {/* <Button
+                          onClick={() => {
+                            const canvasElem: any = document.getElementById(
+                              `ccc-paint-canvas ${id}`
+                            );
+                            const data = canvasElem
+                              .getContext("2d")
+                              .getImageData(
+                                0,
+                                0,
+                                canvasElem.width,
+                                canvasElem.height
+                              );
+                            calcImageData(data);
+                          }}
+                        >
+                          保存
+                        </Button> */}
                       </div>
                       <div className="ccc-content">
                         <div className="ToolPanel">
@@ -252,23 +287,43 @@ function Paint(props: PaintProps): JSX.Element {
                           </div>
                         ) : (
                           <div className="show-Canvas">
-                            <PiexCanvas
-                              id={id}
-                              strawType={strawType}
-                              CanvasSize={size}
-                              imgSrc={imgSrc}
-                              background={background}
-                              fillColor={fillColor}
-                              toolType={toolType}
-                              fontStyle={fontStyle}
-                              shapeType={shapeType}
-                              shapeOutlineType={shapeOutlineType}
-                              mainColor={mainColor}
-                              subColor={subColor}
-                              lineSize={lineSize}
-                              lineWidthType={lineWidthType}
-                              setColor={setColor}
-                            />
+                            {isPixel ? (
+                              <PiexCanvas
+                                id={id}
+                                strawType={strawType}
+                                CanvasSize={size}
+                                imgSrc={imgSrc}
+                                background={background}
+                                fillColor={fillColor}
+                                toolType={toolType}
+                                fontStyle={fontStyle}
+                                shapeType={shapeType}
+                                shapeOutlineType={shapeOutlineType}
+                                mainColor={mainColor}
+                                subColor={subColor}
+                                lineSize={lineSize}
+                                lineWidthType={lineWidthType}
+                                setColor={setColor}
+                              />
+                            ) : (
+                              <Canvas
+                                id={id}
+                                strawType={strawType}
+                                CanvasSize={size}
+                                imgSrc={imgSrc}
+                                background={background}
+                                fillColor={fillColor}
+                                toolType={toolType}
+                                fontStyle={fontStyle}
+                                shapeType={shapeType}
+                                shapeOutlineType={shapeOutlineType}
+                                mainColor={mainColor}
+                                subColor={subColor}
+                                lineSize={lineSize}
+                                lineWidthType={lineWidthType}
+                                setColor={setColor}
+                              />
+                            )}
                           </div>
                         )}
                         <div className="show-type">

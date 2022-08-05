@@ -22,14 +22,14 @@ class Pixel {
     isFill: any;
     strokeStyle: string | CanvasGradient | CanvasPattern;
   }) {
-    this.lineWidth = 1;
+    this.lineWidth = 0;
     this.x = option.x;
     this.y = option.y;
     this.shape = option.shape;
     this.size = option.size || 16;
     this.fillStyle = option.fillStyle;
     this.isFill = option.isFill;
-    this.strokeStyle = option.strokeStyle;
+    this.strokeStyle = "transparent";
   }
 
   setColor(color: string) {
@@ -64,9 +64,10 @@ class Pixel {
 
   createRect(ctx: CanvasRenderingContext2D) {
     let points = this.getPoints();
-    points.forEach(function (point, i) {
-      ctx[i == 0 ? "moveTo" : "lineTo"](point.x, point.y);
-    });
+    ctx.fillRect(this.x, this.y, this.size, this.size);
+    // points.forEach(function (point, i) {
+    //   ctx[i == 0 ? "moveTo" : "lineTo"](point.x, point.y);
+    // });
   }
 
   draw(ctx: CanvasRenderingContext2D) {

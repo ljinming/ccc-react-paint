@@ -27,15 +27,15 @@ class Pen extends Tool {
         this.previousPos = pos;
     this.penColor = testColor
      Tool.ctx.lineWidth = Tool.lineWidthFactor * this.lineWidthBase;
-    if (Tool.isPixel) {
-      for (let p = 0; p < Tool.PixelBoxs.length; p++) {
-        const pixel = Tool.PixelBoxs[p];
-        if (pixel.isPointInPath(Tool.ctx, pos)) {
-           pixel.fillStyle = testColor;
-        }
-      }
+    // if (Tool.isPixel) {
+    //   for (let p = 0; p < Tool.PixelBoxs.length; p++) {
+    //     const pixel = Tool.PixelBoxs[p];
+    //     if (pixel.isPointInPath(Tool.ctx, pos)) {
+    //        pixel.fillStyle = testColor;
+    //     }
+    //   }
       
-    }
+    // }
     this.saveImageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
     Tool.ctx.strokeStyle = testColor;
     Tool.ctx.lineJoin = "round";
