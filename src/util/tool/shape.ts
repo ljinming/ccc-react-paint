@@ -134,7 +134,7 @@ class Shape extends Tool {
         this.mouseDownPos = pos;
         Tool.ctx.strokeStyle = Tool.mainColor;
         Tool.ctx.lineWidth = Tool.isPixel?lineWidth*Tool.OptPixel.size:lineWidth;//5// Tool.lineWidthFactor * this.lineWidthBase;
-        Tool.ctx.fillStyle = Tool.mainColor;
+        Tool.ctx.fillStyle = Tool.subColor;
         if (this.isDashed) {
             Tool.ctx.setLineDash(this.dashLineStyle);
         }
@@ -160,6 +160,10 @@ class Shape extends Tool {
                 ctx.closePath();
                 ctx.stroke();
             }
+                         if (Tool.isPixel) { 
+         updatePixelBoxs(Tool.ctx);
+        }
+      
         }
     }
     

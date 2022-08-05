@@ -13,7 +13,7 @@ class Snapshot {
     this.imageData1.push(imageData);
   }
  
-  public clear(type:string) {
+  public clear(type?:string) {
     switch (type) {
       case 'back':
         this.imageData2 = []

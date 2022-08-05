@@ -160,6 +160,7 @@ const Canvas: FC<CanvasProps> = (props) => {
       const dispatcher = dispatcherContext.dispatcher;
       const callback = () => {
         const ctx = canvas.getContext("2d");
+        snapshot.clear();
         if (ctx) {
           if (imgSrc) {
             if (Tool.isPixel) {
@@ -167,24 +168,6 @@ const Canvas: FC<CanvasProps> = (props) => {
               DrawImgPiex(imgSrc);
               return;
             }
-            const img = new Image();
-            img.crossOrigin = "anonymous";
-            img.src = imgSrc;
-            img.onload = function () {
-              const { width, height } = img;
-              /*1.在canvas 中绘制图像*/
-              ctx.drawImage(img, 0, 0);
-              /*2.从canvas 中获取图像的ImageData*/
-              const imgData = ctx.getImageData(0, 0, width, height);
-              /*3.在canvas 中显示ImageData*/
-              ctx.putImageData(
-                imgData,
-                //位置
-                0,
-                height
-              );
-              snapshot.add(imgData);
-            };
           } else {
             ctx.fillStyle = "#2d2d2d";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
