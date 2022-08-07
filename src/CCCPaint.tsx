@@ -130,21 +130,6 @@ function Paint(props: PaintProps): JSX.Element {
       }
     }
 
-    // console.log("imageData===3", canvasElem.toDataURL("image/png"));
-    // const dataSrc = canvasElem.toDataURL("image/png", 1.0);
-
-    // const a = document.createElement("a");
-    // // 创建一个单击事件
-    // const event = new MouseEvent("click");
-
-    // // 将a的download属性设置为我们想要下载的图片名称，若name不存在则使用‘下载图片名称’作为默认名称
-    // a.download = "下载图片名称";
-    // // 将生成的URL设置为a.href属性
-    // a.href = dataSrc;
-
-    // // 触发a的单击事件
-    // a.dispatchEvent(event);
-
     return canvasElem.toDataURL("image/png");
   };
 
@@ -163,6 +148,7 @@ function Paint(props: PaintProps): JSX.Element {
     Tool.isPixel = isPixel;
     Tool.currentScale = 1;
     Tool.translate = { translatex: 0, translatey: 0 };
+
     if (imgSrc) {
       loadImage(imgSrc);
     } else if (width && height) {

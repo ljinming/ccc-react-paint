@@ -38,20 +38,22 @@ const ToolPanel: React.FC<ToolPanelProps> = (props) => {
                 {toolPen}
               </span>
             </span>
-            {/* <span title="Draw Shape" className="tool-Icon">
-              <span
-                className={
-                  type === ToolType.SHAPE
-                    ? `tool-item ${selectedToolClass}`
-                    : "tool-item"
-                }
-                onClick={() => {
-                  setType(ToolType.SHAPE);
-                }}
-              >
-                {toolShape}
+            {!isPixel && (
+              <span title="Draw Shape" className="tool-Icon">
+                <span
+                  className={
+                    type === ToolType.SHAPE
+                      ? `tool-item ${selectedToolClass}`
+                      : "tool-item"
+                  }
+                  onClick={() => {
+                    setType(ToolType.SHAPE);
+                  }}
+                >
+                  {toolShape}
+                </span>
               </span>
-            </span> */}
+            )}
             <span title="Eraser Tool" className="tool-Icon">
               <span
                 className={

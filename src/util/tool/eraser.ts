@@ -58,17 +58,16 @@ class Eraser extends Tool {
     if (this.mouseDown) {
         Tool.ctx.closePath();
         this.mouseDown = false;
-      if (!Tool.isPixel) { 
-      let imageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
-      const colorRgb = hexToRgb(this.color);
-      if (colorRgb && this.saveImageData) {
-        imageData = updateImageData(this.saveImageData, imageData, [colorRgb.r, colorRgb.g, colorRgb.b, colorRgb.a]);
-        Tool.ctx.putImageData(imageData, 0, 0);
+      if (!Tool.isPixel) {
+        let imageData = Tool.ctx.getImageData(0, 0, Tool.ctx.canvas.width, Tool.ctx.canvas.height);
+        const colorRgb = hexToRgb(this.color);
+        if (colorRgb && this.saveImageData) {
+          imageData = updateImageData(this.saveImageData, imageData, [colorRgb.r, colorRgb.g, colorRgb.b, colorRgb.a]);
+          Tool.ctx.putImageData(imageData, 0, 0);
+        }
+      } else { 
+          updatePixelBoxs(Tool.ctx)
       }
-      }
-              updatePixelBoxs(Tool.ctx)
-
-     
     }
   }
   public onMouseDown(event: MouseEvent): void {
