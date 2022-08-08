@@ -248,9 +248,12 @@ class Text extends Tool {
                 );
                 Tool.ctx.drawImage(img, x, y);
               };
-              document
+      if (Tool.textList[va].canvas && !Tool.isPixel) { 
+  document
                 .getElementById("all-canvas")
                 ?.removeChild(Tool.textList[va].canvas);
+      }
+            
    });
     Tool.textList = {}
   }
@@ -259,10 +262,13 @@ class Text extends Tool {
         //  event.preventDefault();
     if (event.keyCode == 8) {
       //delete 
+      
       Object.keys(Tool.textList).forEach(va => { 
+        if (Tool.textList[va].canvas && !Tool.isPixel) { 
               document
                 .getElementById("all-canvas")
                 ?.removeChild(Tool.textList[va].canvas);
+      }
       })
       Tool.textList = {}
 

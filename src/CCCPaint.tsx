@@ -50,14 +50,14 @@ interface PaintProps {
 function Paint(props: PaintProps): JSX.Element {
   const {
     id = "test",
-    imgSrc = "https://v4oyv-zaaaa-aaaah-qctya-cai.raw.ic0.app/token/5479",
+    imgSrc = "https://bafybeicgvg3vwtv5c633cjexbykjp75yjt755qhma4o7vgusa4ldvocz44.ipfs.dweb.link/orign.png",
     width = 0,
     height = 0,
     background,
     cRef,
     showArea,
     ThumbSrc,
-    isPixel = true,
+    isPixel = false,
   } = props;
 
   const [toolType, setToolType] = useState<ToolType>(ToolType.PEN);
@@ -97,6 +97,7 @@ function Paint(props: PaintProps): JSX.Element {
 
   useImperativeHandle(cRef, () => ({
     getCurrentImageData: () => {
+      canvasText();
       const canvasElem: any = document.getElementById(`ccc-paint-canvas ${id}`);
       let imageData;
       if (Tool.isPixel) {
@@ -162,6 +163,35 @@ function Paint(props: PaintProps): JSX.Element {
     }
   }, [width, imgSrc, height, isPixel]);
 
+  const canvasText = () => {
+    if (
+      Tool.textList &&
+      Object.keys(Tool.textList).length > 0 &&
+      !Tool.isPixel
+    ) {
+      Object.keys(Tool.textList).forEach((va) => {
+        const { data, pos } = Tool.textList[va];
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = data;
+        img.onload = function () {
+          /*1.在canvas 中绘制图像*/
+          const { x, y } = getMousePos(Tool.ctx.canvas, undefined, undefined, {
+            x: pos[0],
+            y: pos[1],
+          });
+          Tool.ctx.drawImage(img, x, y);
+        };
+        if (Tool.textList[va].canvas) {
+          document
+            .getElementById("all-canvas")
+            ?.removeChild(Tool.textList[va].canvas);
+        }
+      });
+      Tool.textList = {};
+    }
+  };
+
   if (showArea) {
     Tool.showArea = showArea;
   }
@@ -174,31 +204,7 @@ function Paint(props: PaintProps): JSX.Element {
           setStrawType(value);
         },
         setType: (value) => {
-          if (Tool.textList && Object.keys(Tool.textList).length > 0) {
-            Object.keys(Tool.textList).forEach((va) => {
-              const { data, pos } = Tool.textList[va];
-              const img = new Image();
-              img.crossOrigin = "anonymous";
-              img.src = data;
-              img.onload = function () {
-                /*1.在canvas 中绘制图像*/
-                const { x, y } = getMousePos(
-                  Tool.ctx.canvas,
-                  undefined,
-                  undefined,
-                  {
-                    x: pos[0],
-                    y: pos[1],
-                  }
-                );
-                Tool.ctx.drawImage(img, x, y);
-              };
-              document
-                .getElementById("all-canvas")
-                ?.removeChild(Tool.textList[va].canvas);
-            });
-            Tool.textList = {};
-          }
+          canvasText();
           setToolType(value);
         },
       }}
